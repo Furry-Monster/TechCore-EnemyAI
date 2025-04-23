@@ -20,8 +20,8 @@ namespace MonsterBT
 
         private void OnDestroy()
         {
-            this.treeExec.Dispose();
-            this.treeExec = null;
+            treeExec.Dispose();
+            treeExec = null;
         }
     }
 }

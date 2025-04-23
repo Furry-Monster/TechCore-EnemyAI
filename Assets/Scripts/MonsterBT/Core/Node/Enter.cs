@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace MonsterBT
 {
@@ -14,21 +15,30 @@ namespace MonsterBT
 
         protected override void OnInitialize()
         {
-            child.Initalize(Tree, Exec);
+            OnStateChanged += state =>
+            {
+                if (state == NodeState.Error)
+                {
+                    Debug.LogError($"[MonsterBT] {this.GetType()} occurred Error...");
+                }
+            };
+
+            child?.Initalize(Tree, Exec);
         }
 
         protected override NodeState DoExecute()
         {
-            var state = child.Execute();
+            var state = child?.Execute();
 
-            return state;
+            return state == null
+                ? NodeState.Error
+                : (NodeState)state;
         }
 
         public override void Dispose()
         {
+            child?.Dispose();
             base.Dispose();
-
-            child.Dispose();
         }
     }
 }

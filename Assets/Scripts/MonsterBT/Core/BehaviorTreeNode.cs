@@ -18,7 +18,7 @@ namespace MonsterBT
     {
         protected BehaviorTree Tree { get; private set; }
         protected BehaviorTreeExec Exec { get; private set; }
-        private Action<NodeState> onStateChanged;
+        protected Action<NodeState> OnStateChanged;
 
         public void Initalize(BehaviorTree tree, BehaviorTreeExec exec)
         {
@@ -34,7 +34,9 @@ namespace MonsterBT
         {
             var state = DoExecute();
 
-            onStateChanged?.Invoke(state);
+            Debug.Log($"Now exec node : {GetType()}");
+
+            OnStateChanged?.Invoke(state);
 
             return state;
         }
@@ -43,7 +45,7 @@ namespace MonsterBT
 
         public virtual void Dispose()
         {
-            onStateChanged = null;
+            OnStateChanged = null;
         }
     }
 }

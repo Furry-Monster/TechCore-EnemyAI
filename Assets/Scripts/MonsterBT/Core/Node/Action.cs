@@ -1,10 +1,26 @@
 using System;
+using UnityEngine;
 
 namespace MonsterBT
 {
     public abstract class Action : BehaviorTreeNode
     {
-        private BehaviorTreeNode parent;
+
+        protected override void OnInitialize()
+        {
+            OnStateChanged += state =>
+            {
+                if (state == NodeState.Error)
+                {
+                    Debug.LogError($"[MonsterBT] {this.GetType()} occurred Error...");
+                }
+            };
+        }
+
+        protected override NodeState DoExecute()
+        {
+            throw new NotImplementedException();
+        }
 
         public override void Dispose()
         {

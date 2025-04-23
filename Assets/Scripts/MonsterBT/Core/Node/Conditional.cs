@@ -6,8 +6,20 @@ namespace MonsterBT
 {
     public abstract class Conditional : BehaviorTreeNode
     {
-        private BehaviorTreeNode parent;
         private BehaviorTreeNode child;
+
+        protected override void OnInitialize()
+        {
+            OnStateChanged += state =>
+            {
+                if (state == NodeState.Error)
+                {
+                    Debug.LogError($"[MonsterBT] {this.GetType()} occurred Error...");
+                }
+            };
+
+            child?.Initalize(Tree, Exec);
+        }
 
         protected override NodeState DoExecute()
         {

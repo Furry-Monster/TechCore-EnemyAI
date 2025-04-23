@@ -16,14 +16,19 @@ namespace MonsterBT
             set => currentTree = value;
         }
 
-        public void Boot() => currentTree.Enter.Initalize(currentTree, this);
+        public BehaviorTreeExec()
+        {
+            currentTree ??= new();
+        }
+
+        public void Boot() => currentTree.Enter?.Initalize(currentTree, this);
 
         public void Tick()
         {
-            currentTree.Enter.Execute();
+            currentTree.Enter?.Execute();
         }
 
-        public void Pause()
+        public void Halt()
         {
             throw new NotImplementedException();
         }

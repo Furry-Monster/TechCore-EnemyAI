@@ -19,10 +19,22 @@ namespace MonsterBT
             set => enter = value;
         }
 
-        public BehaviorTree() { }
+        public BehaviorTree()
+        {
+            enter = BehaviorTreeData.BuildMockTree() as Enter;
+            enter ??= new();
+        }
+
         public BehaviorTree(BehaviorTreeData data)
         {
-            throw new NotImplementedException();
+            enter = data.BuildTree() as Enter;
+            enter ??= new();
+        }
+
+        public void LoadTreeData(BehaviorTreeData data)
+        {
+            enter = data.BuildTree() as Enter;
+            enter ??= new();
         }
 
         public IEnumerator<BehaviorTreeNode> GetEnumerator()
@@ -39,6 +51,7 @@ namespace MonsterBT
         public void Dispose()
         {
             enter.Dispose();
+            enter = null;
         }
     }
 }
