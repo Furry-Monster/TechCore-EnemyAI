@@ -25,7 +25,7 @@ namespace MonsterBT
             Tree = tree;
             Exec = exec;
 
-            OnInitialize();
+            ; OnInitialize();
         }
 
         protected abstract void OnInitialize();
@@ -47,5 +47,33 @@ namespace MonsterBT
         {
             OnStateChanged = null;
         }
+    }
+
+    public interface IHasChildren
+    {
+        /// <summary>
+        /// 获取子节点
+        /// </summary>
+        /// <returns></returns>
+        public abstract BehaviorTreeNode[] GetChildren();
+
+        /// <summary>
+        /// 获取子节点数目
+        /// </summary>
+        /// <returns></returns>
+        public abstract int GetChildrenCount();
+
+        /// <summary>
+        /// 设置某一个子节点
+        /// </summary>
+        /// <param name="index">节点标号</param>
+        /// <param name="node">节点实例</param>
+        public abstract void SetChild(int index, BehaviorTreeNode node);
+
+        /// <summary>
+        /// 设置所有子节点
+        /// </summary>
+        /// <param name="nodes">节点实例组</param>
+        public abstract void SetChildren(BehaviorTreeNode[] nodes);
     }
 }

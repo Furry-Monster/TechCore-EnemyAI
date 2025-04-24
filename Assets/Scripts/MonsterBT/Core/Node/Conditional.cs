@@ -1,10 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace MonsterBT
 {
-    public abstract class Conditional : BehaviorTreeNode
+    public abstract class Conditional : BehaviorTreeNode, IHasChildren
     {
         private BehaviorTreeNode child;
 
@@ -21,16 +22,31 @@ namespace MonsterBT
             child?.Initalize(Tree, Exec);
         }
 
-        protected override NodeState DoExecute()
-        {
-            throw new System.NotImplementedException();
-        }
-
         public override void Dispose()
         {
             base.Dispose();
 
             child.Dispose();
+        }
+
+        public virtual BehaviorTreeNode[] GetChildren()
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual int GetChildrenCount()
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void SetChild(int index, BehaviorTreeNode node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void SetChildren(BehaviorTreeNode[] nodes)
+        {
+            throw new NotImplementedException();
         }
     }
 }

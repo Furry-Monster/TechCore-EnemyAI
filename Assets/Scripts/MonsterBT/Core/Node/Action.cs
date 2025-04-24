@@ -17,11 +17,6 @@ namespace MonsterBT
             };
         }
 
-        protected override NodeState DoExecute()
-        {
-            throw new NotImplementedException();
-        }
-
         public override void Dispose()
         {
             base.Dispose();

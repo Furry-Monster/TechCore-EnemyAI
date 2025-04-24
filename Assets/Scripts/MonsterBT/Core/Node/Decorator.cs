@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace MonsterBT
 {
-    public abstract class Decorator : BehaviorTreeNode
+    public abstract class Decorator : BehaviorTreeNode, IHasChildren
     {
         private BehaviorTreeNode child;
 
@@ -20,18 +20,31 @@ namespace MonsterBT
             child?.Initalize(Tree, Exec);
         }
 
-        protected override NodeState DoExecute()
-        {
-            var state = child.Execute();
-
-            return state;
-        }
-
         public override void Dispose()
         {
             base.Dispose();
 
             child.Dispose();
+        }
+
+        public virtual BehaviorTreeNode[] GetChildren()
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual int GetChildrenCount()
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void SetChild(int index, BehaviorTreeNode node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void SetChildren(BehaviorTreeNode[] nodes)
+        {
+            throw new NotImplementedException();
         }
     }
 }
