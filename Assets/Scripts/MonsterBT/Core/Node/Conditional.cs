@@ -29,15 +29,12 @@ namespace MonsterBT
             child.Dispose();
         }
 
-        public virtual BehaviorTreeNode[] GetChildren()
-        {
-            throw new NotImplementedException();
-        }
+        public virtual BehaviorTreeNode[] GetChildren() =>
+            child == null
+            ? Array.Empty<BehaviorTreeNode>()
+            : new[] { child };
 
-        public virtual int GetChildrenCount()
-        {
-            throw new NotImplementedException();
-        }
+        public virtual int GetChildrenCount() => child == null ? 0 : 1;
 
         public virtual void SetChild(int index, BehaviorTreeNode node)
         {

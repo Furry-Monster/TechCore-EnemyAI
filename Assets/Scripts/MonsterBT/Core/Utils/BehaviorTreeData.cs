@@ -7,7 +7,9 @@ namespace MonsterBT
         public static BehaviorTreeNode BuildMockTree()
         {
             // mock data here
-            return new Enter();
+            Enter root = new Enter();
+            root.SetChild(0, new Log());
+            return root;
         }
 
         public BehaviorTreeNode BuildTree()

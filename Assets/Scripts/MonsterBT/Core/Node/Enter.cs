@@ -61,6 +61,7 @@ namespace MonsterBT
             else if (index < 0)
             {
                 Debug.LogError($"[MonsterBT] Node index of {index} is InValid");
+                return;
             }
 
             child = node;

@@ -13,8 +13,8 @@ namespace MonsterBT
 
     public class Log : Action
     {
-        public string Message;
-        public LogLevel Level;
+        public string Message = "Ciallo~";
+        public LogLevel Level = LogLevel.Info;
 
         protected override NodeState DoExecute()
         {

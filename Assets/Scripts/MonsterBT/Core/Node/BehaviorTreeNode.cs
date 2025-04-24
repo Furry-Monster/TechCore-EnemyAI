@@ -25,7 +25,7 @@ namespace MonsterBT
             Tree = tree;
             Exec = exec;
 
-            ; OnInitialize();
+            OnInitialize();
         }
 
         protected abstract void OnInitialize();
