@@ -21,7 +21,7 @@ namespace MonsterBT
             foreach (var child in children)
             {
 
-                child?.Initalize(Tree, Exec);
+                child?.Initalize(Tree, Exec, GameObject);
             }
         }
 

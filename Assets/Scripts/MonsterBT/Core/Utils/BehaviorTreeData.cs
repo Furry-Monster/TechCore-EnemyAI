@@ -1,15 +1,35 @@
 using System;
+using System.Collections.Generic;
 
 namespace MonsterBT
 {
     public class BehaviorTreeData
     {
-        public static BehaviorTreeNode BuildMockTree()
+        public Variable[] Variables;
+
+        public Blackboard Blackboard;
+
+        /// <summary>
+        /// For test
+        /// </summary>
+        public static List<Object> GenerateMockData()
         {
-            // mock data here
+            List<Object> res = new();
+
+            // mock tree
             Enter root = new Enter();
             root.SetChild(0, new Log());
-            return root;
+            res.Add(root);
+
+            // mock variables
+            List<Variable> mockVariables = new();
+            res.Add(mockVariables);
+
+            // mock blackboard
+            Blackboard mockBlackboard = new();
+            res.Add(mockBlackboard);
+
+            return res;
         }
 
         public BehaviorTreeNode BuildTree()

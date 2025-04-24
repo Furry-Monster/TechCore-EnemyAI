@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace MonsterBT
@@ -11,28 +12,39 @@ namespace MonsterBT
     /// </summary>
     public class BehaviorTree : IEnumerable<BehaviorTreeNode>, IDisposable
     {
+        private List<Variable> treeVariables;
+
+        public List<Variable> TreeVariables => treeVariables;
+
+        private Blackboard blackboard;
+
+        public Blackboard Blackboard => blackboard;
+
         private Enter enter;
 
-        public Enter Enter
-        {
-            get => enter;
-            set => enter = value;
-        }
+        public Enter Enter => enter;
 
         public BehaviorTree()
         {
-            enter = BehaviorTreeData.BuildMockTree() as Enter;
+            var data = BehaviorTreeData.GenerateMockData();
+            treeVariables = data[1] as List<Variable>;
+            blackboard = data[2] as Blackboard;
+            enter = data[0] as Enter;
             enter ??= new();
         }
 
         public BehaviorTree(BehaviorTreeData data)
         {
+            treeVariables = data.Variables.ToList();
+            blackboard = data.Blackboard;
             enter = data.BuildTree() as Enter;
             enter ??= new();
         }
 
         public void LoadTreeData(BehaviorTreeData data)
         {
+            treeVariables = data.Variables.ToList();
+            blackboard = data.Blackboard;
             enter = data.BuildTree() as Enter;
             enter ??= new();
         }

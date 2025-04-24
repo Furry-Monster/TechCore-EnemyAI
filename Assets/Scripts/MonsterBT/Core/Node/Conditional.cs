@@ -19,7 +19,7 @@ namespace MonsterBT
                 }
             };
 
-            child?.Initalize(Tree, Exec);
+            child?.Initalize(Tree, Exec, GameObject);
         }
 
         public override void Dispose()

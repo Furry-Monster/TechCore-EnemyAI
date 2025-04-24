@@ -2,7 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BlackboardComp : MonoBehaviour
+namespace MonsterBT
 {
+    public class Blackboard
+    {
 
+    }
 }

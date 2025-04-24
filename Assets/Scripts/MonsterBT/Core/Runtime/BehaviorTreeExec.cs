@@ -9,19 +9,18 @@ namespace MonsterBT
     {
 
         private BehaviorTree currentTree;
+        public BehaviorTree CurrentTree => currentTree;
 
-        public BehaviorTree CurrentTree
-        {
-            get => currentTree;
-            set => currentTree = value;
-        }
+        private BehaviorTreeComp component;
+        public BehaviorTreeComp Component => component;
 
-        public BehaviorTreeExec()
+        public BehaviorTreeExec(BehaviorTreeComp comp)
         {
             currentTree ??= new();
+            component = comp;
         }
 
-        public void Boot() => currentTree.Enter?.Initalize(currentTree, this);
+        public void Boot() => currentTree.Enter?.Initalize(currentTree, this, component.gameObject);
 
         public void Tick()
         {

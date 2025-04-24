@@ -10,9 +10,14 @@ namespace MonsterBT
     /// </summary>
     public class BehaviorTreeComp : MonoBehaviour
     {
+        [SerializeField]
+        private BehaviorTreeSO externalBehaviorTree;
+        [SerializeField]
+        private BlackboardSO externalBlackboard;
+
         private BehaviorTreeExec treeExec;
 
-        private void Awake() => this.treeExec ??= new();
+        private void Awake() => this.treeExec ??= new(this);
 
         private void Start() => this.treeExec.Boot();
 

@@ -18,12 +18,14 @@ namespace MonsterBT
     {
         protected BehaviorTree Tree { get; private set; }
         protected BehaviorTreeExec Exec { get; private set; }
+        protected GameObject GameObject { get; private set; }
         protected Action<NodeState> OnStateChanged;
 
-        public void Initalize(BehaviorTree tree, BehaviorTreeExec exec)
+        public void Initalize(BehaviorTree tree, BehaviorTreeExec exec, GameObject gameObject)
         {
             Tree = tree;
             Exec = exec;
+            GameObject = gameObject;
 
             OnInitialize();
         }

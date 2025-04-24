@@ -25,7 +25,7 @@ namespace MonsterBT
                 }
             };
 
-            child?.Initalize(Tree, Exec);
+            child?.Initalize(Tree, Exec, GameObject);
         }
 
         protected override NodeState DoExecute()
