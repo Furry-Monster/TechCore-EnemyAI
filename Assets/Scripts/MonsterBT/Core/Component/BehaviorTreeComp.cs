@@ -12,12 +12,20 @@ namespace MonsterBT
     {
         [SerializeField]
         private BehaviorTreeSO externalBehaviorTree;
+
         [SerializeField]
         private BlackboardSO externalBlackboard;
 
+        private BlackboardComp blackboardComp;
+
         private BehaviorTreeExec treeExec;
 
-        private void Awake() => this.treeExec ??= new(this);
+        private void Awake()
+        {
+            blackboardComp = this.GetComponent<BlackboardComp>();
+
+            this.treeExec ??= new(this, blackboardComp);
+        }
 
         private void Start() => this.treeExec.Boot();
 

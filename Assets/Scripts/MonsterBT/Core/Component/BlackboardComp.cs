@@ -1,11 +1,11 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace MonsterBT
 {
-    public class BehaviorTreeBus
+    [RequireComponent(typeof(BehaviorTreeComp))]
+    public class BlackboardComp : MonoBehaviour
     {
 
     }

@@ -8,19 +8,23 @@ namespace MonsterBT
     public class BehaviorTreeExec : IDisposable
     {
 
-        private BehaviorTree currentTree;
+        private readonly BehaviorTree currentTree;
         public BehaviorTree CurrentTree => currentTree;
 
-        private BehaviorTreeComp component;
-        public BehaviorTreeComp Component => component;
+        private readonly BehaviorTreeComp BTComp;
+        public BehaviorTreeComp BTComponent => BTComp;
 
-        public BehaviorTreeExec(BehaviorTreeComp comp)
+        private readonly BlackboardComp BBComp;
+        public BlackboardComp BBComponent => BBComp;
+
+        public BehaviorTreeExec(BehaviorTreeComp bt, BlackboardComp bb)
         {
             currentTree ??= new();
-            component = comp;
+            BTComp = bt;
+            BBComp = bb;
         }
 
-        public void Boot() => currentTree.Enter?.Initalize(currentTree, this, component.gameObject);
+        public void Boot() => currentTree.Enter?.Initalize(currentTree, this, BTComp.gameObject);
 
         public void Tick()
         {
@@ -32,9 +36,6 @@ namespace MonsterBT
             throw new NotImplementedException();
         }
 
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
+        public void Dispose() => currentTree.Dispose();
     }
 }

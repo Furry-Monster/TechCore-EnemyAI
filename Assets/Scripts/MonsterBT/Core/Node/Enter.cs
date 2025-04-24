@@ -39,7 +39,16 @@ namespace MonsterBT
 
         public override void Dispose()
         {
+            OnStateChanged -= state =>
+            {
+                if (state == NodeState.Error)
+                {
+                    Debug.LogError($"[MonsterBT] {this.GetType()} occurred Error...");
+                }
+            };
+
             child?.Dispose();
+
             base.Dispose();
         }
 

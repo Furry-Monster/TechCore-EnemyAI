@@ -27,12 +27,20 @@ namespace MonsterBT
 
         public override void Dispose()
         {
-            base.Dispose();
+            OnStateChanged -= state =>
+            {
+                if (state == NodeState.Error)
+                {
+                    Debug.LogError($"[MonsterBT] {this.GetType()} occurred Error...");
+                }
+            };
 
             foreach (var child in children)
             {
                 child.Dispose();
             }
+
+            base.Dispose();
         }
 
         public virtual BehaviorTreeNode[] GetChildren() => children ?? Array.Empty<BehaviorTreeNode>();

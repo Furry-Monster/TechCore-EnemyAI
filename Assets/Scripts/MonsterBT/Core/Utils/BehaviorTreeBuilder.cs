@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace MonsterBT
 {
-    public record BehaviorTreeElem
+    public struct BehaviorTreeElem // struct for less memory usage
     {
         public BehaviorTreeNode node;
         public Variable[] variables;
@@ -13,6 +13,40 @@ namespace MonsterBT
         {
             this.node = node ?? null;
             this.variables = variables ?? Array.Empty<Variable>();
+        }
+    }
+
+    public record BehaviorTreeData //record for transmitting ref
+    {
+        public BehaviorTreeNode Tree;
+
+        public Variable[] Variables;
+
+        public Blackboard Blackboard;
+
+        /// <summary>
+        /// For test
+        /// </summary>
+        public static List<object> GenerateMockData()
+        {
+            List<object> res = new();
+            BehaviorTreeBuilder builder = new();
+
+            // mock tree
+            BehaviorTreeNode mockTree = builder
+                .Action()
+                .GetTree();
+            res.Add(mockTree);
+
+            // mock variables
+            List<Variable> mockVariables = new();
+            res.Add(mockVariables);
+
+            // mock blackboard
+            Blackboard mockBlackboard = new();
+            res.Add(mockBlackboard);
+
+            return res;
         }
     }
 
@@ -80,12 +114,35 @@ namespace MonsterBT
             return root;
         }
 
-        public BehaviorTree Build()
+        public bool TryGetTree(out BehaviorTreeNode treeRoot)
+        {
+            treeRoot = elemsQueue.Dequeue().node;
+            BehaviorTreeNode iterator = treeRoot;
+
+            while (elemsQueue.Count > 0)
+            {
+                var next = elemsQueue.Dequeue().node;
+                if (iterator is IHasChildren hasChildren)
+                {
+                    hasChildren.SetChild(0, next);
+                    iterator = next;
+                }
+            }
+
+            return true;
+        }
+
+        public Variable GetVariable()
         {
             throw new NotImplementedException();
         }
 
-        public void Build(out BehaviorTree tree)
+        public BehaviorTreeData Build()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Build(out BehaviorTreeData data)
         {
             throw new NotImplementedException();
         }
