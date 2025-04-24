@@ -15,11 +15,13 @@ namespace MonsterBT
         public static List<Object> GenerateMockData()
         {
             List<Object> res = new();
+            BehaviorTreeBuilder builder = new();
 
             // mock tree
-            Enter root = new Enter();
-            root.SetChild(0, new Log());
-            res.Add(root);
+            BehaviorTreeNode mockTree = builder
+                .Action()
+                .GetTree();
+            res.Add(mockTree);
 
             // mock variables
             List<Variable> mockVariables = new();
