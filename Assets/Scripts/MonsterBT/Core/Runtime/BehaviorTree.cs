@@ -15,8 +15,8 @@ namespace MonsterBT
         private Enter enter;
         public Enter Enter => enter;
 
-        private List<Variable> treeVariables;
-        public List<Variable> TreeVariables => treeVariables;
+        private List<BTVariable> treeVariables;
+        public List<BTVariable> TreeVariables => treeVariables;
 
         private Blackboard blackboard;
         public Blackboard Blackboard => blackboard;

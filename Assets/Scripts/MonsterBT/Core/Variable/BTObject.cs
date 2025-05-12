@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace MonsterBT
 {
-    public class BTObject : Variable
+    public class BTObject : BTVariable
     {
         public override object GetValue()
         {

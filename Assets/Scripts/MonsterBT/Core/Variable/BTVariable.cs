@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace MonsterBT
 {
-    public abstract class Variable
+    public abstract class BTVariable
     {
         private string name;
         public string Name
@@ -19,7 +19,7 @@ namespace MonsterBT
         public abstract void SetValue(object value);
     }
 
-    public class ReflectionVariable : Variable
+    public class ReflectionVariable : BTVariable
     {
         private FieldInfo fieldInfo;
         private object target;

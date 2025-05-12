@@ -7,9 +7,9 @@ namespace MonsterBT
     public struct BehaviorTreeElem // struct for less memory usage
     {
         public BehaviorTreeNode node;
-        public List<Variable> variables;
+        public List<BTVariable> variables;
 
-        public BehaviorTreeElem(BehaviorTreeNode node = null, List<Variable> variables = null)
+        public BehaviorTreeElem(BehaviorTreeNode node = null, List<BTVariable> variables = null)
         {
             this.node = node ?? null;
             this.variables = variables;
@@ -20,7 +20,7 @@ namespace MonsterBT
     {
         public BehaviorTreeNode Tree;
 
-        public List<Variable> Variables;
+        public List<BTVariable> Variables;
 
         public Blackboard Blackboard;
 
@@ -36,7 +36,7 @@ namespace MonsterBT
             this.Tree = mockTree;
 
             // mock variables
-            List<Variable> mockVariables = new();
+            List<BTVariable> mockVariables = new();
             this.Variables = mockVariables;
 
             // mock blackboard
@@ -48,6 +48,7 @@ namespace MonsterBT
     public class BehaviorTreeBuilder
     {
         public Queue<BehaviorTreeElem> elemsQueue;
+        public List<BTVariable> variableList;
 
         public BehaviorTreeBuilder()
         {
@@ -62,10 +63,10 @@ namespace MonsterBT
             // default action node should be a logger  
             action.node = new Log();
 
-            List<Variable> variables = new();
+            List<BTVariable> variables = new();
             foreach (var field in action.node.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance))
             {
-                Variable variable = new ReflectionVariable(field);
+                BTVariable variable = new ReflectionVariable(field);
                 variables.Add(variable);
             }
             action.variables = variables;
@@ -79,10 +80,10 @@ namespace MonsterBT
             BehaviorTreeElem action = new();
             action.node = new T();
 
-            List<Variable> variables = new();
+            List<BTVariable> variables = new();
             foreach (var field in action.node.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance))
             {
-                Variable variable = new ReflectionVariable(field);
+                BTVariable variable = new ReflectionVariable(field);
                 variables.Add(variable);
             }
             action.variables = variables;
@@ -127,7 +128,7 @@ namespace MonsterBT
             return true;
         }
 
-        public Variable GetVariable()
+        public BTVariable GetVariable()
         {
             throw new NotImplementedException();
         }

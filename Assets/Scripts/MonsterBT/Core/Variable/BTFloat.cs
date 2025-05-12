@@ -5,7 +5,7 @@ using UnityEngine;
 namespace MonsterBT
 {
 
-    public class BTFloat : Variable
+    public class BTFloat : BTVariable
     {
         public override object GetValue()
         {
