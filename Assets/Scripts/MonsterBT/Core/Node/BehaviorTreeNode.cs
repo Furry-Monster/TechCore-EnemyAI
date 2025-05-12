@@ -19,7 +19,7 @@ namespace MonsterBT
         protected BehaviorTree Tree { get; private set; }
         protected BehaviorTreeExec Exec { get; private set; }
         protected GameObject GameObject { get; private set; }
-        protected Action<NodeState> OnStateChanged;
+        protected Action<NodeState> OnStateChanged; // state change event
 
         public void Initalize(BehaviorTree tree, BehaviorTreeExec exec, GameObject gameObject)
         {
@@ -30,20 +30,20 @@ namespace MonsterBT
             OnInitialize();
         }
 
-        protected abstract void OnInitialize();
+        protected abstract void OnInitialize(); // impl by nodes
 
         public NodeState Execute()
         {
             var state = DoExecute();
 
-            Debug.Log($"Now exec node : {GetType()}");
+            Debug.Log($"[MonsterBt] Now exec node : {GetType()}");
 
             OnStateChanged?.Invoke(state);
 
             return state;
         }
 
-        protected abstract NodeState DoExecute();
+        protected abstract NodeState DoExecute(); // impl by nodes
 
         public virtual void Dispose()
         {

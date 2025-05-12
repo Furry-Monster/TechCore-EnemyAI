@@ -885,7 +885,7 @@ GameObject:
   - component: {fileID: 1693173315}
   - component: {fileID: 1693173319}
   m_Layer: 0
-  m_Name: BTEnemy
+  m_Name: BTEnemy(Test)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -991,6 +991,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d28ee798dd84fd43a30ed226905750f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  externalBehaviorTree: {fileID: 0}
+  externalBlackboard: {fileID: 0}
 --- !u!1 &2101720455
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,7 +11,7 @@ namespace MonsterBT
     public class BehaviorTreeComp : MonoBehaviour
     {
         [SerializeField]
-        private BehaviorTreeSO externalBehaviorTree;
+        private BehaviorTreeSO externalTree;
 
         [SerializeField]
         private BlackboardSO externalBlackboard;

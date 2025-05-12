@@ -7,12 +7,12 @@ namespace MonsterBT
     public struct BehaviorTreeElem // struct for less memory usage
     {
         public BehaviorTreeNode node;
-        public Variable[] variables;
+        public List<Variable> variables;
 
-        public BehaviorTreeElem(BehaviorTreeNode node = null, Variable[] variables = null)
+        public BehaviorTreeElem(BehaviorTreeNode node = null, List<Variable> variables = null)
         {
             this.node = node ?? null;
-            this.variables = variables ?? Array.Empty<Variable>();
+            this.variables = variables;
         }
     }
 
@@ -20,33 +20,28 @@ namespace MonsterBT
     {
         public BehaviorTreeNode Tree;
 
-        public Variable[] Variables;
+        public List<Variable> Variables;
 
         public Blackboard Blackboard;
 
-        /// <summary>
-        /// For test
-        /// </summary>
-        public static List<object> GenerateMockData()
+        // Create default tree data pack
+        public BehaviorTreeData()
         {
-            List<object> res = new();
             BehaviorTreeBuilder builder = new();
 
             // mock tree
             BehaviorTreeNode mockTree = builder
                 .Action()
                 .GetTree();
-            res.Add(mockTree);
+            this.Tree = mockTree;
 
             // mock variables
             List<Variable> mockVariables = new();
-            res.Add(mockVariables);
+            this.Variables = mockVariables;
 
             // mock blackboard
             Blackboard mockBlackboard = new();
-            res.Add(mockBlackboard);
-
-            return res;
+            this.Blackboard = mockBlackboard;
         }
     }
 
@@ -73,7 +68,7 @@ namespace MonsterBT
                 Variable variable = new ReflectionVariable(field);
                 variables.Add(variable);
             }
-            action.variables = variables.ToArray();
+            action.variables = variables;
 
             elemsQueue.Enqueue(action);
             return this;
@@ -90,7 +85,7 @@ namespace MonsterBT
                 Variable variable = new ReflectionVariable(field);
                 variables.Add(variable);
             }
-            action.variables = variables.ToArray();
+            action.variables = variables;
 
             elemsQueue.Enqueue(action);
             return this;

@@ -23,18 +23,18 @@ namespace MonsterBT
 
         public BehaviorTree()
         {
-            var data = BehaviorTreeData.GenerateMockData();
+            var data = new BehaviorTreeData();
 
-            enter = data[0] as Enter;
-            treeVariables = data[1] as List<Variable>;
-            blackboard = data[2] as Blackboard;
+            enter = data.Tree as Enter;
+            treeVariables = data.Variables;
+            blackboard = data.Blackboard;
             enter ??= new();
         }
 
         public BehaviorTree(BehaviorTreeData data)
         {
             enter = data.Tree as Enter;
-            treeVariables = data.Variables.ToList();
+            treeVariables = data.Variables;
             blackboard = data.Blackboard;
             enter ??= new();
         }
