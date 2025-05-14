@@ -10,13 +10,11 @@ namespace MonsterBT
     {
         public BehaviorTreeNode node;
         public List<BTVariable> variables;
-        public BehaviorTreeNode[] children;
 
-        public BehaviorTreeElem(BehaviorTreeNode node = null, List<BTVariable> variables = null, BehaviorTreeNode[] children = null)
+        public BehaviorTreeElem(BehaviorTreeNode node = null, List<BTVariable> variables = null)
         {
             this.node = node;
             this.variables = variables;
-            this.children = children;
         }
     }
 
