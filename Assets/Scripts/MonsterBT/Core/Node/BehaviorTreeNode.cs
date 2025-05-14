@@ -6,18 +6,38 @@ namespace MonsterBT
 
     public enum NodeState
     {
-        Executing,      // ½ÚµãÖ´ĞĞÖĞ
-        Success,        // Ö´ĞĞ³É¹¦
-        Failure,        // Ö´ĞĞÊ§°Ü
-        Error,          // Ö´ĞĞ´íÎó,ĞèÒªDebug
+        Executing,      // èŠ‚ç‚¹æ‰§è¡Œä¸­
+        Success,        // æ‰§è¡ŒæˆåŠŸ
+        Failure,        // æ‰§è¡Œå¤±è´¥
+        Error,          // æ‰§è¡Œé”™è¯¯,éœ€è¦Debug
     };
 
     public abstract class BehaviorTreeNode : IDisposable
     {
+        public Guid GUID { get; private set; }
+
+        private string nodeName;
+        public string NodeName
+        {
+            get => string.IsNullOrEmpty(nodeName) ? GetType().Name : nodeName;
+            set => nodeName = value;
+        }
+
+        public string Description { get; set; }
+
+        private NodeState lastState = NodeState.Failure;
+        public NodeState LastState => lastState;
+
         protected BehaviorTree Tree { get; private set; }
         protected BehaviorTreeExec Exec { get; private set; }
         protected GameObject GameObject { get; private set; }
-        protected Action<NodeState> OnStateChanged; // state change event
+
+        protected Action<NodeState> OnStateChanged;
+
+        public BehaviorTreeNode()
+        {
+            GUID = Guid.NewGuid();
+        }
 
         public void Initalize(BehaviorTree tree, BehaviorTreeExec exec, GameObject gameObject)
         {
@@ -28,20 +48,44 @@ namespace MonsterBT
             OnInitialize();
         }
 
-        protected abstract void OnInitialize(); // impl by nodes
+        protected abstract void OnInitialize(); // èŠ‚ç‚¹åˆå§‹åŒ–é€»è¾‘
 
         public NodeState Execute()
         {
-            var state = DoExecute();
+            try
+            {
+                var state = DoExecute();
+                lastState = state;
 
-            Debug.Log($"[MonsterBt] Now exec node : {GetType()}");
+                Debug.Log($"[MonsterBt] Node execution: {NodeName}, State: {state}");
 
-            OnStateChanged?.Invoke(state);
+                OnStateChanged?.Invoke(state);
 
-            return state;
+                // é€šè¿‡æ¶ˆæ¯æ€»çº¿å¹¿æ’­çŠ¶æ€å˜åŒ–
+                BehaviorTreeBus.Instance.PublishNodeStateChanged(GUID, state);
+
+                return state;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[MonsterBT] Error executing node {NodeName}: {e.Message}");
+                lastState = NodeState.Error;
+
+                OnStateChanged?.Invoke(NodeState.Error);
+
+                // é€šè¿‡æ¶ˆæ¯æ€»çº¿å¹¿æ’­çŠ¶æ€å˜åŒ–
+                BehaviorTreeBus.Instance.PublishNodeStateChanged(GUID, NodeState.Error);
+
+                return NodeState.Error;
+            }
         }
 
-        protected abstract NodeState DoExecute(); // impl by nodes
+        protected abstract NodeState DoExecute(); // èŠ‚ç‚¹æ‰§è¡Œé€»è¾‘
+
+        public virtual string GetDebugInfo()
+        {
+            return $"Node: {NodeName} ({GetType().Name}), Last State: {LastState}";
+        }
 
         public virtual void Dispose()
         {
@@ -53,40 +97,40 @@ namespace MonsterBT
     public interface IHasChild
     {
         /// <summary>
-        /// »ñÈ¡×Ó½ÚµãÊıÄ¿
+        /// è·å–å­èŠ‚ç‚¹æ•°ç›®
         /// </summary>
-        /// <returns>×Ó½ÚµãÊıÄ¿</returns>
+        /// <returns>å­èŠ‚ç‚¹æ•°ç›®</returns>
         public abstract int GetChildrenCount();
     }
 
     public interface IHasSingleChild : IHasChild
     {
         /// <summary>
-        /// »ñÈ¡×Ó½Úµã
+        /// è·å–å­èŠ‚ç‚¹
         /// </summary>
-        /// <returns>½ÚµãÊµÀı</returns>
+        /// <returns>èŠ‚ç‚¹å®ä¾‹</returns>
         public abstract BehaviorTreeNode GetChild();
 
         /// <summary>
-        /// ÉèÖÃ×Ó½Úµã
+        /// è®¾ç½®å­èŠ‚ç‚¹
         /// </summary>
-        /// <param name="node"> ½ÚµãÊµÀı </param>
+        /// <param name="node"> èŠ‚ç‚¹å®ä¾‹ </param>
         public abstract void SetChild(BehaviorTreeNode node);
     }
 
     public interface IHasChildren : IHasChild
     {
         /// <summary>
-        /// »ñÈ¡ËùÓĞ×Ó½Úµã
+        /// è·å–æ‰€æœ‰å­èŠ‚ç‚¹
         /// </summary>
-        /// <returns>½ÚµãÊı×é</returns>
+        /// <returns>èŠ‚ç‚¹æ•°ç»„</returns>
         public abstract BehaviorTreeNode[] GetChildren();
 
         /// <summary>
-        /// ÉèÖÃÄ³Ò»¸ö×Ó½Úµã
+        /// è®¾ç½®æŸä¸€ä¸ªå­èŠ‚ç‚¹
         /// </summary>
-        /// <param name="index">½Úµã±êºÅ</param>
-        /// <param name="node">½ÚµãÊµÀı</param>
+        /// <param name="index">èŠ‚ç‚¹åºå·</param>
+        /// <param name="node">èŠ‚ç‚¹å®ä¾‹</param>
         public abstract void SetChild(int index, BehaviorTreeNode node);
     }
     #endregion

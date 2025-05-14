@@ -8,11 +8,13 @@ namespace MonsterBT
     {
         public BehaviorTreeNode node;
         public List<BTVariable> variables;
+        public BehaviorTreeNode[] children;
 
-        public BehaviorTreeElem(BehaviorTreeNode node = null, List<BTVariable> variables = null)
+        public BehaviorTreeElem(BehaviorTreeNode node = null, List<BTVariable> variables = null, BehaviorTreeNode[] children = null)
         {
             this.node = node;
             this.variables = variables;
+            this.children = children;
         }
     }
 
@@ -36,7 +38,7 @@ namespace MonsterBT
             this.Tree = mockTree;
 
             // mock blackboard
-            Blackboard mockBlackboard = new();
+            Blackboard mockBlackboard = builder.GetBlackboard();
             this.Blackboard = mockBlackboard;
         }
 
@@ -49,16 +51,21 @@ namespace MonsterBT
 
     public class BehaviorTreeBuilder
     {
+        private bool isDirty = false;
+
         private BehaviorTreeNode root;
         private Blackboard blackboard;
+        private Stack<BehaviorTreeNode> nodeStack;
 
         public Queue<BehaviorTreeElem> elemsQueue;
 
         public BehaviorTreeBuilder()
         {
             elemsQueue = new();
+            nodeStack = new();
             BehaviorTreeElem firstElem = new(new Enter());
             elemsQueue.Enqueue(firstElem);
+            isDirty = true;
         }
 
         public BehaviorTreeBuilder Action<T>(Dictionary<string, object> initialValues = null) where T : Action, new()
@@ -82,27 +89,125 @@ namespace MonsterBT
             action.variables = variablesToAdd;
 
             elemsQueue.Enqueue(action);
+            isDirty = true;
+
+            return this;
+        }
+
+        public BehaviorTreeBuilder Composite<T>(params Func<BehaviorTreeBuilder, BehaviorTreeBuilder>[] childBuilders) where T : Composite, new()
+        {
+            var compositeNode = new T();
+            List<BehaviorTreeNode> childNodes = new();
+
+            // 保存当前队列状态
+            var currentQueue = new Queue<BehaviorTreeElem>(elemsQueue);
+            elemsQueue.Clear();
+
+            foreach (var builder in childBuilders)
+            {
+                // 使用新的构建器来构建子树
+                var childBuilder = new BehaviorTreeBuilder();
+                builder(childBuilder);
+                childBuilder.Build();
+
+                if (childBuilder.root != null)
+                    childNodes.Add(childBuilder.root);
+            }
+
+            elemsQueue = currentQueue;
+
+            BehaviorTreeElem composite = new(compositeNode, null, childNodes.ToArray());
+            elemsQueue.Enqueue(composite);
+            isDirty = true;
+
+            return this;
+        }
+
+        public BehaviorTreeBuilder Decorator<T>(Func<BehaviorTreeBuilder, BehaviorTreeBuilder> childBuilder) where T : Decorator, new()
+        {
+            var decoratorNode = new T();
+
+            // 保存当前队列状态
+            var currentQueue = new Queue<BehaviorTreeElem>(elemsQueue);
+            elemsQueue.Clear();
+
+            var builder = new BehaviorTreeBuilder();
+            childBuilder(builder);
+            builder.Build();
+
+            elemsQueue = currentQueue;
+
+            BehaviorTreeElem decorator = new(decoratorNode, null, new[] { builder.root });
+            elemsQueue.Enqueue(decorator);
+            isDirty = true;
+
+            return this;
+        }
+
+        public BehaviorTreeBuilder Conditional<T>(Dictionary<string, object> initialValues = null) where T : Conditional, new()
+        {
+            BehaviorTreeElem conditional = new();
+            BehaviorTreeNode conditionalNode = new T();
+            conditional.node = conditionalNode;
+
+            List<BTVariable> variablesToAdd = new();
+            foreach (FieldInfo field in conditional.node.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance))
+            {
+                BTVariable variable = new ReflectionVariable(field, conditionalNode);
+                // set initial values if exist
+                if (initialValues != null && initialValues.TryGetValue(field.Name, out var value))
+                {
+                    variable.SetValue(value);
+                }
+                variablesToAdd.Add(variable);
+            }
+            conditional.variables = variablesToAdd;
+
+            elemsQueue.Enqueue(conditional);
+            isDirty = true;
+
             return this;
         }
 
         public BehaviorTreeBuilder Build()
         {
+            if (!isDirty) return this;
+
             // here we build tree , as well as bind variables on blackboard
-            var firstElem = elemsQueue.Dequeue();
-            var root = firstElem.node;
+            BehaviorTreeNode root = elemsQueue.Dequeue().node;
+            Blackboard blackboard = new();
+
             var current = root;
 
             while (elemsQueue.Count > 0)
             {
                 var nextElem = elemsQueue.Dequeue();
-                if (current is IHasSingleChild currentNode)
+
+                if (current is IHasSingleChild currentSingleChildNode)
                 {
-                    currentNode.SetChild(nextElem.node);
+                    currentSingleChildNode.SetChild(nextElem.node);
                     current = nextElem.node;
+                }
+                else if (current is IHasChildren currentMultiChildNode && nextElem.children != null && nextElem.children.Length > 0)
+                {
+                    for (int i = 0; i < nextElem.children.Length; i++)
+                    {
+                        currentMultiChildNode.SetChild(i, nextElem.children[i]);
+                    }
+                }
+
+                if (nextElem.variables != null)
+                {
+                    foreach (var variable in nextElem.variables)
+                    {
+                        blackboard.Add(variable);
+                    }
                 }
             }
 
             this.root = root;
+            this.blackboard = blackboard;
+            isDirty = false;
 
             return this;
         }
@@ -110,19 +215,6 @@ namespace MonsterBT
         public BehaviorTreeNode GetTree()
         {
             this.Build();
-
-            //BehaviorTreeNode root = elemsQueue.Dequeue().node;
-            //BehaviorTreeNode iterator = root;
-
-            //while (elemsQueue.Count > 0)
-            //{
-            //    var next = elemsQueue.Dequeue().node;
-            //    if (iterator is IHasSingleChild hasChild)
-            //    {
-            //        hasChild.SetChild(next);
-            //        iterator = next;
-            //    }
-            //}
 
             return root;
         }
@@ -148,6 +240,12 @@ namespace MonsterBT
 
             blackboard = this.blackboard;
             return blackboard != null;
+        }
+
+        public BehaviorTreeData GetBehaviorTreeData()
+        {
+            this.Build();
+            return new BehaviorTreeData(root, blackboard);
         }
     }
 }
