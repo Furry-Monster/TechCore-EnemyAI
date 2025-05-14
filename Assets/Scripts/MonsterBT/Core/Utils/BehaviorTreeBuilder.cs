@@ -49,6 +49,9 @@ namespace MonsterBT
 
     public class BehaviorTreeBuilder
     {
+        private BehaviorTreeNode root;
+        private Blackboard blackboard;
+
         public Queue<BehaviorTreeElem> elemsQueue;
 
         public BehaviorTreeBuilder()
@@ -88,9 +91,13 @@ namespace MonsterBT
             var root = elemsQueue.Dequeue();
             childCache.Enqueue(root);
 
-            while (elemsQueue.Count > 0)
+            while (childCache.Count > 0)
             {
+                var nextElem = childCache.Dequeue();
+                if (nextElem.node is IHasChildren)
+                {
 
+                }
             }
 
             throw new NotImplementedException();
@@ -98,48 +105,45 @@ namespace MonsterBT
 
         public BehaviorTreeNode GetTree()
         {
-            BehaviorTreeNode root = elemsQueue.Dequeue().node;
-            BehaviorTreeNode iterator = root;
+            this.Build();
 
-            while (elemsQueue.Count > 0)
-            {
-                var next = elemsQueue.Dequeue().node;
-                if (iterator is IHasChildren hasChildren)
-                {
-                    hasChildren.SetChild(0, next);
-                    iterator = next;
-                }
-            }
+            //BehaviorTreeNode root = elemsQueue.Dequeue().node;
+            //BehaviorTreeNode iterator = root;
+
+            //while (elemsQueue.Count > 0)
+            //{
+            //    var next = elemsQueue.Dequeue().node;
+            //    if (iterator is IHasChildren hasChildren)
+            //    {
+            //        hasChildren.SetChild(0, next);
+            //        iterator = next;
+            //    }
+            //}
 
             return root;
         }
 
         public bool TryGetTree(out BehaviorTreeNode treeRoot)
         {
-            treeRoot = elemsQueue.Dequeue().node;
-            BehaviorTreeNode iterator = treeRoot;
+            this.Build();
 
-            while (elemsQueue.Count > 0)
-            {
-                var next = elemsQueue.Dequeue().node;
-                if (iterator is IHasChildren hasChildren)
-                {
-                    hasChildren.SetChild(0, next);
-                    iterator = next;
-                }
-            }
-
-            return true;
+            treeRoot = root;
+            return treeRoot != null;
         }
 
         public Blackboard GetBlackboard()
         {
-            throw new NotImplementedException();
+            this.Build();
+
+            return blackboard;
         }
 
         public bool TryGetBlackboard(out Blackboard blackboard)
         {
-            throw new NotImplementedException();
+            this.Build();
+
+            blackboard = this.blackboard;
+            return blackboard != null;
         }
     }
 }
