@@ -82,6 +82,8 @@ namespace MonsterBT
 
         protected abstract NodeState DoExecute(); // 节点执行逻辑
 
+        public virtual bool CanExecute() => true;
+
         public virtual string GetDebugInfo()
         {
             return $"Node: {NodeName} ({GetType().Name}), Last State: {LastState}";

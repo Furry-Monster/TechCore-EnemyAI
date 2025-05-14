@@ -6,7 +6,7 @@ namespace MonsterBT
 {
     public abstract class Composite : BehaviorTreeNode, IHasChildren
     {
-        private readonly BehaviorTreeNode[] children;
+        protected readonly BehaviorTreeNode[] children;
 
         public Composite(int childNum = 0)
         {

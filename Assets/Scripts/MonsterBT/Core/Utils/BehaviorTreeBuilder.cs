@@ -63,8 +63,10 @@ namespace MonsterBT
         {
             elemsQueue = new();
             nodeStack = new();
+
             BehaviorTreeElem firstElem = new(new Enter());
             elemsQueue.Enqueue(firstElem);
+
             isDirty = true;
         }
 

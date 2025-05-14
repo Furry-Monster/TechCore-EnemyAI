@@ -2,9 +2,8 @@ using UnityEngine;
 
 namespace MonsterBT
 {
-    public abstract class Conditional : BehaviorTreeNode, IHasSingleChild
+    public abstract class Conditional : BehaviorTreeNode
     {
-        private BehaviorTreeNode child;
 
         protected override void OnInitialize()
         {
@@ -15,8 +14,6 @@ namespace MonsterBT
                     Debug.LogError($"[MonsterBT] {this.GetType()} occurred Error...");
                 }
             };
-
-            child?.Initalize(Tree, Exec, GameObject);
         }
 
         public override void Dispose()
@@ -29,21 +26,7 @@ namespace MonsterBT
                 }
             };
 
-            child.Dispose();
-
             base.Dispose();
-        }
-
-        public virtual BehaviorTreeNode GetChild()
-        {
-            return child;
-        }
-
-        public int GetChildrenCount() => child == null ? 0 : 1;
-
-        public virtual void SetChild(BehaviorTreeNode node)
-        {
-            child = node;
         }
     }
 }

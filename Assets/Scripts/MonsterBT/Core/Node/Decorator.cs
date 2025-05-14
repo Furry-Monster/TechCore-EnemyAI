@@ -4,7 +4,7 @@ namespace MonsterBT
 {
     public abstract class Decorator : BehaviorTreeNode, IHasSingleChild
     {
-        private BehaviorTreeNode child;
+        protected BehaviorTreeNode child;
 
         protected override void OnInitialize()
         {
