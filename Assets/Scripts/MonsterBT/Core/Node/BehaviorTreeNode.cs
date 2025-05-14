@@ -61,41 +61,20 @@ namespace MonsterBT
     #region interfaces
     public interface IHasChild
     {
-        /// <summary>
-        /// ��ȡ�ӽڵ���Ŀ
-        /// </summary>
-        /// <returns>�ӽڵ���Ŀ</returns>
         public abstract int GetChildrenCount();
     }
 
     public interface IHasSingleChild : IHasChild
     {
-        /// <summary>
-        /// ��ȡ�ӽڵ�
-        /// </summary>
-        /// <returns>�ڵ�ʵ��</returns>
         public abstract BehaviorTreeNode GetChild();
 
-        /// <summary>
-        /// �����ӽڵ�
-        /// </summary>
-        /// <param name="node"> �ڵ�ʵ�� </param>
         public abstract void SetChild(BehaviorTreeNode node);
     }
 
     public interface IHasChildren : IHasChild
     {
-        /// <summary>
-        /// ��ȡ�����ӽڵ�
-        /// </summary>
-        /// <returns>�ڵ�����</returns>
         public abstract BehaviorTreeNode[] GetChildren();
 
-        /// <summary>
-        /// ����ĳһ���ӽڵ�
-        /// </summary>
-        /// <param name="index">�ڵ���</param>
-        /// <param name="node">�ڵ�ʵ��</param>
         public abstract void SetChild(int index, BehaviorTreeNode node);
     }
     #endregion

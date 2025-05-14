@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using Unity.VisualScripting;
 
 namespace MonsterBT
 {
@@ -8,18 +10,19 @@ namespace MonsterBT
     {
         public BehaviorTreeNode node;
         public List<BTVariable> variables;
+        public BehaviorTreeNode[] children;
 
-        public BehaviorTreeElem(BehaviorTreeNode node = null, List<BTVariable> variables = null)
+        public BehaviorTreeElem(BehaviorTreeNode node = null, List<BTVariable> variables = null, BehaviorTreeNode[] children = null)
         {
             this.node = node;
             this.variables = variables;
+            this.children = children;
         }
     }
 
     public record BehaviorTreeData //record for transmitting ref
     {
         public BehaviorTreeNode Tree;
-
         public Blackboard Blackboard;
 
         // Create default tree data pack
@@ -91,6 +94,8 @@ namespace MonsterBT
             BehaviorTreeNode compositeNode = new T();
             composite.node = compositeNode;
 
+            
+
             return this;
         }
 
@@ -103,42 +108,65 @@ namespace MonsterBT
             return this;
         }
 
-        public BehaviorTreeBuilder Conditional<T>() where T : Conditional, new()
+        public BehaviorTreeBuilder Conditional<T>(Dictionary<string, object> initialValues = null) where T : Conditional, new()
         {
             BehaviorTreeElem conditional = new();
             BehaviorTreeNode conditionalNode = new T();
             conditional.node = conditionalNode;
 
+            // get all fields by reflection
+            List<BTVariable> variablesToAdd = new();
+            foreach (FieldInfo field in conditional.node.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance))
+            {
+                BTVariable variable = new ReflectionVariable(field, conditionalNode);
+                // set initial values if exist
+                if (initialValues != null && initialValues.TryGetValue(field.Name, out var value))
+                {
+                    variable.SetValue(value);
+                }
+                variablesToAdd.Add(variable);
+            }
+            conditional.variables = variablesToAdd;
+
+            elemsQueue.Enqueue(conditional);
             return this;
         }
 
         public BehaviorTreeBuilder Build()
         {
             // here we build tree , as well as bind variables on blackboard
-            BehaviorTreeNode root = elemsQueue.Dequeue().node;
+            BehaviorTreeElem rootElem = elemsQueue.Dequeue();
             Blackboard blackboard = new();
 
-            var current = root;
+            // µÝ¹é½¨Ê÷
+            BuildSubtree(rootElem, blackboard);
 
-            while (elemsQueue.Count > 0)
-            {
-                var nextElem = elemsQueue.Dequeue();
-                if (current is IHasSingleChild currentNode)
-                {
-                    currentNode.SetChild(nextElem.node);
-                    current = nextElem.node;
-                }
-            }
-
-            this.root = root;
+            this.root = rootElem.node;
             this.blackboard = blackboard;
 
             return this;
         }
 
-        private void BuildSubtree(BehaviorTreeNode subRoot)
+        private void BuildSubtree(BehaviorTreeElem subRootElem, Blackboard blackbord)
         {
-
+            if (subRootElem.node is IHasChildren multiChildNode)
+            {
+                for (int i = 0; i < subRootElem.children.Count(); i++)
+                {
+                    var nextElem = elemsQueue.Dequeue();
+                    multiChildNode.SetChild(i, nextElem.node);
+                    BuildSubtree(nextElem, blackbord);
+                }
+            }
+            else if (subRootElem.node is IHasSingleChild singleChildNode)
+            {
+                if (elemsQueue.Count > 0)
+                {
+                    var nextElem = elemsQueue.Dequeue();
+                    singleChildNode.SetChild(nextElem.node);
+                    BuildSubtree(nextElem, blackbord);
+                }
+            }
         }
 
         public BehaviorTreeNode GetTree()
@@ -148,14 +176,6 @@ namespace MonsterBT
             return root;
         }
 
-        public bool TryGetTree(out BehaviorTreeNode treeRoot)
-        {
-            this.Build();
-
-            treeRoot = root;
-            return treeRoot != null;
-        }
-
         public Blackboard GetBlackboard()
         {
             this.Build();
@@ -163,12 +183,11 @@ namespace MonsterBT
             return blackboard;
         }
 
-        public bool TryGetBlackboard(out Blackboard blackboard)
+        public BehaviorTreeData GetBehaviorTreeData()
         {
             this.Build();
 
-            blackboard = this.blackboard;
-            return blackboard != null;
+            return new BehaviorTreeData(root, blackboard);
         }
     }
 }
