@@ -57,8 +57,8 @@ namespace MonsterBT
         public BehaviorTreeBuilder()
         {
             elemsQueue = new();
-            BehaviorTreeElem root = new BehaviorTreeElem(new Enter());
-            elemsQueue.Enqueue(root);
+            BehaviorTreeElem firstElem = new(new Enter());
+            elemsQueue.Enqueue(firstElem);
         }
 
         public BehaviorTreeBuilder Action<T>(Dictionary<string, object> initialValues = null) where T : Action, new()
@@ -67,6 +67,7 @@ namespace MonsterBT
             BehaviorTreeNode actionNode = new T();
             action.node = actionNode;
 
+            // get all fields by reflection
             List<BTVariable> variablesToAdd = new();
             foreach (FieldInfo field in action.node.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance))
             {
@@ -87,20 +88,23 @@ namespace MonsterBT
         public BehaviorTreeBuilder Build()
         {
             // here we build tree , as well as bind variables on blackboard
-            Queue<BehaviorTreeElem> childCache = new();
-            var root = elemsQueue.Dequeue();
-            childCache.Enqueue(root);
+            var firstElem = elemsQueue.Dequeue();
+            var root = firstElem.node;
+            var current = root;
 
-            while (childCache.Count > 0)
+            while (elemsQueue.Count > 0)
             {
-                var nextElem = childCache.Dequeue();
-                if (nextElem.node is IHasChildren)
+                var nextElem = elemsQueue.Dequeue();
+                if (current is IHasSingleChild currentNode)
                 {
-
+                    currentNode.SetChild(nextElem.node);
+                    current = nextElem.node;
                 }
             }
 
-            throw new NotImplementedException();
+            this.root = root;
+
+            return this;
         }
 
         public BehaviorTreeNode GetTree()
@@ -113,9 +117,9 @@ namespace MonsterBT
             //while (elemsQueue.Count > 0)
             //{
             //    var next = elemsQueue.Dequeue().node;
-            //    if (iterator is IHasChildren hasChildren)
+            //    if (iterator is IHasSingleChild hasChild)
             //    {
-            //        hasChildren.SetChild(0, next);
+            //        hasChild.SetChild(next);
             //        iterator = next;
             //    }
             //}

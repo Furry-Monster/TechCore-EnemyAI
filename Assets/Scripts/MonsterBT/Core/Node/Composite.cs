@@ -6,7 +6,12 @@ namespace MonsterBT
 {
     public abstract class Composite : BehaviorTreeNode, IHasChildren
     {
-        private BehaviorTreeNode[] children;
+        private readonly BehaviorTreeNode[] children;
+
+        public Composite(int childNum = 0)
+        {
+            children = new BehaviorTreeNode[childNum];
+        }
 
         protected override void OnInitialize()
         {
@@ -20,7 +25,6 @@ namespace MonsterBT
 
             foreach (var child in children)
             {
-
                 child?.Initalize(Tree, Exec, GameObject);
             }
         }
@@ -37,30 +41,28 @@ namespace MonsterBT
 
             foreach (var child in children)
             {
-                child.Dispose();
+                child?.Dispose();
             }
 
             base.Dispose();
         }
 
-        public virtual BehaviorTreeNode[] GetChildren() => children ?? Array.Empty<BehaviorTreeNode>();
+        public virtual BehaviorTreeNode[] GetChildren()
+        {
+            if (children == null || children.Count() == 0)
+                return Array.Empty<BehaviorTreeNode>();
+            return children;
+        }
 
-        public int GetChildrenCount() => children?.Count() ?? 0;
+        public int GetChildrenCount() => children.Count();
 
         public virtual void SetChild(int index, BehaviorTreeNode node)
         {
-            if (index < 0)
+            if (index < 0 || index >= children.Count())
             {
                 Debug.LogError($"[MonsterBT] Node index of {index} is InValid");
                 return;
             }
-
-            if (index > children.Count())
-            {
-                Debug.LogError($"[MonsterBT] Node index of {index} is InValid");
-                return;
-            }
-
             children[index] = node;
         }
     }
