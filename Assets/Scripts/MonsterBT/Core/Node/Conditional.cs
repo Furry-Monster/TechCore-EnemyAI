@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace MonsterBT
 {
-    public abstract class Conditional : BehaviorTreeNode, IHasChildren
+    public abstract class Conditional : BehaviorTreeNode, IHasSingleChild
     {
         private BehaviorTreeNode child;
 
@@ -38,38 +38,16 @@ namespace MonsterBT
             base.Dispose();
         }
 
-        public virtual BehaviorTreeNode[] GetChildren() =>
-            child == null
-            ? Array.Empty<BehaviorTreeNode>()
-            : new[] { child };
-
-        public virtual int GetChildrenCount() => child == null ? 0 : 1;
-
-        public virtual void SetChild(int index, BehaviorTreeNode node)
+        public virtual BehaviorTreeNode GetChild()
         {
-            if (index > 0)
-            {
-                Debug.LogWarning(
-                    $"[MonsterBT] The Node of Type {this.GetType()} has only 1 child\n" +
-                    $"But we automatically set the node on index 0,instead of {index}");
-            }
-            else if (index < 0)
-            {
-                Debug.LogError($"[MonsterBT] Node index of {index} is InValid");
-                return;
-            }
-
-            child = node;
+            throw new NotImplementedException();
         }
 
-        public virtual void SetChildren(BehaviorTreeNode[] nodes)
-        {
-            if (nodes.Count() > 1)
-            {
-                Debug.LogWarning($"[MonsterBT] The Node of Type {this.GetType()} has only 1 child\n");
-            }
+        public int GetChildrenCount() => child == null ? 0 : 1;
 
-            child = nodes[0];
+        public virtual void SetChild(BehaviorTreeNode node)
+        {
+            throw new NotImplementedException();
         }
     }
 }

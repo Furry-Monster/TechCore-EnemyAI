@@ -51,19 +51,38 @@ namespace MonsterBT
         }
     }
 
-    public interface IHasChildren
+    #region interfaces
+    public interface IHasChild
+    {
+        /// <summary>
+        /// 获取子节点数目
+        /// </summary>
+        /// <returns>子节点数目</returns>
+        public abstract int GetChildrenCount();
+    }
+
+    public interface IHasSingleChild : IHasChild
     {
         /// <summary>
         /// 获取子节点
         /// </summary>
-        /// <returns></returns>
-        public abstract BehaviorTreeNode[] GetChildren();
+        /// <returns>节点实例</returns>
+        public abstract BehaviorTreeNode GetChild();
 
         /// <summary>
-        /// 获取子节点数目
+        /// 设置子节点
         /// </summary>
-        /// <returns></returns>
-        public abstract int GetChildrenCount();
+        /// <param name="node"> 节点实例 </param>
+        public abstract void SetChild(BehaviorTreeNode node);
+    }
+
+    public interface IHasChildren : IHasChild
+    {
+        /// <summary>
+        /// 获取所有子节点
+        /// </summary>
+        /// <returns>节点数组</returns>
+        public abstract BehaviorTreeNode[] GetChildren();
 
         /// <summary>
         /// 设置某一个子节点
@@ -71,11 +90,6 @@ namespace MonsterBT
         /// <param name="index">节点标号</param>
         /// <param name="node">节点实例</param>
         public abstract void SetChild(int index, BehaviorTreeNode node);
-
-        /// <summary>
-        /// 设置所有子节点
-        /// </summary>
-        /// <param name="nodes">节点实例组</param>
-        public abstract void SetChildren(BehaviorTreeNode[] nodes);
     }
+    #endregion
 }

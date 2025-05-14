@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace MonsterBT
 {
-    public class Enter : BehaviorTreeNode, IHasChildren
+    public class Enter : BehaviorTreeNode, IHasSingleChild
     {
         private BehaviorTreeNode child;
 
@@ -52,38 +52,16 @@ namespace MonsterBT
             base.Dispose();
         }
 
-        public BehaviorTreeNode[] GetChildren() =>
-            child == null
-            ? Array.Empty<BehaviorTreeNode>()
-            : new[] { child };
+        public virtual BehaviorTreeNode GetChild()
+        {
+            throw new NotImplementedException();
+        }
 
         public int GetChildrenCount() => child == null ? 0 : 1;
 
-        public void SetChild(int index, BehaviorTreeNode node)
+        public virtual void SetChild(BehaviorTreeNode node)
         {
-            if (index > 0)
-            {
-                Debug.LogWarning(
-                    $"[MonsterBT] The Node of Type {this.GetType()} has only 1 child\n" +
-                    $"But we automatically set the node on index 0,instead of {index}");
-            }
-            else if (index < 0)
-            {
-                Debug.LogError($"[MonsterBT] Node index of {index} is InValid");
-                return;
-            }
-
-            child = node;
-        }
-
-        public void SetChildren(BehaviorTreeNode[] nodes)
-        {
-            if (nodes.Count() > 1)
-            {
-                Debug.LogWarning($"[MonsterBT] The Node of Type {this.GetType()} has only 1 child\n");
-            }
-
-            child = nodes[0];
+            throw new NotImplementedException();
         }
     }
 }

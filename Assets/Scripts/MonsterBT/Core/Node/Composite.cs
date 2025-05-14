@@ -45,7 +45,7 @@ namespace MonsterBT
 
         public virtual BehaviorTreeNode[] GetChildren() => children ?? Array.Empty<BehaviorTreeNode>();
 
-        public virtual int GetChildrenCount() => children?.Count() ?? 0;
+        public int GetChildrenCount() => children?.Count() ?? 0;
 
         public virtual void SetChild(int index, BehaviorTreeNode node)
         {
@@ -62,31 +62,6 @@ namespace MonsterBT
             }
 
             children[index] = node;
-        }
-
-        public virtual void SetChildren(BehaviorTreeNode[] nodes)
-        {
-            int indBound = children.Count(); ;
-            // if out of boundary,
-            // we will only cast the valid node in nodes into children array.
-            if (nodes.Count() > children.Count())
-            {
-                Debug.LogWarning(
-                    $"[MonsterBT] Node Array is too big to fit for children array\n" +
-                    $"So we'd cast it into smaller size");
-            }
-            else if (nodes.Count() < children.Count())
-            {
-                Debug.LogWarning(
-                    $"[MonsterBT] Node Array is too small to fit for the whole children array\n" +
-                    $"So we'd only set sequentially");
-                indBound = nodes.Count();
-            }
-
-            for (int i = 0; i < indBound; i++)
-            {
-                children[i] = nodes[i];
-            }
         }
     }
 }
