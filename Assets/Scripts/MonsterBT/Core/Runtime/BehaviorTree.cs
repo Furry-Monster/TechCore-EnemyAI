@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace MonsterBT
 {
@@ -49,38 +48,8 @@ namespace MonsterBT
 
         public IEnumerator<BehaviorTreeNode> GetEnumerator()
         {
-            if (enter == null)
-            {
-                Debug.LogWarning("[MonsterBT] Cannot iterate over an empty tree");
-                yield break;
-            }
-
-            // 使用Stack进行深度优先遍历
-            Stack<BehaviorTreeNode> nodeStack = new Stack<BehaviorTreeNode>();
-            nodeStack.Push(enter);
-
-            while (nodeStack.Count > 0)
-            {
-                BehaviorTreeNode current = nodeStack.Pop();
-
-                yield return current;
-
-                if (current is IHasChildren multiChildNode)
-                {
-                    BehaviorTreeNode[] children = multiChildNode.GetChildren();
-                    for (int i = children.Length - 1; i >= 0; i--)
-                    {
-                        if (children[i] != null)
-                            nodeStack.Push(children[i]);
-                    }
-                }
-                else if (current is IHasSingleChild singleChildNode)
-                {
-                    BehaviorTreeNode child = singleChildNode.GetChild();
-                    if (child != null)
-                        nodeStack.Push(child);
-                }
-            }
+            // implement iterator here...
+            throw new NotImplementedException();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -88,22 +57,9 @@ namespace MonsterBT
             return GetEnumerator();
         }
 
-        public BehaviorTreeNode FindNodeByGUID(Guid guid)
-        {
-            foreach (var node in this)
-            {
-                if (node.GUID == guid)
-                    return node;
-            }
-            return null;
-        }
-
         public void Dispose()
         {
-            foreach (var node in this)
-            {
-                node.Dispose();
-            }
+            enter.Dispose();
             blackboard.Dispose();
         }
     }
