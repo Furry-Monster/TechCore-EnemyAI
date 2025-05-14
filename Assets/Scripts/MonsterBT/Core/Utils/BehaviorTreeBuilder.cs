@@ -11,7 +11,7 @@ namespace MonsterBT
 
         public BehaviorTreeElem(BehaviorTreeNode node = null, List<BTVariable> variables = null)
         {
-            this.node = node ?? null;
+            this.node = node;
             this.variables = variables;
         }
     }
@@ -19,8 +19,6 @@ namespace MonsterBT
     public record BehaviorTreeData //record for transmitting ref
     {
         public BehaviorTreeNode Tree;
-
-        public List<BTVariable> Variables;
 
         public Blackboard Blackboard;
 
@@ -31,24 +29,27 @@ namespace MonsterBT
 
             // mock tree
             BehaviorTreeNode mockTree = builder
-                .Action()
+                .Action<Log>(new() {
+                    { "Message", "If u see this, reflection has passed the test!" }
+                })
                 .GetTree();
             this.Tree = mockTree;
-
-            // mock variables
-            List<BTVariable> mockVariables = new();
-            this.Variables = mockVariables;
 
             // mock blackboard
             Blackboard mockBlackboard = new();
             this.Blackboard = mockBlackboard;
+        }
+
+        public BehaviorTreeData(BehaviorTreeNode root, Blackboard blackboard)
+        {
+            Tree = root;
+            Blackboard = blackboard;
         }
     }
 
     public class BehaviorTreeBuilder
     {
         public Queue<BehaviorTreeElem> elemsQueue;
-        public List<BTVariable> variableList;
 
         public BehaviorTreeBuilder()
         {
@@ -57,39 +58,42 @@ namespace MonsterBT
             elemsQueue.Enqueue(root);
         }
 
-        public BehaviorTreeBuilder Action()
+        public BehaviorTreeBuilder Action<T>(Dictionary<string, object> initialValues = null) where T : Action, new()
         {
             BehaviorTreeElem action = new();
-            // default action node should be a logger  
-            action.node = new Log();
+            BehaviorTreeNode actionNode = new T();
+            action.node = actionNode;
 
-            List<BTVariable> variables = new();
-            foreach (var field in action.node.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance))
+            List<BTVariable> variablesToAdd = new();
+            foreach (FieldInfo field in action.node.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance))
             {
-                BTVariable variable = new ReflectionVariable(field);
-                variables.Add(variable);
+                BTVariable variable = new ReflectionVariable(field, actionNode);
+                // set initial values if exist
+                if (initialValues != null && initialValues.TryGetValue(field.Name, out var value))
+                {
+                    variable.SetValue(value);
+                }
+                variablesToAdd.Add(variable);
             }
-            action.variables = variables;
+            action.variables = variablesToAdd;
 
             elemsQueue.Enqueue(action);
             return this;
         }
 
-        public BehaviorTreeBuilder Action<T>() where T : Action, new()
+        public BehaviorTreeBuilder Build()
         {
-            BehaviorTreeElem action = new();
-            action.node = new T();
+            // here we build tree , as well as bind variables on blackboard
+            Queue<BehaviorTreeElem> childCache = new();
+            var root = elemsQueue.Dequeue();
+            childCache.Enqueue(root);
 
-            List<BTVariable> variables = new();
-            foreach (var field in action.node.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance))
+            while (elemsQueue.Count > 0)
             {
-                BTVariable variable = new ReflectionVariable(field);
-                variables.Add(variable);
-            }
-            action.variables = variables;
 
-            elemsQueue.Enqueue(action);
-            return this;
+            }
+
+            throw new NotImplementedException();
         }
 
         public BehaviorTreeNode GetTree()
@@ -128,17 +132,12 @@ namespace MonsterBT
             return true;
         }
 
-        public BTVariable GetVariable()
+        public Blackboard GetBlackboard()
         {
             throw new NotImplementedException();
         }
 
-        public BehaviorTreeData Build()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Build(out BehaviorTreeData data)
+        public bool TryGetBlackboard(out Blackboard blackboard)
         {
             throw new NotImplementedException();
         }

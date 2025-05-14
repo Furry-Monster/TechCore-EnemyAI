@@ -15,34 +15,35 @@ namespace MonsterBT
         private Enter enter;
         public Enter Enter => enter;
 
-        private List<BTVariable> treeVariables;
-        public List<BTVariable> TreeVariables => treeVariables;
-
         private Blackboard blackboard;
         public Blackboard Blackboard => blackboard;
 
         public BehaviorTree()
         {
+            // create default tree data
             var data = new BehaviorTreeData();
 
+            // bind tree structure
             enter = data.Tree as Enter;
-            treeVariables = data.Variables;
+            // bind data blackboard
             blackboard = data.Blackboard;
             enter ??= new();
         }
 
         public BehaviorTree(BehaviorTreeData data)
         {
+            // bind tree structure
             enter = data.Tree as Enter;
-            treeVariables = data.Variables;
+            // bind data blackboard
             blackboard = data.Blackboard;
             enter ??= new();
         }
 
         public void LoadTreeData(BehaviorTreeData data)
         {
+            // bind tree structure
             enter = data.Tree as Enter;
-            treeVariables = data.Variables.ToList();
+            // bind data blackboard
             blackboard = data.Blackboard;
             enter ??= new();
         }
@@ -61,7 +62,6 @@ namespace MonsterBT
         public void Dispose()
         {
             enter.Dispose();
-            treeVariables.Clear();
             blackboard.Dispose();
         }
     }
