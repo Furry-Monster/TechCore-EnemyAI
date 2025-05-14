@@ -19,9 +19,9 @@ namespace MonsterBT
             child?.Initalize(Tree, Exec, GameObject);
         }
 
-        protected override NodeState DoExecute()
+        protected override NodeState DoUpdate()
         {
-            var state = child?.Execute();
+            var state = child?.Update();
 
             return state == null
                 ? NodeState.Error

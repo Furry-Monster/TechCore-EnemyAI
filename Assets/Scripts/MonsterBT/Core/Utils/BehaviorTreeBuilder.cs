@@ -149,12 +149,7 @@ namespace MonsterBT
         {
             if (subRootElem.node is IHasChildren multiChildNode)
             {
-                for (int i = 0; i < subRootElem.children.Count(); i++)
-                {
-                    var nextElem = elemsQueue.Dequeue();
-                    multiChildNode.SetChild(i, nextElem.node);
-                    BuildSubtree(nextElem, blackbord);
-                }
+                
             }
             else if (subRootElem.node is IHasSingleChild singleChildNode)
             {

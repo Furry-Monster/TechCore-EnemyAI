@@ -6,21 +6,21 @@ namespace MonsterBT
     {
         private BehaviorTreeNode runningNode;
 
-        public override bool CanExecute()
+        public override bool CanUpdate()
         {
             foreach (var child in children)
             {
-                if (!child.CanExecute())
+                if (!child.CanUpdate())
                     return false;
             }
             return true;
         }
 
-        protected override NodeState DoExecute()
+        protected override NodeState DoUpdate()
         {
             foreach (var child in children)
             {
-                var state = child.Execute();
+                var state = child.Update();
 
                 switch (state)
                 {

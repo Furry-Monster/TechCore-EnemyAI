@@ -19,6 +19,23 @@ namespace MonsterBT
             child?.Initalize(Tree, Exec, GameObject);
         }
 
+        protected override void DoTick()
+        {
+            child?.Tick();
+        }
+
+        protected override NodeState DoUpdate()
+        {
+            var result = child.Update();
+            result = DoDecorate(result);
+            return result;
+        }
+
+        protected virtual NodeState DoDecorate(NodeState state)
+        {
+            return state;
+        }
+
         public override void Dispose()
         {
             OnStateChanged -= state =>

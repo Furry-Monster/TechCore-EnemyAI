@@ -14,7 +14,7 @@ namespace MonsterBT
         public string Message = "Ciallo~";
         public LogLevel Level = LogLevel.Info;
 
-        protected override NodeState DoExecute()
+        protected override NodeState DoUpdate()
         {
             switch (Level)
             {

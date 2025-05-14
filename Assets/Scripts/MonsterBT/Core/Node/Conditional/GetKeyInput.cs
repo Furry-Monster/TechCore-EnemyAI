@@ -2,7 +2,7 @@ namespace MonsterBT
 {
     public class GetKeyInput : Conditional
     {
-        protected override NodeState DoExecute()
+        protected override NodeState DoUpdate()
         {
             throw new System.NotImplementedException();
         }

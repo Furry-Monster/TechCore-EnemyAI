@@ -2,7 +2,7 @@ namespace MonsterBT
 {
     public class Random : Composite
     {
-        protected override NodeState DoExecute()
+        protected override NodeState DoUpdate()
         {
             throw new System.NotImplementedException();
         }

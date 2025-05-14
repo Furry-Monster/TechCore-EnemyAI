@@ -16,6 +16,11 @@ namespace MonsterBT
             };
         }
 
+        protected override void DoTick()
+        {
+
+        }
+
         public override void Dispose()
         {
             OnStateChanged -= state =>

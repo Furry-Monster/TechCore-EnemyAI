@@ -37,20 +37,27 @@ namespace MonsterBT
 
         protected abstract void OnInitialize(); // impl by nodes
 
-        public virtual bool CanExecute() => true;
-
-        public NodeState Execute()
+        public void Tick()
         {
-            var state = DoExecute();
+            DoTick();
 
-            Debug.Log($"[MonsterBt] Now exec node : {GetType()}");
+            Debug.Log($"[MonsterBt] Now tick node : {GetType()}");
+        }
+
+        protected abstract void DoTick();
+
+        public virtual bool CanUpdate() => true;
+
+        public NodeState Update()
+        {
+            var state = DoUpdate();
 
             OnStateChanged?.Invoke(state);
 
             return state;
         }
 
-        protected abstract NodeState DoExecute(); // impl by nodes
+        protected abstract NodeState DoUpdate(); // impl by nodes
 
         public virtual void Dispose()
         {

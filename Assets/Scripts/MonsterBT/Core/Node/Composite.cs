@@ -29,6 +29,14 @@ namespace MonsterBT
             }
         }
 
+        protected override void DoTick()
+        {
+            foreach (var child in children)
+            {
+                child.Tick();
+            }
+        }
+
         public override void Dispose()
         {
             OnStateChanged -= state =>

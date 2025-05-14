@@ -24,11 +24,16 @@ namespace MonsterBT
             BBComp = bb;
         }
 
-        public void Boot() => currentTree.Enter?.Initalize(currentTree, this, BTComp.gameObject);
+        public void Initalize() => currentTree.Enter?.Initalize(currentTree, this, BTComp.gameObject);
 
         public void Tick()
         {
-            currentTree.Enter?.Execute();
+
+        }
+
+        public void Update()
+        {
+            currentTree.Enter?.Update();
         }
 
         public void Halt()
