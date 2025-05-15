@@ -16,18 +16,14 @@ namespace MonsterBT
     public abstract class BehaviorTreeNode : IDisposable
     {
         public string Name;
-        public Rect graphPosition;
         public Guid GUID;
-        public Action<NodeState> OnStateChanged;
+
+        protected BehaviorTreeExecutor Executor;
+        protected Action<NodeState> OnStateNotify;
 
         public void Initialize()
         {
             Name ??= this.GetType().ToString();
-
-            if (graphPosition == default)
-            {
-                graphPosition = new Rect(400, 300, 100, 100);
-            }
 
             GUID = Guid.NewGuid();
 
@@ -47,7 +43,7 @@ namespace MonsterBT
         {
             var state = OnTick();
 
-            OnStateChanged?.Invoke(state);
+            OnStateNotify?.Invoke(state);
 
             return state;
         }
@@ -56,7 +52,7 @@ namespace MonsterBT
 
         public virtual void Dispose()
         {
-
+            OnStateNotify = null;
         }
     }
 
@@ -66,22 +62,7 @@ namespace MonsterBT
 
         protected sealed override void OnInitialize()
         {
-            OnStateChanged += OnRootStateChanged;
-
             child?.Initialize();
-        }
-
-        private void OnRootStateChanged(NodeState tickState)
-        {
-            if (tickState == NodeState.Success)
-            {
-                // this means the whole tree finish 1 round running
-
-            }
-            else if (tickState == NodeState.Failure)
-            {
-                // this means some failure wasn't handled by node
-            }
         }
 
         protected sealed override void OnStart()

@@ -34,11 +34,13 @@ namespace MonsterBT
                 executor.Tree = externalTree.GetData().Build();
             if (externalBlackboard != null)
                 executor.Blackboard = externalBlackboard.GetData().Build();
+
+            executor.Initialize();
         }
 
         private void Start()
         {
-            executor.Initialize();
+            executor.Start();
         }
 
         private void Update()
