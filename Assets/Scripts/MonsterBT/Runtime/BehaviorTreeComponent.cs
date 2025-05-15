@@ -29,6 +29,11 @@ namespace MonsterBT
         private void Awake()
         {
             executor = new BehaviorTreeExecutor();
+
+            if (externalTree != null)
+                executor.Tree = externalTree.GetData().Build();
+            if (externalBlackboard != null)
+                executor.Blackboard = externalBlackboard.GetData().Build();
         }
 
         private void Start()
