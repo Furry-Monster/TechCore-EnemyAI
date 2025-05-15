@@ -38,7 +38,7 @@ namespace MonsterBT
 
         private void Start()
         {
-            executor.Start();
+            executor.TreeBoot();
         }
 
         private void Update()

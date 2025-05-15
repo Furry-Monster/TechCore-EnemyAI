@@ -9,6 +9,7 @@ namespace MonsterBT
         public Blackboard Blackboard { get; set; }
 
         public bool IsRunning = false;
+        public bool IsRestarting = false;
 
         private Action<NodeState> OnRootStateNotify;
 
@@ -18,6 +19,9 @@ namespace MonsterBT
             Blackboard = extBlackboard;
         }
 
+        /// <summary>
+        /// 初始化行为树
+        /// </summary>
         public void Initialize()
         {
             OnRootStateNotify += OnRootNotifySuccess;
@@ -25,20 +29,32 @@ namespace MonsterBT
             Tree.Root.Initialize();
         }
 
-        private void OnRootNotifySuccess(NodeState rootState) => IsRunning = false;
-
-        public void Start()
+        private void OnRootNotifySuccess(NodeState rootState)
         {
-            Tree.Root.Start();
+            IsRunning = false;
+            IsRestarting = true;
+        }
+
+        /// <summary>
+        /// 启动行为树
+        /// </summary>
+        public void TreeBoot()
+        {
+            Tree.Root.Run();
 
             IsRunning = true;
         }
 
+        /// <summary>
+        /// 按Update帧更新行为树，获取每一个Update帧的树状态
+        /// </summary>
         public void TreeTick()
         {
-            if (IsRunning == false)
+            if (IsRunning == false && IsRestarting)
             {
-                Start();
+                TreeBoot();
+
+                IsRestarting = false;
             }
 
             var rootState = Tree.Root.Tick();
@@ -46,6 +62,9 @@ namespace MonsterBT
             OnRootStateNotify?.Invoke(rootState);
         }
 
+        /// <summary>
+        /// 清除行为树资源与依赖
+        /// </summary>
         public void Dispose()
         {
             Tree.Root.Dispose();

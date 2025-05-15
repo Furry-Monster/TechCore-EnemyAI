@@ -9,9 +9,9 @@ namespace MonsterBT
             child?.Initialize();
         }
 
-        protected override void OnStart()
+        protected override void OnRun()
         {
-            child?.Start();
+            child?.Run();
         }
 
         protected override NodeState OnTick()

@@ -28,12 +28,12 @@ namespace MonsterBT
 
         protected abstract void OnInitialize();
 
-        public void Start()
+        public void Run()
         {
-            OnStart();
+            OnRun();
         }
 
-        protected abstract void OnStart();
+        protected abstract void OnRun();
 
         public NodeState Tick()
         {
