@@ -24,15 +24,18 @@ namespace MonsterBT
         /// </summary>
         public void Initialize()
         {
-            OnRootStateNotify += OnRootNotifySuccess;
+            // 如果根节点状态返回Success
+            OnRootStateNotify += rootState =>
+            {
+                if (rootState == NodeState.Success)
+                {
+                    // 设置重新启动
+                    IsRunning = false;
+                    IsRestarting = true;
+                }
+            };
 
             Tree.Root.Initialize();
-        }
-
-        private void OnRootNotifySuccess(NodeState rootState)
-        {
-            IsRunning = false;
-            IsRestarting = true;
         }
 
         /// <summary>
@@ -40,7 +43,7 @@ namespace MonsterBT
         /// </summary>
         public void TreeBoot()
         {
-            Tree.Root.Run();
+            Tree.Root.Boot();
 
             IsRunning = true;
         }
@@ -50,7 +53,7 @@ namespace MonsterBT
         /// </summary>
         public void TreeTick()
         {
-            if (IsRunning == false && IsRestarting)
+            if (!IsRunning && IsRestarting)
             {
                 TreeBoot();
 
@@ -68,8 +71,6 @@ namespace MonsterBT
         public void Dispose()
         {
             Tree.Root.Dispose();
-
-            OnRootStateNotify -= OnRootNotifySuccess;
 
             OnRootStateNotify = null;
         }

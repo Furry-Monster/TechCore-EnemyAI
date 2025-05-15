@@ -11,9 +11,9 @@ namespace MonsterBT
             children?.ForEach(e => e.Initialize());
         }
 
-        protected override void OnRun()
+        protected override void OnBoot()
         {
-            children?.ForEach(e => e.Run());
+            children?.ForEach(e => e.Boot());
         }
 
         public override void Dispose()

@@ -7,6 +7,7 @@ namespace MonsterBT
         Success,
         Failure,
         Running,
+        None,
     }
 
     public abstract class BehaviorTreeNode : IDisposable
@@ -15,6 +16,7 @@ namespace MonsterBT
         public Guid GUID;
 
         protected BehaviorTreeExecutor Executor;
+        protected NodeState CurrentState;
         protected Action<NodeState> OnStateNotify;
 
         public void Initialize()
@@ -23,17 +25,21 @@ namespace MonsterBT
 
             GUID = Guid.NewGuid();
 
+            CurrentState = NodeState.None;
+
             OnInitialize();
         }
 
         protected abstract void OnInitialize();
 
-        public void Run()
+        public void Boot()
         {
-            OnRun();
+            CurrentState = NodeState.Running;
+
+            OnBoot();
         }
 
-        protected abstract void OnRun();
+        protected abstract void OnBoot();
 
         public NodeState Tick()
         {

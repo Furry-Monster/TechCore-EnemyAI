@@ -4,14 +4,9 @@ using UnityEngine;
 
 namespace MonsterBT
 {
-    public class Log : Action
+    public class Wait : Action
     {
-        public string LogMessage;
-
-        protected override void OnInitialize()
-        {
-            LogMessage ??= "Default Log Text";
-        }
+        protected override void OnInitialize() { }
 
         protected override NodeState OnTick()
         {
