@@ -16,6 +16,9 @@ namespace MonsterBT
         private Blackboard blackboard;
         public Blackboard Blackboard => blackboard;
 
+        public bool IsTicking = false;
+        public bool IsPauing = false;
+
         public BehaviorTree()
         {
             // create default tree data

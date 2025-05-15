@@ -29,11 +29,11 @@ namespace MonsterBT
             }
         }
 
-        protected override void DoTick()
+        protected override void DoHalt()
         {
             foreach (var child in children)
             {
-                child.Tick();
+                child?.Halt();
             }
         }
 

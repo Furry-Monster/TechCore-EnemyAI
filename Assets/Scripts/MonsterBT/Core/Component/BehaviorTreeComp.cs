@@ -25,9 +25,9 @@ namespace MonsterBT
             this.treeExec ??= new(this, blackboardComp);
         }
 
-        private void Start() => this.treeExec.Boot();
+        private void Start() => this.treeExec.Initalize();
 
-        private void Update() => this.treeExec.Tick();
+        private void Update() => this.treeExec.Update();
 
         private void OnDestroy()
         {

@@ -16,9 +16,8 @@ namespace MonsterBT
             };
         }
 
-        protected override void DoTick()
+        protected override void DoHalt()
         {
-
         }
 
         public override void Dispose()

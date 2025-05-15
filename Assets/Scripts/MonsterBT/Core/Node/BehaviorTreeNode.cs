@@ -37,15 +37,6 @@ namespace MonsterBT
 
         protected abstract void OnInitialize(); // impl by nodes
 
-        public void Tick()
-        {
-            DoTick();
-
-            Debug.Log($"[MonsterBt] Now tick node : {GetType()}");
-        }
-
-        protected abstract void DoTick();
-
         public virtual bool CanUpdate() => true;
 
         public NodeState Update()
@@ -58,6 +49,15 @@ namespace MonsterBT
         }
 
         protected abstract NodeState DoUpdate(); // impl by nodes
+
+        public void Halt()
+        {
+            Debug.Log($"[MonsterBt] Now halt node : {GetType()}");
+
+            DoHalt();
+        }
+
+        protected abstract void DoHalt();   // impl by nodes
 
         public virtual void Dispose()
         {

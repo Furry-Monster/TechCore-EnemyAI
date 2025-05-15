@@ -19,21 +19,21 @@ namespace MonsterBT
             child?.Initalize(Tree, Exec, GameObject);
         }
 
-        protected override void DoTick()
-        {
-            child?.Tick();
-        }
-
         protected override NodeState DoUpdate()
         {
             var result = child.Update();
-            result = DoDecorate(result);
+            result = Decorate(result);
             return result;
         }
 
-        protected virtual NodeState DoDecorate(NodeState state)
+        protected virtual NodeState Decorate(NodeState state)
         {
             return state;
+        }
+
+        protected override void DoHalt()
+        {
+            child?.Halt();
         }
 
         public override void Dispose()

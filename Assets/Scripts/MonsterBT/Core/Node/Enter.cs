@@ -16,6 +16,14 @@ namespace MonsterBT
                 }
             };
 
+            OnStateChanged += state =>
+            {
+                if (state is NodeState.Success or NodeState.Failure or NodeState.Error)
+                {
+                    Tree.IsTicking = false;
+                }
+            };
+
             child?.Initalize(Tree, Exec, GameObject);
         }
 
@@ -26,6 +34,11 @@ namespace MonsterBT
             return state == null
                 ? NodeState.Error
                 : (NodeState)state;
+        }
+
+        protected override void DoHalt()
+        {
+            child?.Halt();
         }
 
         public override void Dispose()
