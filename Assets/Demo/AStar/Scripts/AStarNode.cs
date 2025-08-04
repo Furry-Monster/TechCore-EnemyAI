@@ -1,18 +1,33 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+// ReSharper disable CheckNamespace
 
-public class AStarNode : MonoBehaviour
+using System;
+
+namespace AStar
 {
-    // Start is called before the first frame update
-    void Start()
+    public enum AStarNodeType
     {
-        
+        None,
+        Source,
+        Target,
+        Obstacle,
     }
 
-    // Update is called once per frame
-    void Update()
+    public class AStarNode
     {
-        
+        public readonly int X;
+        public readonly int Y;
+
+        public float G = 0.0f;
+        public float H = 0.0f;
+        public float F => G + H;
+
+        public AStarNode Parent;
+        public AStarNodeType Type = AStarNodeType.None;
+
+        public AStarNode(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
     }
 }
