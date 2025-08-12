@@ -883,6 +883,7 @@ GameObject:
   - component: {fileID: 1693173317}
   - component: {fileID: 1693173316}
   - component: {fileID: 1693173315}
+  - component: {fileID: 1693173319}
   m_Layer: 0
   m_Name: BTEnemy(Test)
   m_TagString: Untagged
@@ -978,6 +979,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1693173319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1693173314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb7d3e86b51c0d6e4b8ee021a70c7c27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  behaviorTreeAsset: {fileID: 0}
+  runOnStart: 1
+  debugMode: 0
 --- !u!1 &2101720455
 GameObject:
   m_ObjectHideFlags: 0
