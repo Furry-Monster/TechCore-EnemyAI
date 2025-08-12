@@ -15,14 +15,14 @@ namespace MonsterBT.Editor
         [MenuItem("Window/MonsterBT/Behavior Tree Editor")]
         public static void ShowWindow()
         {
-            BTVisualEditor wnd = GetWindow<BTVisualEditor>();
-            wnd.titleContent = new GUIContent("Behavior Tree Editor");
+            var wnd = GetWindow<BTVisualEditor>();
+            wnd.titleContent = new GUIContent("MonsterBT Editor");
             wnd.minSize = new Vector2(800, 600);
         }
 
         public void CreateGUI()
         {
-            VisualElement root = rootVisualElement;
+            var root = rootVisualElement;
 
             // 创建工具栏
             CreateToolbar(root);
