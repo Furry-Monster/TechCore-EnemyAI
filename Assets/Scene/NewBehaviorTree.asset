@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: NewBehaviorTree
   m_EditorClassIdentifier: 
   rootNode: {fileID: 8231891095886367451}
-  blackboard: {fileID: 0}
+  blackboard: {fileID: 11400000, guid: 0594509728934d5d9b2f5333677c51ab, type: 2}
 --- !u!114 &131995568669565651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42,5 +42,5 @@ MonoBehaviour:
   m_Name: Root
   m_EditorClassIdentifier: 
   nodeName: Node
-  position: {x: 400, y: 100}
+  position: {x: 2178, y: 1128}
   child: {fileID: 0}

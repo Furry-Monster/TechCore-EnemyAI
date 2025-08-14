@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using MonsterBT.Runtime.Utils;
 using UnityEngine;
 
 namespace MonsterBT.Runtime
@@ -20,7 +20,8 @@ namespace MonsterBT.Runtime
     [CreateAssetMenu(fileName = "Blackboard", menuName = "MonsterBT/Blackboard")]
     public class Blackboard : ScriptableObject
     {
-        [SerializeField] private Dictionary<string, object> data = new Dictionary<string, object>();
+        [SerializeField] private SerializableDictionary<string, object> data =
+            new SerializableDictionary<string, object>();
 
         public T GetValue<T>(string key)
         {

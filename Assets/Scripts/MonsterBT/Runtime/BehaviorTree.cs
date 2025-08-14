@@ -26,7 +26,7 @@ namespace MonsterBT.Runtime
 
         public BehaviorTree Clone()
         {
-            BehaviorTree tree = Instantiate(this);
+            var tree = Instantiate(this);
             tree.rootNode = rootNode?.Clone() as RootNode;
             tree.blackboard = Instantiate(blackboard);
             return tree;
@@ -44,14 +44,9 @@ namespace MonsterBT.Runtime
 
         public BTNodeState Update()
         {
-            if (rootNode != null)
-            {
-                treeState = rootNode.Update();
-            }
-            else
-            {
-                treeState = BTNodeState.Failure;
-            }
+            treeState = rootNode != null
+                ? rootNode.Update()
+                : BTNodeState.Failure;
 
             return treeState;
         }
