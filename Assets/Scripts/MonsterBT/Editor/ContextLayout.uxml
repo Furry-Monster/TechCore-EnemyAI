@@ -1,9 +1,66 @@
-<?xml version="1.0" encoding="utf-8"?>
-<engine:UXML
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:engine="UnityEngine.UIElements"
-    xmlns:editor="UnityEditor.UIElements"
-    xsi:noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
->
-    
-</engine:UXML>
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements"
+         xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements"
+         editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
+         editor-extension-mode="False">
+    <Style
+        src="project://database/Assets/Scripts/MonsterBT/Editor/BTEditorStyle.uss?fileID=7433441132597879392&amp;guid=60d4d4fd49eefcb3a94470c1e4edecd0&amp;type=3#MonsterBTEditor" />
+    <ui:VisualElement name="context-menu-root" class="context-menu">
+        <ui:VisualElement name="create-node-section">
+            <ui:Label text="Create Node" class="context-menu-item" />
+            <ui:VisualElement class="context-menu-separator" />
+
+            <ui:Label text="Composite" class="context-menu-item" style="padding-left: 24px; font-style: italic;" />
+            <ui:VisualElement name="create-selector" class="context-menu-item" style="padding-left: 32px;">
+                <ui:Label text="Selector" />
+            </ui:VisualElement>
+            <ui:VisualElement name="create-sequence" class="context-menu-item" style="padding-left: 32px;">
+                <ui:Label text="Sequence" />
+            </ui:VisualElement>
+
+            <ui:Label text="Decorator" class="context-menu-item" style="padding-left: 24px; font-style: italic;" />
+            <ui:VisualElement name="create-inverter" class="context-menu-item" style="padding-left: 32px;">
+                <ui:Label text="Inverter" />
+            </ui:VisualElement>
+
+            <ui:Label text="Action" class="context-menu-item" style="padding-left: 24px; font-style: italic;" />
+            <ui:VisualElement name="create-debug-log" class="context-menu-item" style="padding-left: 32px;">
+                <ui:Label text="Debug Log" />
+            </ui:VisualElement>
+            <ui:VisualElement name="create-wait" class="context-menu-item" style="padding-left: 32px;">
+                <ui:Label text="Wait" />
+            </ui:VisualElement>
+            <ui:VisualElement name="create-move-to-target" class="context-menu-item" style="padding-left: 32px;">
+                <ui:Label text="Move To Target" />
+            </ui:VisualElement>
+
+            <ui:Label text="Condition" class="context-menu-item" style="padding-left: 24px; font-style: italic;" />
+            <ui:VisualElement name="create-distance-condition" class="context-menu-item" style="padding-left: 32px;">
+                <ui:Label text="Distance Condition" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="spacer" class="context-menu-separator" />
+        <ui:VisualElement name="edit-section">
+            <ui:VisualElement name="copy-node" class="context-menu-item">
+                <ui:Label text="Copy" />
+            </ui:VisualElement>
+            <ui:VisualElement name="paste-node" class="context-menu-item">
+                <ui:Label text="Paste" />
+            </ui:VisualElement>
+            <ui:VisualElement name="duplicate-node" class="context-menu-item">
+                <ui:Label text="Duplicate" />
+            </ui:VisualElement>
+            <ui:VisualElement name="delete-node" class="context-menu-item">
+                <ui:Label text="Delete" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="spacer" class="context-menu-separator" />
+        <ui:VisualElement name="layout-section">
+            <ui:VisualElement name="auto-arrange" class="context-menu-item">
+                <ui:Label text="Auto Arrange" />
+            </ui:VisualElement>
+            <ui:VisualElement name="align-nodes" class="context-menu-item">
+                <ui:Label text="Align Nodes" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

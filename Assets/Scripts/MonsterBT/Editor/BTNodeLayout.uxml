@@ -1,33 +1,32 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" 
-         xmlns:uie="UnityEditor.UIElements"
-         xsi:schemaLocation="UnityEngine.UIElements UnityEngine.UIElements.xsd UnityEditor.UIElements UnityEditor.UIElements.xsd"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    
-    <!-- 行为树节点模板 -->
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements"
+         xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements"
+         editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
+         editor-extension-mode="False">
+    <Style
+        src="project://database/Assets/Scripts/MonsterBT/Editor/BTEditorStyle.uss?fileID=7433441132597879392&amp;guid=60d4d4fd49eefcb3a94470c1e4edecd0&amp;type=3#MonsterBTEditor" />
     <ui:VisualElement name="bt-node-container" class="bt-node">
-        
+
         <!-- 节点状态指示器 -->
         <ui:VisualElement name="state-indicator" class="state-indicator state-idle" />
-        
+
         <!-- 输入端口 -->
         <ui:VisualElement name="input-port" class="port port-input" />
-        
+
         <!-- 节点标题栏 -->
         <ui:VisualElement name="title-container" class="bt-node-title">
             <ui:Label name="node-title" text="Node Name" />
         </ui:VisualElement>
-        
+
         <!-- 节点内容区域 -->
         <ui:VisualElement name="content-container" class="bt-node-content">
             <ui:Label name="node-description" text="Node description" />
-            
+
             <!-- 参数容器 -->
             <ui:VisualElement name="parameters-container" style="margin-top: 4px;" />
         </ui:VisualElement>
-        
+
         <!-- 输出端口容器 -->
         <ui:VisualElement name="output-ports-container" style="flex-direction: row; justify-content: flex-end;" />
-        
+
     </ui:VisualElement>
-    
 </ui:UXML>
