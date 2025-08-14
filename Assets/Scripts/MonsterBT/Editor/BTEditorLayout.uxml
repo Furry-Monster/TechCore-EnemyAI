@@ -1,0 +1,72 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements"
+         xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements"
+         editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
+         editor-extension-mode="False">
+    <Style
+        src="project://database/Assets/Scripts/MonsterBT/Editor/MonsterBTEditor.uss?fileID=7433441132597879392&amp;guid=60d4d4fd49eefcb3a94470c1e4edecd0&amp;type=3#MonsterBTEditor" />
+    <ui:VisualElement name="behavior-tree-editor-root" class="behavior-tree-editor">
+        <ui:VisualElement name="main-toolbar" class="editor-toolbar">
+            <ui:Button name="create-button" text="Create New" class="toolbar-button" />
+            <ui:Button name="save-button" text="Save" class="toolbar-button" />
+            <ui:Button name="auto-layout-button" text="Auto Layout" class="toolbar-button" />
+            <ui:Button name="play-button" text="▶ Play" class="toolbar-button" />
+            <ui:Button name="debug-button" text="# Debug" class="toolbar-button" />
+        </ui:VisualElement>
+        <ui:VisualElement name="main-content" style="flex-direction: row; flex: 1;">
+            <ui:VisualElement name="inspector-panel" class="sidebar">
+                <ui:Label text="Node Library" class="sidebar-title" />
+                <ui:VisualElement name="composite-nodes" class="sidebar-section">
+                    <ui:Label text="Composite Nodes" class="sidebar-title" />
+                    <ui:VisualElement name="selector-item" class="node-list-item">
+                        <ui:Label text="Selector" />
+                        <ui:Label text="Composite" class="blackboard-type" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="sequence-item" class="node-list-item">
+                        <ui:Label text="Sequence" />
+                        <ui:Label text="Composite" class="blackboard-type" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="decorator-nodes" class="sidebar-section">
+                    <ui:Label text="Decorator Nodes" class="sidebar-title" />
+                    <ui:VisualElement name="inverter-item" class="node-list-item">
+                        <ui:Label text="Inverter" />
+                        <ui:Label text="Decorator" class="blackboard-type" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="action-nodes" class="sidebar-section">
+                    <ui:Label text="Action Nodes" class="sidebar-title" />
+                    <ui:VisualElement name="debug-log-item" class="node-list-item">
+                        <ui:Label text="Debug Log" />
+                        <ui:Label text="Action" class="blackboard-type" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="wait-item" class="node-list-item">
+                        <ui:Label text="Wait" />
+                        <ui:Label text="Action" class="blackboard-type" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="move-to-target-item" class="node-list-item">
+                        <ui:Label text="Move To Target" />
+                        <ui:Label text="Action" class="blackboard-type" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="graph-container" class="graph-view" style="flex: 1;" />
+
+            <ui:VisualElement name="inspector-panel" class="sidebar">
+                <ui:Label text="Inspector" class="sidebar-title" />
+                <ui:VisualElement name="node-properties" class="sidebar-section">
+                    <ui:Label text="Node Properties" class="sidebar-title" />
+                    <ui:VisualElement name="property-container" />
+                </ui:VisualElement>
+
+                <ui:VisualElement name="blackboard-section" class="sidebar-section">
+                    <ui:Label text="Blackboard" class="sidebar-title" />
+                    <ui:VisualElement name="blackboard-container" class="blackboard-panel" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="status-bar" class="status-bar">
+            <ui:Label name="status-text" text="Ready" style="color: rgb(200, 200, 200); font-size: 11px;" />
+            <ui:Label name="node-count" text="Nodes: 0" style="color: rgb(150, 150, 150); font-size: 10px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
