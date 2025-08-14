@@ -12,24 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abc20b60d5e4fc4faaf435e6c03e1bfe, type: 3}
   m_Name: NewBehaviorTree
   m_EditorClassIdentifier: 
-  rootNode: {fileID: 8231891095886367451}
-  blackboard: {fileID: 11400000, guid: 0594509728934d5d9b2f5333677c51ab, type: 2}
---- !u!114 &131995568669565651
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 501da2e394bb633ad9663e8805e33585, type: 3}
-  m_Name: SelectorNode
-  m_EditorClassIdentifier: 
-  nodeName: Node
-  position: {x: 283, y: 238}
-  children: []
---- !u!114 &8231891095886367451
+  rootNode: {fileID: 957113224481216419}
+  blackboard: {fileID: 0}
+--- !u!114 &957113224481216419
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -42,5 +27,5 @@ MonoBehaviour:
   m_Name: Root
   m_EditorClassIdentifier: 
   nodeName: Node
-  position: {x: 2178, y: 1128}
+  position: {x: 400, y: 100}
   child: {fileID: 0}
