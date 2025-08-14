@@ -18,7 +18,7 @@ namespace MonsterBT.Editor
         {
             var window = GetWindow<BTEditorWindow>();
             window.titleContent = new GUIContent("Monster BehaviorTree");
-            window.minSize = new Vector2(800, 600);
+            window.minSize = new Vector2(1360, 1020);
         }
 
         public void OnEnable()
@@ -33,17 +33,12 @@ namespace MonsterBT.Editor
 
             // 加载主编辑器布局模板
             var template = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
-                "Assets/Scripts/MonsterBT/Editor/BehaviorTreeEditorWindow.uxml");
+                "Assets/Scripts/MonsterBT/Editor/BTEditorLayout.uxml");
 
             if (template != null)
             {
                 template.CloneTree(root);
                 SetupUIElements();
-            }
-            else
-            {
-                // 回退到代码创建UI
-                CreateUIFallback(root);
             }
         }
 
@@ -66,11 +61,11 @@ namespace MonsterBT.Editor
                 behaviorTreeField.RegisterValueChangedCallback(OnBehaviorTreeChanged);
             }
 
-            createButton?.RegisterCallback<ClickEvent>(evt => CreateNewBehaviorTree());
-            saveButton?.RegisterCallback<ClickEvent>(evt => SaveBehaviorTree());
-            autoLayoutButton?.RegisterCallback<ClickEvent>(evt => AutoLayoutNodes());
-            playButton?.RegisterCallback<ClickEvent>(evt => TogglePlayMode());
-            debugButton?.RegisterCallback<ClickEvent>(evt => ToggleDebugMode());
+            createButton?.RegisterCallback<ClickEvent>(_ => CreateNewBehaviorTree());
+            saveButton?.RegisterCallback<ClickEvent>(_ => SaveBehaviorTree());
+            autoLayoutButton?.RegisterCallback<ClickEvent>(_ => AutoLayoutNodes());
+            playButton?.RegisterCallback<ClickEvent>(_ => TogglePlayMode());
+            debugButton?.RegisterCallback<ClickEvent>(_ => ToggleDebugMode());
 
             // 创建图形视图并添加到容器
             var graphContainer = rootVisualElement.Q<VisualElement>("graph-container");
@@ -82,37 +77,6 @@ namespace MonsterBT.Editor
 
             // 设置节点库拖拽事件
             SetupNodeLibrary();
-        }
-
-        private void CreateUIFallback(VisualElement root)
-        {
-            CreateToolbar(root);
-            graphView = new BTGraphView();
-            root.Add(graphView);
-        }
-
-        private void CreateToolbar(VisualElement root)
-        {
-            var toolbar = new Toolbar();
-            toolbar.style.height = 30;
-
-            behaviorTreeField = new ObjectField("Behavior Tree")
-            {
-                objectType = typeof(BehaviorTree),
-                style = { width = 300 }
-            };
-            behaviorTreeField.RegisterValueChangedCallback(OnBehaviorTreeChanged);
-            toolbar.Add(behaviorTreeField);
-
-            toolbar.Add(new ToolbarSpacer());
-
-            var createButton = new ToolbarButton(CreateNewBehaviorTree) { text = "Create New" };
-            toolbar.Add(createButton);
-
-            var saveButton = new ToolbarButton(SaveBehaviorTree) { text = "Save" };
-            toolbar.Add(saveButton);
-
-            root.Add(toolbar);
         }
 
         private void SetupNodeLibrary()
