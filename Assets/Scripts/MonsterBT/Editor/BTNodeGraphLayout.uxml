@@ -4,49 +4,5 @@
          editor-extension-mode="True">
     <Style
         src="project://database/Assets/Scripts/MonsterBT/Editor/BTNodeGraphStyle.uss?fileID=7433441132597879392&amp;guid=d8836b4515665d46bb37c6381dbc7575&amp;type=3#BTNodeGraphStyle" />
-    <ui:VisualElement name="node-graph-root" class="node-graph-view">
-        <ui:VisualElement name="grid-background" class="grid-background" />
-        <ui:VisualElement name="nodes-container" class="nodes-container" />
-        <ui:VisualElement name="connections-container" class="connections-container" />
-        <ui:VisualElement name="selection-box" class="selection-box" style="display: none;" />
-        <ui:VisualElement name="minimap-container" class="minimap-container">
-            <ui:VisualElement name="minimap" class="minimap">
-                <ui:Label text="Mini Map" class="minimap-title" />
-                <ui:VisualElement name="minimap-viewport" class="minimap-viewport" />
-                <ui:VisualElement name="minimap-nodes" class="minimap-nodes" />
-            </ui:VisualElement>
-        </ui:VisualElement>
-        <ui:VisualElement name="navigation-controls" class="navigation-controls">
-            <ui:Button name="zoom-fit" text="Fit" class="nav-button" />
-            <ui:Button name="zoom-in" text="+" class="nav-button" />
-            <ui:Button name="zoom-out" text="−" class="nav-button" />
-            <ui:Label name="zoom-level" text="100%" class="zoom-label" />
-        </ui:VisualElement>
-        <ui:VisualElement name="context-menu" class="context-menu" style="display: none;">
-            <ui:VisualElement name="menu-section-create" class="menu-section">
-                <ui:Label text="Create Node" class="menu-header" />
-                <ui:VisualElement name="create-composite" class="menu-item">
-                    <ui:Label text="▶ Composite" />
-                </ui:VisualElement>
-                <ui:VisualElement name="create-decorator" class="menu-item">
-                    <ui:Label text="◆ Decorator" />
-                </ui:VisualElement>
-                <ui:VisualElement name="create-action" class="menu-item">
-                    <ui:Label text="● Action" />
-                </ui:VisualElement>
-            </ui:VisualElement>
-            <ui:VisualElement name="menu-section-edit" class="menu-section">
-                <ui:Label text="Edit" class="menu-header" />
-                <ui:VisualElement name="copy-node" class="menu-item">
-                    <ui:Label text="Copy" />
-                </ui:VisualElement>
-                <ui:VisualElement name="paste-node" class="menu-item">
-                    <ui:Label text="Paste" />
-                </ui:VisualElement>
-                <ui:VisualElement name="delete-node" class="menu-item">
-                    <ui:Label text="Delete" />
-                </ui:VisualElement>
-            </ui:VisualElement>
-        </ui:VisualElement>
-    </ui:VisualElement>
+    <ui:VisualElement name="node-graph-root" class="node-graph-view" />
 </ui:UXML>

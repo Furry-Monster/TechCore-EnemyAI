@@ -20,20 +20,18 @@ namespace MonsterBT.Editor
 
             nodeViews = new Dictionary<BTNode, BTNodeVM>();
 
-            // 设置缩放
             SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
 
-            // 添加操作器
             this.AddManipulator(new ContentDragger());
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
 
-            // 添加网格背景
             var grid = new GridBackground();
             Insert(0, grid);
             grid.StretchToParentSize();
 
-            // 监听图形变化
+            AddToClassList("node-graph-view");
+
             graphViewChanged += OnGraphViewChanged;
         }
 
