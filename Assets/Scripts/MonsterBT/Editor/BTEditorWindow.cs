@@ -1,8 +1,10 @@
+using System;
 using MonsterBT.Runtime;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Object = UnityEngine.Object;
 
 namespace MonsterBT.Editor
 {
@@ -150,13 +152,19 @@ namespace MonsterBT.Editor
 
         private void OnClickSpawnNode(ClickEvent evt)
         {
-            
         }
 
         private void OnDragSpawnNode(MouseDownEvent evt)
         {
-            
         }
 
+    }
+
+    public class SaveManipulator : KeyboardNavigationManipulator
+    {
+
+        public SaveManipulator(Action<KeyboardNavigationOperation, EventBase> action) : base(action)
+        {
+        }
     }
 }

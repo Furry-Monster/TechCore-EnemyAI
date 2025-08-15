@@ -3,6 +3,7 @@ using System.Linq;
 using MonsterBT.Runtime;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace MonsterBT.Editor
@@ -24,6 +25,11 @@ namespace MonsterBT.Editor
             this.AddManipulator(new ContentDragger());
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
+
+            var miniMap = new MiniMap();
+            miniMap.name = "mini-map";
+            miniMap.AddToClassList("mini-map");
+            Add(miniMap);
 
             var grid = new GridBackground();
             Insert(0, grid);

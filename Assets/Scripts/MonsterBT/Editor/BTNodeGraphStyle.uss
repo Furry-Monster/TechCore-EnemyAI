@@ -44,3 +44,16 @@
 .action-node #title {
     background-color: rgba(255, 100, 100, 0.3);
 }
+
+/* MiniMap */
+.mini-map {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 200px;
+    height: 140px;
+    border-width: 2px;
+    border-color: rgb(45, 45, 50);
+    border-radius: 4px;
+    background-color: rgba(25, 25, 30, 0.95);
+}
