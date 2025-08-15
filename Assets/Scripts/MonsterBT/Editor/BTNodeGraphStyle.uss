@@ -1,1 +1,229 @@
-VisualElement {}
+/* 主图形视图容器 */
+.node-graph-view {
+    background-color: rgb(20, 20, 20);
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+/* 网格背景 */
+.grid-background {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('project://database/Assets/Scripts/MonsterBT/Resources/grid-bg.jpg');
+    background-repeat: repeat;
+    opacity: 0.3;
+}
+
+/* 节点容器 */
+.nodes-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+}
+
+/* 连接线容器 */
+.connections-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+}
+
+/* 选择框 */
+.selection-box {
+    position: absolute;
+    background-color: rgba(100, 150, 255, 0.15);
+    border-width: 1px;
+    border-color: rgb(100, 150, 255);
+    border-radius: 2px;
+}
+
+/* 小地图容器 */
+.minimap-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 220px;
+    height: 160px;
+}
+
+.minimap {
+    background-color: rgba(25, 25, 25, 0.9);
+    border-width: 1px;
+    border-color: rgb(60, 60, 60);
+    border-radius: 6px;
+    padding: 8px;
+    width: 100%;
+    height: 100%;
+}
+
+.minimap-title {
+    color: rgb(200, 200, 200);
+    font-size: 11px;
+    font-weight: bold;
+    margin-bottom: 4px;
+    text-align: center;
+}
+
+.minimap-viewport {
+    position: absolute;
+    border-width: 1px;
+    border-color: rgb(100, 150, 255);
+    background-color: rgba(100, 150, 255, 0.1);
+}
+
+.minimap-nodes {
+    position: relative;
+    flex: 1;
+    background-color: rgba(15, 15, 15, 0.8);
+    border-radius: 3px;
+    margin-top: 4px;
+}
+
+/* 导航控制 */
+.navigation-controls {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    flex-direction: row;
+    background-color: rgba(40, 40, 40, 0.9);
+    border-radius: 6px;
+    padding: 4px;
+    border-width: 1px;
+    border-color: rgb(60, 60, 60);
+}
+
+.nav-button {
+    background-color: rgb(50, 50, 50);
+    border-width: 1px;
+    border-color: rgb(70, 70, 70);
+    border-radius: 4px;
+    color: rgb(200, 200, 200);
+    font-size: 12px;
+    padding: 4px 8px;
+    margin: 2px;
+    min-width: 30px;
+}
+
+.nav-button:hover {
+    background-color: rgb(60, 60, 60);
+    border-color: rgb(80, 80, 80);
+}
+
+.nav-button:active {
+    background-color: rgb(35, 35, 35);
+}
+
+.zoom-label {
+    color: rgb(180, 180, 180);
+    font-size: 11px;
+    padding: 4px 8px;
+    align-self: center;
+    min-width: 40px;
+    text-align: center;
+}
+
+/* 右键菜单 */
+.context-menu {
+    position: absolute;
+    background-color: rgb(35, 35, 35);
+    border-width: 1px;
+    border-color: rgb(65, 65, 65);
+    border-radius: 6px;
+    padding: 4px 0;
+    min-width: 160px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.menu-section {
+    padding: 4px 0;
+    border-bottom-width: 1px;
+    border-bottom-color: rgb(50, 50, 50);
+}
+
+.menu-section:last-child {
+    border-bottom-width: 0;
+}
+
+.menu-header {
+    color: rgb(150, 150, 150);
+    font-size: 11px;
+    font-weight: bold;
+    padding: 4px 12px;
+    text-transform: uppercase;
+}
+
+.menu-item {
+    color: rgb(200, 200, 200);
+    font-size: 12px;
+    padding: 6px 12px;
+    cursor: link;
+}
+
+.menu-item:hover {
+    background-color: rgb(45, 45, 45);
+    color: rgb(255, 255, 255);
+}
+
+.menu-item Label {
+    color: inherit;
+}
+
+/* 连接线样式 */
+.connection-line {
+    position: absolute;
+    background-color: rgb(180, 180, 180);
+    height: 2px;
+}
+
+.connection-line.selected {
+    background-color: rgb(100, 150, 255);
+    height: 3px;
+}
+
+.connection-line.executing {
+    background-color: rgb(100, 255, 100);
+    height: 3px;
+}
+
+.connection-arrow {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left-width: 6px;
+    border-right-width: 6px;
+    border-top-width: 8px;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    border-top-color: rgb(180, 180, 180);
+}
+
+.connection-arrow.selected {
+    border-top-color: rgb(100, 150, 255);
+}
+
+.connection-arrow.executing {
+    border-top-color: rgb(100, 255, 100);
+}
+
+/* 拖拽状态 */
+.dragging {
+    opacity: 0.7;
+}
+
+.drag-preview {
+    background-color: rgba(100, 150, 255, 0.3);
+    border-width: 2px;
+    border-color: rgb(100, 150, 255);
+    border-radius: 4px;
+    border-style: dashed;
+}

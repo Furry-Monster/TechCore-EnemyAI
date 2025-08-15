@@ -1,9 +1,34 @@
-<?xml version="1.0" encoding="utf-8"?>
-<engine:UXML
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:engine="UnityEngine.UIElements"
-    xmlns:editor="UnityEditor.UIElements"
-    xsi:noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
->
-    
-</engine:UXML>
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements"
+         xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements"
+         editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
+         editor-extension-mode="True">
+    <Style
+        src="project://database/Assets/Scripts/MonsterBT/Editor/BTNodeStyle.uss?fileID=7433441132597879392&amp;guid=544af097bfcb62286a409a92a708ec22&amp;type=3#BTNodeStyle" />
+    <ui:VisualElement name="node-root" class="bt-node" style="top: 158px; left: 88px;">
+        <ui:VisualElement name="node-body" class="node-body">
+            <ui:VisualElement name="node-header" class="node-header">
+                <ui:VisualElement name="node-icon" class="node-icon" />
+                <ui:Label name="node-title" text="Node" class="node-title" />
+                <ui:VisualElement name="node-state-indicator" class="state-indicator" />
+            </ui:VisualElement>
+            <ui:VisualElement name="node-content" class="node-content">
+                <ui:Label name="node-description" text="Node Description" class="node-description" />
+                <ui:VisualElement name="node-properties" class="node-properties" />
+                <ui:VisualElement name="condition-display" class="condition-display" style="display: none;">
+                    <ui:Label name="condition-label" text="Condition:" class="condition-label" />
+                    <ui:Label name="condition-value" class="condition-value" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="input-port" class="port input-port">
+            <ui:VisualElement name="input-connector" class="port-connector input-connector" />
+        </ui:VisualElement>
+        <ui:VisualElement name="output-port" class="port output-port">
+            <ui:VisualElement name="output-connector" class="port-connector output-connector" />
+        </ui:VisualElement>
+        <ui:VisualElement name="selection-border" class="selection-border" style="display: none;" />
+        <ui:VisualElement name="debug-overlay" class="debug-overlay" style="display: none;">
+            <ui:Label name="debug-text" text="Debug Info" class="debug-text" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

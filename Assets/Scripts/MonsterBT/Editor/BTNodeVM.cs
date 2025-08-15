@@ -1,7 +1,9 @@
+using UnityEditor.Experimental.GraphView;
+
 namespace MonsterBT.Editor
 {
-    public class BTNodeVM
+    public class BTNodeVM : Node
     {
-        
+
     }
 }

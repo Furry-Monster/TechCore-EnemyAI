@@ -1,5 +1,9 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/Scripts/MonsterBT/Editor/BTContextMenuStyle.uss?fileID=7433441132597879392&amp;guid=801b4a1bcea200269afacc887508acb9&amp;type=3#BTContextMenuStyle" />
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements"
+         xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements"
+         editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
+         editor-extension-mode="False">
+    <Style
+        src="project://database/Assets/Scripts/MonsterBT/Editor/BTContextMenuStyle.uss?fileID=7433441132597879392&amp;guid=801b4a1bcea200269afacc887508acb9&amp;type=3#BTContextMenuStyle" />
     <ui:VisualElement name="context-menu-root" class="context-menu">
         <ui:VisualElement name="create-node-section">
             <ui:Label text="Create Node" class="context-menu-item" />

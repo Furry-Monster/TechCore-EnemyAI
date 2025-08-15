@@ -8,7 +8,7 @@ namespace MonsterBT.Editor
 {
     public class BTEditorWindow : EditorWindow
     {
-        private BTNodeGraphView graphView;
+        private BTNodeGraphVM graphView;
         private ObjectField behaviorTreeField;
 
         private BehaviorTree currentBehaviorTree;
@@ -71,36 +71,27 @@ namespace MonsterBT.Editor
             var graphContainer = rootVisualElement.Q<VisualElement>("graph-container");
             if (graphContainer != null)
             {
-                graphView = new BTNodeGraphView();
+                graphView = new BTNodeGraphVM();
                 graphContainer.Add(graphView);
             }
 
-            // 设置节点库拖拽事件
+            // 设置节点库添加事件
             SetupNodeLibrary();
         }
 
         private void SetupNodeLibrary()
         {
-            // 设置节点库中各节点项的拖拽功能
+            // 设置节点库中各节点项的功能
             var nodeItems = rootVisualElement.Query<VisualElement>(className: "node-list-item");
             nodeItems.ForEach(item =>
             {
                 item.RegisterCallback<MouseDownEvent>(evt =>
                 {
-                    if (evt.button == 0) // 左键开始拖拽
-                    {
-                        StartNodeDrag(item, evt);
-                    }
+                    // 添加一个节点到附近
                 });
             });
         }
 
-        private void StartNodeDrag(VisualElement nodeItem, MouseDownEvent evt)
-        {
-            // 实现从节点库拖拽创建节点的功能
-            string nodeType = nodeItem.name.Replace("-item", "");
-            Debug.Log($"开始拖拽节点类型: {nodeType}");
-        }
 
         private void AutoLayoutNodes()
         {
