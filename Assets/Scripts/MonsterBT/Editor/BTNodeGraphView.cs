@@ -37,6 +37,7 @@ namespace MonsterBT.Editor
             AddToClassList("node-graph-view");
 
             graphViewChanged += OnGraphViewChanged;
+            PopulateView();
         }
 
         public void SetBehaviorTree(BehaviorTree tree)
@@ -59,6 +60,7 @@ namespace MonsterBT.Editor
             // 如果有行为树，创建节点视图
             if (behaviorTree?.RootNode != null)
             {
+                CreateNodeView(behaviorTree.RootNode);
                 CreateNodeViewsRecursive(behaviorTree.RootNode);
                 CreateConnections();
             }
@@ -68,19 +70,28 @@ namespace MonsterBT.Editor
         {
             if (node is CompositeNode composite)
             {
+                if (composite.Children == null || composite.Children.Count == 0)
+                    return;
+
                 foreach (var child in composite.Children)
                 {
                     CreateNodeView(child);
                     CreateNodeViewsRecursive(child);
                 }
             }
-            else if (node is DecoratorNode decorator && decorator.Child != null)
+            else if (node is DecoratorNode decorator)
             {
+                if (decorator.Child == null)
+                    return;
+
                 CreateNodeView(decorator.Child);
                 CreateNodeViewsRecursive(decorator.Child);
             }
-            else if (node is RootNode root && root.Child != null)
+            else if (node is RootNode root)
             {
+                if (root.Child == null)
+                    return;
+
                 CreateNodeView(root.Child);
                 CreateNodeViewsRecursive(root.Child);
             }
@@ -98,22 +109,28 @@ namespace MonsterBT.Editor
 
         private void CreateConnections()
         {
-            foreach (var kvp in nodeViews)
+            foreach (var (node, nodeView) in nodeViews)
             {
-                var node = kvp.Key;
-                var nodeView = kvp.Value;
-
                 // 连接到子节点
-                if (node is RootNode root && root.Child != null)
+                if (node is RootNode root)
                 {
+                    if (root.Child == null)
+                        return;
+
                     ConnectNodes(nodeView, nodeViews[root.Child]);
                 }
-                else if (node is DecoratorNode decorator && decorator.Child != null)
+                else if (node is DecoratorNode decorator)
                 {
+                    if (decorator.Child == null)
+                        return;
+
                     ConnectNodes(nodeView, nodeViews[decorator.Child]);
                 }
                 else if (node is CompositeNode composite)
                 {
+                    if (composite.Children == null || composite.Children.Count == 0)
+                        return;
+
                     foreach (var child in composite.Children)
                     {
                         ConnectNodes(nodeView, nodeViews[child]);
@@ -124,11 +141,11 @@ namespace MonsterBT.Editor
 
         private void ConnectNodes(BTNodeView parentNode, BTNodeView childNode)
         {
-            if (parentNode.OutputPort != null && childNode.InputPort != null)
-            {
-                var edge = parentNode.OutputPort.ConnectTo(childNode.InputPort);
-                AddElement(edge);
-            }
+            if (parentNode.OutputPort == null || childNode.InputPort == null)
+                return;
+
+            var edge = parentNode.OutputPort.ConnectTo(childNode.InputPort);
+            AddElement(edge);
         }
 
         private GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
