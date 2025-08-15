@@ -1,8 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements"
-         xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements"
-         editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
-         editor-extension-mode="True">
-    <Style
-        src="project://database/Assets/Scripts/MonsterBT/Editor/BTNodeGraphStyle.uss?fileID=7433441132597879392&amp;guid=d8836b4515665d46bb37c6381dbc7575&amp;type=3#BTNodeGraphStyle" />
-    <ui:VisualElement name="node-graph-root" class="node-graph-view" />
-</ui:UXML>
