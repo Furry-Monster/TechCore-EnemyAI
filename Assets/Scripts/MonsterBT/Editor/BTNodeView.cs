@@ -6,9 +6,9 @@ using UnityEngine.UIElements;
 
 namespace MonsterBT.Editor
 {
-    public sealed class BTNode : Node
+    public sealed class BTNodeView : Node
     {
-        public Runtime.BTNode Node { get; }
+        public BTNode Node { get; }
         public Port InputPort { get; private set; }
         public Port OutputPort { get; private set; }
 
@@ -18,11 +18,10 @@ namespace MonsterBT.Editor
         private VisualElement nodeIcon;
         private VisualElement stateIndicator;
 
-        public BTNode(Runtime.BTNode node)
+        public BTNodeView(BTNode node)
         {
             Node = node;
 
-            // 加载节点模板
             var template = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
                 "Assets/Scripts/MonsterBT/Editor/BTNodeLayout.uxml");
 
@@ -56,14 +55,11 @@ namespace MonsterBT.Editor
             var outputPortContainer = nodeRoot.Q<VisualElement>("output-port");
 
             // 根据节点类型创建端口
-            if (!(Node is RootNode))
+            if (Node is not RootNode)
             {
                 InputPort = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(bool));
                 InputPort.portName = "";
-                if (inputPortContainer != null)
-                {
-                    inputPortContainer.Add(InputPort);
-                }
+                inputPortContainer?.Add(InputPort);
             }
             else
             {
@@ -75,7 +71,7 @@ namespace MonsterBT.Editor
             }
 
             // 输出端口
-            if (Node is RootNode || Node is CompositeNode)
+            if (Node is RootNode or CompositeNode)
             {
                 OutputPort = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Multi, typeof(bool));
             }
@@ -88,10 +84,7 @@ namespace MonsterBT.Editor
             if (OutputPort != null)
             {
                 OutputPort.portName = "";
-                if (outputPortContainer != null)
-                {
-                    outputPortContainer.Add(OutputPort);
-                }
+                outputPortContainer?.Add(OutputPort);
             }
             else
             {
@@ -123,22 +116,21 @@ namespace MonsterBT.Editor
 
         private void SetupNodeStyle()
         {
-            // 根据节点类型设置样式类
-            if (Node is RootNode)
+            switch (Node)
             {
-                nodeRoot.AddToClassList("root");
-            }
-            else if (Node is CompositeNode)
-            {
-                nodeRoot.AddToClassList("composite");
-            }
-            else if (Node is DecoratorNode)
-            {
-                nodeRoot.AddToClassList("decorator");
-            }
-            else if (Node is ActionNode)
-            {
-                nodeRoot.AddToClassList("action");
+                // 根据节点类型设置样式类
+                case RootNode:
+                    nodeRoot.AddToClassList("root");
+                    break;
+                case CompositeNode:
+                    nodeRoot.AddToClassList("composite");
+                    break;
+                case DecoratorNode:
+                    nodeRoot.AddToClassList("decorator");
+                    break;
+                case ActionNode:
+                    nodeRoot.AddToClassList("action");
+                    break;
             }
         }
 

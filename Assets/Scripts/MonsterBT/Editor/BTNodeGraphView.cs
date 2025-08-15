@@ -1,6 +1,6 @@
-using MonsterBT.Runtime;
 using System.Collections.Generic;
 using System.Linq;
+using MonsterBT.Runtime;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
@@ -14,12 +14,12 @@ namespace MonsterBT.Editor
         }
 
         private BehaviorTree behaviorTree;
-        private Dictionary<Runtime.BTNode, BTNode> nodeViews;
+        private Dictionary<BTNode, BTNodeView> nodeViews;
 
         public BTNodeGraphView()
         {
             behaviorTree = null;
-            nodeViews = new Dictionary<Runtime.BTNode, BTNode>();
+            nodeViews = new Dictionary<BTNode, BTNodeView>();
 
             styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>(
                 "Assets/Scripts/MonsterBT/Editor/BTNodeGraphStyle.uss"));
@@ -33,6 +33,7 @@ namespace MonsterBT.Editor
             Insert(0, grid);
             grid.StretchToParentSize();
 
+            name = "node-graph";
             AddToClassList("node-graph-view");
 
             graphViewChanged += OnGraphViewChanged;
@@ -63,7 +64,7 @@ namespace MonsterBT.Editor
             }
         }
 
-        private void CreateNodeViewsRecursive(Runtime.BTNode node)
+        private void CreateNodeViewsRecursive(BTNode node)
         {
             if (node is CompositeNode composite)
             {
@@ -85,12 +86,12 @@ namespace MonsterBT.Editor
             }
         }
 
-        private void CreateNodeView(Runtime.BTNode node)
+        private void CreateNodeView(BTNode node)
         {
             if (nodeViews.ContainsKey(node))
                 return;
 
-            var nodeView = new BTNode(node);
+            var nodeView = new BTNodeView(node);
             nodeViews[node] = nodeView;
             AddElement(nodeView);
         }
@@ -121,11 +122,11 @@ namespace MonsterBT.Editor
             }
         }
 
-        private void ConnectNodes(BTNode parentView, BTNode childView)
+        private void ConnectNodes(BTNodeView parentNode, BTNodeView childNode)
         {
-            if (parentView.OutputPort != null && childView.InputPort != null)
+            if (parentNode.OutputPort != null && childNode.InputPort != null)
             {
-                var edge = parentView.OutputPort.ConnectTo(childView.InputPort);
+                var edge = parentNode.OutputPort.ConnectTo(childNode.InputPort);
                 AddElement(edge);
             }
         }
@@ -137,27 +138,27 @@ namespace MonsterBT.Editor
             {
                 foreach (var element in graphViewChange.elementsToRemove)
                 {
-                    if (element is BTNode nodeView)
+                    if (element is BTNodeView nodeView)
                     {
                         nodeViews.Remove(nodeView.Node);
                     }
                     else if (element is Edge edge)
                     {
                         // 断开连接
-                        var parentView = edge.output.node as BTNode;
-                        var childView = edge.input.node as BTNode;
+                        var parentView = edge.output.node as BTNodeView;
+                        var childView = edge.input.node as BTNodeView;
 
-                        if (parentView?.Node is RootNode rootNode)
+                        switch (parentView?.Node)
                         {
-                            rootNode.Child = null;
-                        }
-                        else if (parentView?.Node is DecoratorNode decoratorNode)
-                        {
-                            decoratorNode.Child = null;
-                        }
-                        else if (parentView?.Node is CompositeNode compositeNode && childView != null)
-                        {
-                            compositeNode.Children.Remove(childView.Node);
+                            case RootNode rootNode:
+                                rootNode.Child = null;
+                                break;
+                            case DecoratorNode decoratorNode:
+                                decoratorNode.Child = null;
+                                break;
+                            case CompositeNode compositeNode when childView != null:
+                                compositeNode.Children.Remove(childView.Node);
+                                break;
                         }
                     }
                 }
@@ -168,20 +169,20 @@ namespace MonsterBT.Editor
             {
                 foreach (var edge in graphViewChange.edgesToCreate)
                 {
-                    var parentView = edge.output.node as BTNode;
-                    var childView = edge.input.node as BTNode;
+                    var parentView = edge.output.node as BTNodeView;
+                    var childView = edge.input.node as BTNodeView;
 
-                    if (parentView?.Node is RootNode rootNode && childView != null)
+                    switch (parentView?.Node)
                     {
-                        rootNode.Child = childView.Node;
-                    }
-                    else if (parentView?.Node is DecoratorNode decoratorNode && childView != null)
-                    {
-                        decoratorNode.Child = childView.Node;
-                    }
-                    else if (parentView?.Node is CompositeNode compositeNode && childView != null)
-                    {
-                        compositeNode.Children.Add(childView.Node);
+                        case RootNode rootNode when childView != null:
+                            rootNode.Child = childView.Node;
+                            break;
+                        case DecoratorNode decoratorNode when childView != null:
+                            decoratorNode.Child = childView.Node;
+                            break;
+                        case CompositeNode compositeNode when childView != null:
+                            compositeNode.Children.Add(childView.Node);
+                            break;
                     }
                 }
             }
@@ -191,9 +192,12 @@ namespace MonsterBT.Editor
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
         {
-            return ports.ToList().Where(endPort =>
-                endPort.direction != startPort.direction &&
-                endPort.node != startPort.node).ToList();
+            return ports
+                .ToList()
+                .Where(endPort =>
+                    endPort.direction != startPort.direction &&
+                    endPort.node != startPort.node)
+                .ToList();
         }
     }
 }
