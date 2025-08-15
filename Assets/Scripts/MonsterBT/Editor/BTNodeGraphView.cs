@@ -9,10 +9,6 @@ namespace MonsterBT.Editor
 {
     public class BTNodeGraphView : GraphView
     {
-        public new class UxmlFactory : UxmlFactory<BTNodeGraphView, UxmlTraits>
-        {
-        }
-
         private BehaviorTree behaviorTree;
         private Dictionary<BTNode, BTNodeView> nodeViews;
 

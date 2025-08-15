@@ -31,7 +31,6 @@ namespace MonsterBT.Editor
         {
             var root = rootVisualElement;
 
-            // 加载主编辑器布局模板
             var template = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
                 "Assets/Scripts/MonsterBT/Editor/BTEditorLayout.uxml");
 
@@ -46,8 +45,6 @@ namespace MonsterBT.Editor
         {
             // 获取UI元素引用
             behaviorTreeField = rootVisualElement.Q<ObjectField>("behavior-tree-field");
-
-            // 获取工具栏按钮
             var createButton = rootVisualElement.Q<Button>("create-button");
             var saveButton = rootVisualElement.Q<Button>("save-button");
             var autoLayoutButton = rootVisualElement.Q<Button>("auto-layout-button");
@@ -58,16 +55,15 @@ namespace MonsterBT.Editor
             if (behaviorTreeField != null)
             {
                 behaviorTreeField.objectType = typeof(BehaviorTree);
-                behaviorTreeField.RegisterValueChangedCallback(OnBehaviorTreeChanged);
+                behaviorTreeField?.RegisterValueChangedCallback(OnBehaviorTreeChanged);
             }
+            createButton?.RegisterCallback<ClickEvent>(OnCreateNewBehaviorTree);
+            saveButton?.RegisterCallback<ClickEvent>(OnSaveBehaviorTree);
+            autoLayoutButton?.RegisterCallback<ClickEvent>(OnAutoLayoutNodes);
+            playButton?.RegisterCallback<ClickEvent>(OnTogglePlayMode);
+            debugButton?.RegisterCallback<ClickEvent>(OnToggleDebugMode);
 
-            createButton?.RegisterCallback<ClickEvent>(_ => CreateNewBehaviorTree());
-            saveButton?.RegisterCallback<ClickEvent>(_ => SaveBehaviorTree());
-            autoLayoutButton?.RegisterCallback<ClickEvent>(_ => AutoLayoutNodes());
-            playButton?.RegisterCallback<ClickEvent>(_ => TogglePlayMode());
-            debugButton?.RegisterCallback<ClickEvent>(_ => ToggleDebugMode());
-
-            // 创建图形视图并添加到容器
+            // 创建Graph视图
             var graphContainer = rootVisualElement.Q<VisualElement>("graph-container");
             if (graphContainer != null)
             {
@@ -76,51 +72,42 @@ namespace MonsterBT.Editor
             }
 
             // 设置节点库添加事件
-            SetupNodeLibrary();
-        }
-
-        private void SetupNodeLibrary()
-        {
-            // 设置节点库中各节点项的功能
             var nodeItems = rootVisualElement.Query<VisualElement>(className: "node-list-item");
             nodeItems.ForEach(item =>
             {
-                item.RegisterCallback<MouseDownEvent>(evt =>
-                {
-                    // 添加一个节点到附近
-                });
+                item.RegisterCallback<ClickEvent>(OnClickSpawnNode);
+                item.RegisterCallback<MouseDownEvent>(OnDragSpawnNode);
             });
         }
 
+        private void OnBehaviorTreeChanged(ChangeEvent<Object> changeEvent)
+        {
+            currentBehaviorTree = changeEvent.newValue as BehaviorTree;
+            graphView.SetBehaviorTree(currentBehaviorTree);
+        }
 
-        private void AutoLayoutNodes()
+        private void OnAutoLayoutNodes(ClickEvent evt)
         {
             if (graphView != null && currentBehaviorTree != null)
             {
-                // 实现自动布局逻辑
+                // TODO:实现自动布局逻辑
                 Debug.Log("执行自动布局");
             }
         }
 
-        private void TogglePlayMode()
+        private void OnTogglePlayMode(ClickEvent evt)
         {
-            // 实现播放/停止行为树的功能
+            // TODO:实现播放/停止行为树的功能
             Debug.Log("切换播放模式");
         }
 
-        private void ToggleDebugMode()
+        private void OnToggleDebugMode(ClickEvent evt)
         {
-            // 实现调试模式切换
+            // TODO:实现调试模式切换
             Debug.Log("切换调试模式");
         }
 
-        private void OnBehaviorTreeChanged(ChangeEvent<Object> evt)
-        {
-            currentBehaviorTree = evt.newValue as BehaviorTree;
-            graphView.SetBehaviorTree(currentBehaviorTree);
-        }
-
-        private void CreateNewBehaviorTree()
+        private void OnCreateNewBehaviorTree(ClickEvent evt)
         {
             // 默认设置
             var tree = CreateInstance<BehaviorTree>();
@@ -130,7 +117,7 @@ namespace MonsterBT.Editor
             tree.RootNode = rootNode;
             tree.name = "New BehaviorTree";
 
-            // 请求保存
+            // 保存路径选择
             string path = EditorUtility.SaveFilePanelInProject(
                 "Save Behavior Tree",
                 "NewBehaviorTree",
@@ -138,19 +125,20 @@ namespace MonsterBT.Editor
                 "Please enter a file name to save the behavior tree to"
             );
 
-            if (!string.IsNullOrEmpty(path))
-            {
-                AssetDatabase.CreateAsset(tree, path);
-                AssetDatabase.AddObjectToAsset(rootNode, tree);
-                AssetDatabase.SaveAssets();
+            if (string.IsNullOrEmpty(path))
+                return;
 
-                behaviorTreeField.value = tree;
-                currentBehaviorTree = tree;
-                graphView.SetBehaviorTree(currentBehaviorTree);
-            }
+            // 保存到Asset文件中
+            AssetDatabase.CreateAsset(tree, path);
+            AssetDatabase.AddObjectToAsset(rootNode, tree);
+            AssetDatabase.SaveAssets();
+
+            behaviorTreeField.value = tree;
+            currentBehaviorTree = tree;
+            graphView.SetBehaviorTree(currentBehaviorTree);
         }
 
-        private void SaveBehaviorTree()
+        private void OnSaveBehaviorTree(ClickEvent evt)
         {
             if (currentBehaviorTree == null)
                 return;
@@ -159,5 +147,16 @@ namespace MonsterBT.Editor
             AssetDatabase.SaveAssets();
             Debug.Log("Behavior tree saved.");
         }
+
+        private void OnClickSpawnNode(ClickEvent evt)
+        {
+            
+        }
+
+        private void OnDragSpawnNode(MouseDownEvent evt)
+        {
+            
+        }
+
     }
 }

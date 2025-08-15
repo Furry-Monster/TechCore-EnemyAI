@@ -38,6 +38,7 @@ namespace MonsterBT.Editor
 
         private void SetupPorts()
         {
+            // Input Part
             if (Node is not RootNode)
             {
                 InputPort = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single,
@@ -46,6 +47,7 @@ namespace MonsterBT.Editor
                 inputContainer.Add(InputPort);
             }
 
+            // Output Part
             if (Node is RootNode or CompositeNode)
             {
                 OutputPort = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi,
