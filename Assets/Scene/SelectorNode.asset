@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SelectorNode
   m_EditorClassIdentifier: 
   nodeName: Node
-  position: {x: 0, y: 0}
+  position: {x: 428.80798, y: 438.81866}
   children:
   - {fileID: 11400000, guid: bc4adcd46376ee561ae14a1e3f3cb161, type: 2}
   - {fileID: 11400000, guid: 087d71114acffb41ba008511bbfc7c3a, type: 2}

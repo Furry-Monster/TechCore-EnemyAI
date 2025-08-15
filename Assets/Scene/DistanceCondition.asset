@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DistanceCondition
   m_EditorClassIdentifier: 
   nodeName: Node
-  position: {x: 0, y: 0}
+  position: {x: 914.808, y: 588.6469}
   targetKey: MainCamera
   compareDistance: 5
   comparison: 4

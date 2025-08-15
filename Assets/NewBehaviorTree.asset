@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Root
   m_EditorClassIdentifier: 
   nodeName: Node
-  position: {x: 400, y: 100}
+  position: {x: 339.97723, y: 254.25235}
   child: {fileID: 0}
 --- !u!114 &11400000
 MonoBehaviour:

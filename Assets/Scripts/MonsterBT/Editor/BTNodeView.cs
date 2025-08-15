@@ -12,124 +12,73 @@ namespace MonsterBT.Editor
         public Port InputPort { get; private set; }
         public Port OutputPort { get; private set; }
 
-        private VisualElement nodeRoot;
-        private Label nodeTitle;
-        private Label nodeDescription;
-        private VisualElement nodeIcon;
-        private VisualElement stateIndicator;
-
         public BTNodeView(BTNode node)
         {
             Node = node;
 
-            var template = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
-                "Assets/Scripts/MonsterBT/Editor/BTNodeLayout.uxml");
+            SetupNodeContent();
+            SetupPorts();
+            SetupNodeStyle();
 
-            if (template != null)
-            {
-                nodeRoot = template.CloneTree();
-                Add(nodeRoot);
-
-                SetupNodeElements();
-                SetupPorts();
-                SetupNodeData();
-                SetupNodeStyle();
-            }
-
-            // 设置位置
             SetPosition(new Rect(node.Position, Vector2.zero));
         }
 
-        private void SetupNodeElements()
+        private void SetupNodeContent()
         {
-            // 获取UI元素引用
-            nodeTitle = nodeRoot.Q<Label>("node-title");
-            nodeDescription = nodeRoot.Q<Label>("node-description");
-            nodeIcon = nodeRoot.Q<VisualElement>("node-icon");
-            stateIndicator = nodeRoot.Q<VisualElement>("node-state-indicator");
+            title = string.IsNullOrEmpty(Node.name) ? Node.GetType().Name : Node.name;
+
+            var description = new Label(GetNodeDescription())
+            {
+                name = "description"
+            };
+            description.AddToClassList("node-description");
+
+            mainContainer.Add(description);
         }
 
         private void SetupPorts()
         {
-            var inputPortContainer = nodeRoot.Q<VisualElement>("input-port");
-            var outputPortContainer = nodeRoot.Q<VisualElement>("output-port");
-
-            // 根据节点类型创建端口
             if (Node is not RootNode)
             {
-                InputPort = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(bool));
+                InputPort = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single,
+                    typeof(bool));
                 InputPort.portName = "";
-                inputPortContainer?.Add(InputPort);
-            }
-            else
-            {
-                // 隐藏根节点的输入端口
-                if (inputPortContainer != null)
-                {
-                    inputPortContainer.style.display = DisplayStyle.None;
-                }
+                inputContainer.Add(InputPort);
             }
 
-            // 输出端口
             if (Node is RootNode or CompositeNode)
             {
-                OutputPort = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Multi, typeof(bool));
+                OutputPort = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi,
+                    typeof(bool));
             }
             else if (Node is DecoratorNode)
             {
-                OutputPort = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Single,
+                OutputPort = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Single,
                     typeof(bool));
             }
 
             if (OutputPort != null)
             {
                 OutputPort.portName = "";
-                outputPortContainer?.Add(OutputPort);
+                outputContainer.Add(OutputPort);
             }
-            else
-            {
-                // 隐藏叶子节点的输出端口
-                if (outputPortContainer != null)
-                {
-                    outputPortContainer.style.display = DisplayStyle.None;
-                }
-            }
-        }
-
-        private void SetupNodeData()
-        {
-            // 设置节点标题
-            if (nodeTitle != null)
-            {
-                nodeTitle.text = string.IsNullOrEmpty(Node.name) ? Node.GetType().Name : Node.name;
-            }
-
-            // 设置节点描述
-            if (nodeDescription != null)
-            {
-                nodeDescription.text = GetNodeDescription();
-            }
-
-            // 设置状态指示器
-            UpdateStateIndicator();
         }
 
         private void SetupNodeStyle()
         {
             switch (Node)
             {
-                // 根据节点类型设置样式类
                 case RootNode:
-                    nodeRoot.AddToClassList("root");
+                    AddToClassList("root-node");
                     break;
                 case CompositeNode:
-                    nodeRoot.AddToClassList("composite");
+                    AddToClassList("composite-node");
                     break;
                 case DecoratorNode:
-                    nodeRoot.AddToClassList("decorator");
+                    AddToClassList("decorator-node");
                     break;
                 case ActionNode:
-                    nodeRoot.AddToClassList("action");
+                    AddToClassList("action-node");
                     break;
             }
         }
@@ -147,48 +96,11 @@ namespace MonsterBT.Editor
             };
         }
 
-        private void UpdateStateIndicator()
-        {
-            if (stateIndicator == null) return;
-
-            // 清除现有状态类
-            stateIndicator.RemoveFromClassList("running");
-            stateIndicator.RemoveFromClassList("success");
-            stateIndicator.RemoveFromClassList("failure");
-
-            // 根据节点状态设置样式
-            switch (Node.State)
-            {
-                case BTNodeState.Running:
-                    stateIndicator.AddToClassList("running");
-                    break;
-                case BTNodeState.Success:
-                    stateIndicator.AddToClassList("success");
-                    break;
-                case BTNodeState.Failure:
-                    stateIndicator.AddToClassList("failure");
-                    break;
-            }
-        }
-
         public override void SetPosition(Rect newPos)
         {
             base.SetPosition(newPos);
-
-            // 更新节点数据中的位置
             Node.Position = new Vector2(newPos.xMin, newPos.yMin);
-
-            // 标记为脏数据
-            if (Node != null)
-            {
-                EditorUtility.SetDirty(Node);
-            }
-        }
-
-        public void RefreshNode()
-        {
-            SetupNodeData();
-            UpdateStateIndicator();
+            EditorUtility.SetDirty(Node);
         }
     }
 }

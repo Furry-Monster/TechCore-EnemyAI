@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: DebugLogAction
   m_EditorClassIdentifier: 
   nodeName: Node
-  position: {x: 0, y: 0}
+  position: {x: 922.808, y: 335.6469}
   message: Debug Log Action
   logType: 3

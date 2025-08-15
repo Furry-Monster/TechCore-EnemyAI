@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: RootNode
   m_EditorClassIdentifier: 
   nodeName: Node
-  position: {x: 0, y: 0}
+  position: {x: 68.16196, y: 448.04218}
   child: {fileID: 11400000, guid: a181e4300ba76d263878f4bd96463206, type: 2}
