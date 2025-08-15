@@ -51,7 +51,6 @@
 .graph-container {
     background-color: rgb(30, 30, 30);
     flex: 1;
-    background-image: url('project://database/Assets/Scripts/MonsterBT/Resources/grid-bg.jpg');
     background-repeat: repeat;
 }
 

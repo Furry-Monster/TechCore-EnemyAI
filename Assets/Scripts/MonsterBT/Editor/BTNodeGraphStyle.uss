@@ -71,7 +71,6 @@
     font-size: 11px;
     font-weight: bold;
     margin-bottom: 4px;
-    text-align: center;
 }
 
 .minimap-viewport {
@@ -129,7 +128,6 @@
     padding: 4px 8px;
     align-self: center;
     min-width: 40px;
-    text-align: center;
 }
 
 /* 右键菜单 */
@@ -141,7 +139,6 @@
     border-radius: 6px;
     padding: 4px 0;
     min-width: 160px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .menu-section {
@@ -150,16 +147,11 @@
     border-bottom-color: rgb(50, 50, 50);
 }
 
-.menu-section:last-child {
-    border-bottom-width: 0;
-}
-
 .menu-header {
     color: rgb(150, 150, 150);
     font-size: 11px;
     font-weight: bold;
     padding: 4px 12px;
-    text-transform: uppercase;
 }
 
 .menu-item {
@@ -225,5 +217,4 @@
     border-width: 2px;
     border-color: rgb(100, 150, 255);
     border-radius: 4px;
-    border-style: dashed;
 }

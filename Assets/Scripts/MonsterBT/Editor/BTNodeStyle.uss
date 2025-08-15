@@ -7,7 +7,6 @@
     border-width: 2px;
     border-color: rgb(60, 60, 60);
     border-radius: 8px;
-    cursor: move;
 }
 
 .bt-node:hover {
@@ -72,7 +71,6 @@
     font-size: 13px;
     font-weight: bold;
     flex: 1;
-    text-align: left;
 }
 
 /* 状态指示器 */
@@ -155,7 +153,6 @@
 .condition-value {
     color: rgb(200, 200, 200);
     font-size: 11px;
-    font-family: 'Consolas', 'Monaco', monospace;
 }
 
 /* 连接点样式 */
@@ -227,7 +224,6 @@
     color: rgb(100, 255, 100);
     font-size: 11px;
     font-weight: bold;
-    text-align: center;
 }
 
 /* 节点类型特定样式 */
@@ -266,23 +262,6 @@
 
 .bt-node.action .node-header {
     background-color: rgb(85, 60, 60);
-}
-
-/* 节点动画和交互效果 */
-.bt-node.executing {
-    animation-name: pulse;
-    animation-duration: 1s;
-    animation-iteration-count: infinite;
-    animation-direction: alternate;
-}
-
-@keyframes pulse {
-    0% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0.7;
-    }
 }
 
 .bt-node.dragging {
