@@ -9,11 +9,6 @@
             </ui:VisualElement>
             <ui:VisualElement name="node-content" class="node-content">
                 <ui:Label name="node-description" text="Node Description" class="node-description" />
-                <ui:VisualElement name="node-properties" class="node-properties" />
-                <ui:VisualElement name="condition-display" class="condition-display" style="display: none;">
-                    <ui:Label name="condition-label" text="Condition:" class="condition-label" />
-                    <ui:Label name="condition-value" class="condition-value" />
-                </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="input-port" class="port input-port">

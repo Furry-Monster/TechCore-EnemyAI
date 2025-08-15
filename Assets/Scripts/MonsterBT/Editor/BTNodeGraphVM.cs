@@ -43,20 +43,18 @@ namespace MonsterBT.Editor
 
         private void PopulateView()
         {
-            // 暂时禁用事件监听
+            // 填充当前视图
             graphViewChanged -= OnGraphViewChanged;
 
             // 清除现有内容
             DeleteElements(graphElements);
             nodeViews.Clear();
 
-            // 重新启用事件监听
             graphViewChanged += OnGraphViewChanged;
 
             // 如果有行为树，创建节点视图
             if (behaviorTree?.RootNode != null)
             {
-                CreateNodeView(behaviorTree.RootNode);
                 CreateNodeViewsRecursive(behaviorTree.RootNode);
                 CreateConnections();
             }

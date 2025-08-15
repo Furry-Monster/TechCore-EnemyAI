@@ -55,6 +55,7 @@ namespace MonsterBT.Runtime
                 {
                     runtimeTree.Blackboard.SetGameObject("Owner", gameObject);
                     runtimeTree.Blackboard.SetTransform("OwnerTransform", transform);
+                    runtimeTree.Blackboard.SetGameObject("MainCamera", GameObject.Find("Main Camera"));
                 }
 
                 isRunning = true;
