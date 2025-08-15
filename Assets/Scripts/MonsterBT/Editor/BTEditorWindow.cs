@@ -159,12 +159,4 @@ namespace MonsterBT.Editor
         }
 
     }
-
-    public class SaveManipulator : KeyboardNavigationManipulator
-    {
-
-        public SaveManipulator(Action<KeyboardNavigationOperation, EventBase> action) : base(action)
-        {
-        }
-    }
 }
