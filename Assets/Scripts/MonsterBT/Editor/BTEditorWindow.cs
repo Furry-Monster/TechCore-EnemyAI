@@ -18,7 +18,7 @@ namespace MonsterBT.Editor
         {
             var window = GetWindow<BTEditorWindow>();
             window.titleContent = new GUIContent("Monster BehaviorTree");
-            window.minSize = new Vector2(1360, 1020);
+            window.minSize = new Vector2(1920, 1080);
         }
 
         public void OnEnable()

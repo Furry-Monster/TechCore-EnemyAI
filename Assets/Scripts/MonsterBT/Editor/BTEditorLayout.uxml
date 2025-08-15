@@ -1,17 +1,18 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements"
          xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements"
          editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
-         editor-extension-mode="False">
+         editor-extension-mode="True">
     <Style
-        src="project://database/Assets/Scripts/MonsterBT/Editor/MonsterBTEditor.uss?fileID=7433441132597879392&amp;guid=60d4d4fd49eefcb3a94470c1e4edecd0&amp;type=3#MonsterBTEditor" />
+        src="project://database/Assets/Scripts/MonsterBT/Editor/BTEditorStyle.uss?fileID=7433441132597879392&amp;guid=60d4d4fd49eefcb3a94470c1e4edecd0&amp;type=3#BTEditorStyle" />
     <ui:VisualElement name="behavior-tree-editor-root" class="behavior-tree-editor">
-        <ui:VisualElement name="main-toolbar" class="editor-toolbar">
+        <uie:Toolbar name="main-toolbar" class="editor-toolbar">
+            <uie:ObjectField label="Behavior Tree Asset" name="behavior-tree-field" class="toolbar-field" />
             <ui:Button name="create-button" text="Create New" class="toolbar-button" />
             <ui:Button name="save-button" text="Save" class="toolbar-button" />
             <ui:Button name="auto-layout-button" text="Auto Layout" class="toolbar-button" />
             <ui:Button name="play-button" text="▶ Play" class="toolbar-button" />
             <ui:Button name="debug-button" text="# Debug" class="toolbar-button" />
-        </ui:VisualElement>
+        </uie:Toolbar>
         <ui:VisualElement name="main-content" style="flex-direction: row; flex: 1;">
             <ui:VisualElement name="inspector-panel" class="sidebar">
                 <ui:Label text="Node Library" class="sidebar-title" />
@@ -50,14 +51,12 @@
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="graph-container" class="graph-view" style="flex: 1;" />
-
             <ui:VisualElement name="inspector-panel" class="sidebar">
                 <ui:Label text="Inspector" class="sidebar-title" />
                 <ui:VisualElement name="node-properties" class="sidebar-section">
                     <ui:Label text="Node Properties" class="sidebar-title" />
                     <ui:VisualElement name="property-container" />
                 </ui:VisualElement>
-
                 <ui:VisualElement name="blackboard-section" class="sidebar-section">
                     <ui:Label text="Blackboard" class="sidebar-title" />
                     <ui:VisualElement name="blackboard-container" class="blackboard-panel" />
