@@ -69,7 +69,6 @@
 .node-title {
     color: rgb(220, 220, 220);
     font-size: 13px;
-    font-weight: bold;
     flex: 1;
 }
 
@@ -223,7 +222,6 @@
 .debug-text {
     color: rgb(100, 255, 100);
     font-size: 11px;
-    font-weight: bold;
 }
 
 /* 节点类型特定样式 */
@@ -266,7 +264,6 @@
 
 .bt-node.dragging {
     opacity: 0.8;
-    transform: scale(1.02);
 }
 
 .bt-node.error {
