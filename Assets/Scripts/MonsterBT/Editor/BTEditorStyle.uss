@@ -48,127 +48,11 @@
 }
 
 /* 图形视图区域 */
-.graph-view {
+.graph-container {
     background-color: rgb(30, 30, 30);
     flex: 1;
     background-image: url('project://database/Assets/Scripts/MonsterBT/Resources/grid-bg.jpg');
     background-repeat: repeat;
-}
-
-/* 节点基础样式 */
-.bt-node {
-    background-color: rgb(45, 45, 45);
-    border-radius: 8px;
-    border-width: 2px;
-    border-color: rgb(60, 60, 60);
-    min-width: 150px;
-    min-height: 60px;
-    margin: 4px;
-    padding: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.bt-node:selected {
-    border-color: rgb(100, 150, 255);
-    box-shadow: 0 0 10px rgba(100, 150, 255, 0.5);
-}
-
-/* 不同类型节点的颜色 */
-.bt-node-root {
-    background-color: rgb(60, 80, 45);
-    border-color: rgb(80, 120, 60);
-}
-
-.bt-node-composite {
-    background-color: rgb(45, 60, 80);
-    border-color: rgb(60, 80, 120);
-}
-
-.bt-node-decorator {
-    background-color: rgb(80, 60, 45);
-    border-color: rgb(120, 80, 60);
-}
-
-.bt-node-action {
-    background-color: rgb(80, 45, 60);
-    border-color: rgb(120, 60, 80);
-}
-
-/* 节点标题 */
-.bt-node-title {
-    background-color: rgba(0, 0, 0, 0.3);
-    border-radius: 4px 4px 0 0;
-    padding: 4px 8px;
-    margin: -8px -8px 4px -8px;
-    color: rgb(220, 220, 220);
-    font-size: 12px;
-    font-weight: bold;
-    text-align: center;
-}
-
-.bt-node-title-root {
-    background-color: rgba(80, 120, 60, 0.8);
-}
-
-.bt-node-title-composite {
-    background-color: rgba(60, 80, 120, 0.8);
-}
-
-.bt-node-title-decorator {
-    background-color: rgba(120, 80, 60, 0.8);
-}
-
-.bt-node-title-action {
-    background-color: rgba(120, 60, 80, 0.8);
-}
-
-/* 节点内容区 */
-.bt-node-content {
-    padding: 4px;
-    color: rgb(200, 200, 200);
-    font-size: 11px;
-}
-
-/* 端口样式 */
-.port {
-    width: 12px;
-    height: 12px;
-    border-radius: 6px;
-    border-width: 2px;
-    margin: 2px;
-}
-
-.port-input {
-    background-color: rgb(100, 150, 255);
-    border-color: rgb(80, 130, 235);
-    align-self: flex-start;
-}
-
-.port-output {
-    background-color: rgb(255, 150, 100);
-    border-color: rgb(235, 130, 80);
-    align-self: flex-end;
-}
-
-.port:hover {
-    transform: scale(1.2);
-    transition-duration: 0.1s;
-}
-
-/* 连接线样式 */
-.edge {
-    stroke-width: 2px;
-    stroke: rgb(100, 150, 255);
-}
-
-.edge:hover {
-    stroke-width: 3px;
-    stroke: rgb(120, 170, 255);
-}
-
-.edge-selected {
-    stroke-width: 3px;
-    stroke: rgb(255, 200, 100);
 }
 
 /* 状态指示器 */
@@ -215,32 +99,6 @@
     border-radius: 2px;
 }
 
-/* 右键菜单 */
-.context-menu {
-    background-color: rgb(40, 40, 40);
-    border-radius: 4px;
-    border-width: 1px;
-    border-color: rgb(60, 60, 60);
-    padding: 4px 0;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-}
-
-.context-menu-item {
-    padding: 6px 16px;
-    color: rgb(200, 200, 200);
-    font-size: 12px;
-}
-
-.context-menu-item:hover {
-    background-color: rgb(60, 60, 60);
-}
-
-.context-menu-separator {
-    height: 1px;
-    background-color: rgb(60, 60, 60);
-    margin: 4px 8px;
-}
-
 /* 侧边栏 */
 .sidebar {
     background-color: rgb(40, 40, 40);
@@ -278,32 +136,3 @@
 .node-list-item:hover {
     background-color: rgb(60, 60, 60);
 }
-
-/* 黑板面板 */
-.blackboard-panel {
-    background-color: rgb(35, 35, 35);
-    padding: 8px;
-}
-
-.blackboard-entry {
-    background-color: rgb(45, 45, 45);
-    border-radius: 4px;
-    padding: 4px 8px;
-    margin: 2px 0;
-    flex-direction: row;
-    align-items: center;
-}
-
-.blackboard-key {
-    color: rgb(100, 150, 255);
-    font-weight: bold;
-    margin-right: 8px;
-    min-width: 80px;
-}
-
-.blackboard-type {
-    color: rgb(150, 150, 150);
-    font-size: 10px;
-    margin-left: auto;
-}
-                                                                                               

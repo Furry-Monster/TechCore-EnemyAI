@@ -50,7 +50,7 @@
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="graph-container" class="graph-view" style="flex: 1;" />
+            <ui:VisualElement name="graph-container" class="graph-container" style="flex: 1;" />
             <ui:VisualElement name="inspector-panel" class="sidebar">
                 <ui:Label text="Inspector" class="sidebar-title" />
                 <ui:VisualElement name="node-properties" class="sidebar-section">

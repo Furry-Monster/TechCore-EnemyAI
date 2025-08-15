@@ -8,7 +8,7 @@ namespace MonsterBT.Editor
 {
     public class BTEditorWindow : EditorWindow
     {
-        private BTGraphView graphView;
+        private BTNodeGraphView graphView;
         private ObjectField behaviorTreeField;
 
         private BehaviorTree currentBehaviorTree;
@@ -47,7 +47,7 @@ namespace MonsterBT.Editor
             // 获取UI元素引用
             behaviorTreeField = rootVisualElement.Q<ObjectField>("behavior-tree-field");
 
-            // 设置工具栏按钮事件
+            // 获取工具栏按钮
             var createButton = rootVisualElement.Q<Button>("create-button");
             var saveButton = rootVisualElement.Q<Button>("save-button");
             var autoLayoutButton = rootVisualElement.Q<Button>("auto-layout-button");
@@ -71,7 +71,7 @@ namespace MonsterBT.Editor
             var graphContainer = rootVisualElement.Q<VisualElement>("graph-container");
             if (graphContainer != null)
             {
-                graphView = new BTGraphView();
+                graphView = new BTNodeGraphView();
                 graphContainer.Add(graphView);
             }
 
@@ -98,7 +98,7 @@ namespace MonsterBT.Editor
         private void StartNodeDrag(VisualElement nodeItem, MouseDownEvent evt)
         {
             // 实现从节点库拖拽创建节点的功能
-            var nodeType = nodeItem.name.Replace("-item", "");
+            string nodeType = nodeItem.name.Replace("-item", "");
             Debug.Log($"开始拖拽节点类型: {nodeType}");
         }
 
@@ -166,7 +166,7 @@ namespace MonsterBT.Editor
 
             EditorUtility.SetDirty(currentBehaviorTree);
             AssetDatabase.SaveAssets();
-            Debug.Log("Behavior Tree Saved!");
+            Debug.Log("Behavior tree saved.");
         }
     }
 }
