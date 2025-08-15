@@ -1,5 +1,9 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <Style src="project://database/Assets/Scripts/MonsterBT/Editor/BTNodeStyle.uss?fileID=7433441132597879392&amp;guid=544af097bfcb62286a409a92a708ec22&amp;type=3#BTNodeStyle" />
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements"
+         xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements"
+         editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
+         editor-extension-mode="True">
+    <Style
+        src="project://database/Assets/Scripts/MonsterBT/Editor/BTNodeGraphStyle.uss?fileID=7433441132597879392&amp;guid=d8836b4515665d46bb37c6381dbc7575&amp;type=3#BTNodeGraphStyle" />
     <ui:VisualElement name="node-root" class="bt-node" style="top: 158px; left: 88px;">
         <ui:VisualElement name="node-body" class="node-body">
             <ui:VisualElement name="node-header" class="node-header">

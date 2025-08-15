@@ -8,7 +8,7 @@ namespace MonsterBT.Editor
 {
     public class BTEditorWindow : EditorWindow
     {
-        private BTNodeGraphVM graphView;
+        private BTNodeGraphView graphView;
         private ObjectField behaviorTreeField;
 
         private BehaviorTree currentBehaviorTree;
@@ -71,7 +71,7 @@ namespace MonsterBT.Editor
             var graphContainer = rootVisualElement.Q<VisualElement>("graph-container");
             if (graphContainer != null)
             {
-                graphView = new BTNodeGraphVM();
+                graphView = new BTNodeGraphView();
                 graphContainer.Add(graphView);
             }
 

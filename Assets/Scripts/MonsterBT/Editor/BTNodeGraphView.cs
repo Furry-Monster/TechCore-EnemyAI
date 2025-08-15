@@ -3,25 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace MonsterBT.Editor
 {
-    public class BTNodeGraphVM : GraphView
+    public class BTNodeGraphView : GraphView
     {
-        private BehaviorTree behaviorTree;
-        private Dictionary<BTNode, BTNodeVM> nodeViews;
-
-        public BTNodeGraphVM()
+        public new class UxmlFactory : UxmlFactory<BTNodeGraphView, UxmlTraits>
         {
+        }
+
+        private BehaviorTree behaviorTree;
+        private Dictionary<Runtime.BTNode, BTNode> nodeViews;
+
+        public BTNodeGraphView()
+        {
+            behaviorTree = null;
+            nodeViews = new Dictionary<Runtime.BTNode, BTNode>();
+
             styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>(
                 "Assets/Scripts/MonsterBT/Editor/BTNodeGraphStyle.uss"));
 
-            nodeViews = new Dictionary<BTNode, BTNodeVM>();
-
-            SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
-
+            this.AddManipulator(new ContentZoomer());
             this.AddManipulator(new ContentDragger());
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
@@ -60,7 +63,7 @@ namespace MonsterBT.Editor
             }
         }
 
-        private void CreateNodeViewsRecursive(BTNode node)
+        private void CreateNodeViewsRecursive(Runtime.BTNode node)
         {
             if (node is CompositeNode composite)
             {
@@ -82,12 +85,12 @@ namespace MonsterBT.Editor
             }
         }
 
-        private void CreateNodeView(BTNode node)
+        private void CreateNodeView(Runtime.BTNode node)
         {
             if (nodeViews.ContainsKey(node))
                 return;
 
-            var nodeView = new BTNodeVM(node);
+            var nodeView = new BTNode(node);
             nodeViews[node] = nodeView;
             AddElement(nodeView);
         }
@@ -118,7 +121,7 @@ namespace MonsterBT.Editor
             }
         }
 
-        private void ConnectNodes(BTNodeVM parentView, BTNodeVM childView)
+        private void ConnectNodes(BTNode parentView, BTNode childView)
         {
             if (parentView.OutputPort != null && childView.InputPort != null)
             {
@@ -134,15 +137,15 @@ namespace MonsterBT.Editor
             {
                 foreach (var element in graphViewChange.elementsToRemove)
                 {
-                    if (element is BTNodeVM nodeView)
+                    if (element is BTNode nodeView)
                     {
                         nodeViews.Remove(nodeView.Node);
                     }
                     else if (element is Edge edge)
                     {
                         // 断开连接
-                        var parentView = edge.output.node as BTNodeVM;
-                        var childView = edge.input.node as BTNodeVM;
+                        var parentView = edge.output.node as BTNode;
+                        var childView = edge.input.node as BTNode;
 
                         if (parentView?.Node is RootNode rootNode)
                         {
@@ -165,8 +168,8 @@ namespace MonsterBT.Editor
             {
                 foreach (var edge in graphViewChange.edgesToCreate)
                 {
-                    var parentView = edge.output.node as BTNodeVM;
-                    var childView = edge.input.node as BTNodeVM;
+                    var parentView = edge.output.node as BTNode;
+                    var childView = edge.input.node as BTNode;
 
                     if (parentView?.Node is RootNode rootNode && childView != null)
                     {

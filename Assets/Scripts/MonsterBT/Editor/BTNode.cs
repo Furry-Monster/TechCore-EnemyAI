@@ -6,9 +6,9 @@ using UnityEngine.UIElements;
 
 namespace MonsterBT.Editor
 {
-    public sealed class BTNodeVM : Node
+    public sealed class BTNode : Node
     {
-        public BTNode Node { get; }
+        public Runtime.BTNode Node { get; }
         public Port InputPort { get; private set; }
         public Port OutputPort { get; private set; }
 
@@ -18,7 +18,7 @@ namespace MonsterBT.Editor
         private VisualElement nodeIcon;
         private VisualElement stateIndicator;
 
-        public BTNodeVM(BTNode node)
+        public BTNode(Runtime.BTNode node)
         {
             Node = node;
 
