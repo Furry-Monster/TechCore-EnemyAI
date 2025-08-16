@@ -1,3 +1,4 @@
+using MonsterBT.Runtime.Utils;
 using UnityEngine;
 
 namespace MonsterBT.Runtime
@@ -7,15 +8,8 @@ namespace MonsterBT.Runtime
     /// </summary>
     public abstract class BTNode : ScriptableObject
     {
-        [SerializeField] protected string nodeName = "Node";
         [SerializeField] protected string description;
-        [SerializeField] protected Vector2 position;
-
-        public string NodeName
-        {
-            get => nodeName;
-            set => nodeName = value;
-        }
+        [SerializeField] [ReadOnly] protected Vector2 position;
 
         public string Description
         {
