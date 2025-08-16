@@ -60,8 +60,8 @@ namespace MonsterBT.Editor
 
             graphViewChanged += OnGraphViewChanged;
 
-            RegisterCallback<MouseDownEvent>(OnMouseDown);
-            RegisterCallback<KeyDownEvent>(OnKeyDown);
+            // 使用更可靠的事件监听方式
+            this.schedule.Execute(CheckSelection).Every(100);
 
             PopulateView();
         }
@@ -229,9 +229,6 @@ namespace MonsterBT.Editor
                     }
                 }
             }
-
-            // 处理选择变化
-            CheckSelectionChange();
 
             return graphViewChange;
         }
@@ -436,35 +433,26 @@ namespace MonsterBT.Editor
         public event Action<BTNode> OnNodeSelected;
         public event Action OnNodeDeselected;
 
-        private void CheckSelectionChange()
+        private BTNode lastSelectedNode;
+
+        private void CheckSelection()
         {
             var selectedNodes = selection.OfType<BTNodeView>().ToList();
+            var currentSelectedNode = selectedNodes.Count == 1 ? selectedNodes[0].Node : null;
 
-            switch (selectedNodes.Count)
+            // 检查选择是否发生变化
+            if (currentSelectedNode != lastSelectedNode)
             {
-                case 1:
-                    // 选中了一个节点
-                    OnNodeSelected?.Invoke(selectedNodes[0].Node);
-                    break;
-                default:
-                    // 选中了0或多个节点，取消选择
+                lastSelectedNode = currentSelectedNode;
+
+                if (currentSelectedNode != null)
+                {
+                    OnNodeSelected?.Invoke(currentSelectedNode);
+                }
+                else
+                {
                     OnNodeDeselected?.Invoke();
-                    break;
-            }
-        }
-
-        private void OnMouseDown(MouseDownEvent evt)
-        {
-            // 延迟检查选择变化，因为选择在鼠标事件后更新
-            schedule.Execute(CheckSelectionChange).ExecuteLater(10);
-        }
-
-        private void OnKeyDown(KeyDownEvent evt)
-        {
-            // 键盘选择变化（如ESC取消选择）
-            if (evt.keyCode == KeyCode.Escape)
-            {
-                schedule.Execute(CheckSelectionChange).ExecuteLater(10);
+                }
             }
         }
 

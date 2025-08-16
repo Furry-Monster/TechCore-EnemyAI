@@ -160,7 +160,7 @@ namespace MonsterBT.Editor
 
         private bool IsIgnoredField(FieldInfo field)
         {
-            var ignoredFields = new[] { "name", "hideFlags", "description", "position" };
+            string[] ignoredFields = { "name", "hideFlags", "description", "position" };
             return ignoredFields.Contains(field.Name.ToLower()) ||
                    field.Name.StartsWith("m_");
         }
@@ -168,7 +168,7 @@ namespace MonsterBT.Editor
         private VisualElement CreateFieldEditor(FieldInfo field, BTNode node)
         {
             var fieldType = field.FieldType;
-            var fieldName = ObjectNames.NicifyVariableName(field.Name);
+            string fieldName = ObjectNames.NicifyVariableName(field.Name);
 
             return fieldType switch
             {

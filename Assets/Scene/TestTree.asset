@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ae69903f07736620982525bad125447, type: 3}
   m_Name: SequenceNode
   m_EditorClassIdentifier: 
-  nodeName: Node
   description: 
-  position: {x: 663, y: 100}
+  position: {x: 595, y: 100}
   children:
   - {fileID: 4553742961081212638}
   - {fileID: -3614310404712623727}
@@ -29,11 +28,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 79c3957fec07d346d91b5436e50e79d7, type: 3}
-  m_Name: DebugLogAction (Paste)
+  m_Name: DebugLogAction
   m_EditorClassIdentifier: 
-  nodeName: Node
   description: 
-  position: {x: 1005, y: 100}
+  position: {x: 1063.5, y: 100}
   message: Debug Log Action
   logType: 3
 --- !u!114 &11400000
@@ -62,7 +60,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ab2cf2e11c18830c982241b752fb2bc, type: 3}
   m_Name: Inverter
   m_EditorClassIdentifier: 
-  nodeName: Node
   description: 
   position: {x: 1005, y: 361}
   child: {fileID: 88198486191775261}
@@ -78,9 +75,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ab2cf2e11c18830c982241b752fb2bc, type: 3}
   m_Name: Inverter
   m_EditorClassIdentifier: 
-  nodeName: Node
   description: 
-  position: {x: 1324, y: 361}
+  position: {x: 1434.96, y: 361}
   child: {fileID: 7058665364046921447}
 --- !u!114 &4553742961081212638
 MonoBehaviour:
@@ -94,9 +90,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79c3957fec07d346d91b5436e50e79d7, type: 3}
   m_Name: DebugLogAction
   m_EditorClassIdentifier: 
-  nodeName: Node
   description: 
-  position: {x: 1005, y: -138}
+  position: {x: 1005, y: -139.36}
   message: Debug Log Action
   logType: 3
 --- !u!114 &7058665364046921447
@@ -111,7 +106,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79c3957fec07d346d91b5436e50e79d7, type: 3}
   m_Name: DebugLogAction
   m_EditorClassIdentifier: 
-  nodeName: Node
   description: 
   position: {x: 1619, y: 361}
   message: Debug Log Action
@@ -128,7 +122,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f12988c564c2ab858f100b28b9ed2fb, type: 3}
   m_Name: ROOT
   m_EditorClassIdentifier: 
-  nodeName: Node
   description: 
-  position: {x: 400, y: 100}
+  position: {x: 367, y: 100}
   child: {fileID: -6670785265910811436}
