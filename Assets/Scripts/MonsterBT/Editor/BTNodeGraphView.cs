@@ -60,6 +60,8 @@ namespace MonsterBT.Editor
             PopulateView();
         }
 
+        #region General Methods
+
         public void SetBehaviorTree(BehaviorTree tree)
         {
             behaviorTree = tree;
@@ -224,7 +226,31 @@ namespace MonsterBT.Editor
                 }
             }
 
+            // 处理选择变化
+            CheckSelectionChange();
+
             return graphViewChange;
+        }
+
+        private void CheckSelectionChange()
+        {
+            var selectedNodes = selection.OfType<BTNodeView>().ToList();
+            
+            if (selectedNodes.Count == 1)
+            {
+                // 选中了一个节点
+                OnNodeSelected?.Invoke(selectedNodes[0].Node);
+            }
+            else if (selectedNodes.Count == 0)
+            {
+                // 没有选中任何节点
+                OnNodeDeselected?.Invoke();
+            }
+            else
+            {
+                // 选中了多个节点，暂时取消选择
+                OnNodeDeselected?.Invoke();
+            }
         }
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
@@ -236,6 +262,8 @@ namespace MonsterBT.Editor
                     endPort.node != startPort.node)
                 .ToList();
         }
+
+        #endregion
 
         #region ContextMenu Ops
 
@@ -314,7 +342,7 @@ namespace MonsterBT.Editor
             evt.menu.AppendAction("Delete", _ => DeleteNode(nodeView), DropdownMenuAction.AlwaysEnabled);
         }
 
-        private void CreateNode<T>() where T : BTNode
+        public void CreateNode<T>() where T : BTNode
         {
             if (behaviorTree == null)
                 return;
@@ -416,6 +444,13 @@ namespace MonsterBT.Editor
 
             return type.Name;
         }
+
+        #endregion
+
+        #region Inspector Notifications
+
+        public event Action<BTNode> OnNodeSelected;
+        public event Action OnNodeDeselected;
 
         #endregion
 

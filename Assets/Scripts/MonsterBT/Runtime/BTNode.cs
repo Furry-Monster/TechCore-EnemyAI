@@ -8,9 +8,20 @@ namespace MonsterBT.Runtime
     public abstract class BTNode : ScriptableObject
     {
         [SerializeField] protected string nodeName = "Node";
+        [SerializeField] protected string description;
         [SerializeField] protected Vector2 position;
 
-        public string NodeName => nodeName;
+        public string NodeName
+        {
+            get => nodeName;
+            set => nodeName = value;
+        }
+
+        public string Description
+        {
+            get => description;
+            set => description = value;
+        }
 
         public Vector2 Position
         {

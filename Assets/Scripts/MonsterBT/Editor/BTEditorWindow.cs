@@ -11,9 +11,12 @@ namespace MonsterBT.Editor
     public class BTEditorWindow : EditorWindow
     {
         private BTNodeGraphView graphView;
+        private BTPropInspector inspector;
         private ObjectField behaviorTreeField;
 
         private BehaviorTree currentBehaviorTree;
+
+        #region UI Methods
 
         [MenuItem("Window/MonsterBT/BehaviorTree")]
         public static void ShowWindow()
@@ -73,6 +76,21 @@ namespace MonsterBT.Editor
                 graphContainer.Add(graphView);
             }
 
+            // 创建Inspector视图
+            var propContainer = rootVisualElement.Q<VisualElement>("property-container");
+            if (propContainer != null)
+            {
+                inspector = new BTPropInspector();
+                propContainer.Add(inspector);
+            }
+
+            // 连接GraphView和Inspector
+            if (graphView != null && inspector != null)
+            {
+                graphView.OnNodeSelected += inspector.SetSelectedNode;
+                graphView.OnNodeDeselected += inspector.ClearSelection;
+            }
+
             // 设置节点库添加事件
             var nodeItems = rootVisualElement.Query<VisualElement>(className: "node-list-item");
             nodeItems.ForEach(item =>
@@ -81,6 +99,10 @@ namespace MonsterBT.Editor
                 item.RegisterCallback<MouseDownEvent>(OnDragSpawnNode);
             });
         }
+
+        #endregion
+
+        #region Toolbar Callbacks
 
         private void OnBehaviorTreeChanged(ChangeEvent<Object> changeEvent)
         {
@@ -150,6 +172,10 @@ namespace MonsterBT.Editor
             Debug.Log("Behavior tree saved.");
         }
 
+        #endregion
+
+        #region Library Callbacks
+
         private void OnClickSpawnNode(ClickEvent evt)
         {
         }
@@ -157,6 +183,12 @@ namespace MonsterBT.Editor
         private void OnDragSpawnNode(MouseDownEvent evt)
         {
         }
+
+        #endregion
+
+        #region Inspector Callbacks
+
+        #endregion
 
     }
 }

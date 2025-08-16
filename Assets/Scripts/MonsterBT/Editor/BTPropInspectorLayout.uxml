@@ -1,0 +1,12 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements"
+         xsi="http://www.w3.org/2001/XMLSchema-instance"
+         engine="UnityEngine.UIElements"
+         editor="UnityEditor.UIElements"
+         noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd"
+         editor-extension-mode="True">
+    <ui:VisualElement name="inspector-container" class="inspector-container">
+        <ui:ScrollView name="content-scroll" class="content-scroll">
+            <ui:Label name="empty-state" text="No Node Selected" class="empty-state" style="display: none;" />
+        </ui:ScrollView>
+    </ui:VisualElement>
+</ui:UXML>
