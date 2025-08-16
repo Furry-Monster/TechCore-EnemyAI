@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Reflection;
 using MonsterBT.Runtime;
@@ -273,7 +274,7 @@ namespace MonsterBT.Editor
 
         private EnumField CreateEnumField(FieldInfo field, BTNode node, string displayName)
         {
-            var enumValue = (System.Enum)field.GetValue(node);
+            var enumValue = (Enum)field.GetValue(node);
             var enumField = new EnumField(displayName, enumValue);
 
             enumField.RegisterValueChangedCallback(evt =>

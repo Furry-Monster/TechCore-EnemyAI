@@ -18,6 +18,8 @@ namespace MonsterBT.Editor
         private BehaviorTree behaviorTree;
         private Dictionary<BTNode, BTNodeView> nodeViews;
 
+        #region General GraphView Methods
+
         public BTNodeGraphView()
         {
             behaviorTree = null;
@@ -57,10 +59,12 @@ namespace MonsterBT.Editor
             AddToClassList("node-graph-view");
 
             graphViewChanged += OnGraphViewChanged;
+
+            RegisterCallback<MouseDownEvent>(OnMouseDown);
+            RegisterCallback<KeyDownEvent>(OnKeyDown);
+
             PopulateView();
         }
-
-        #region General Methods
 
         public void SetBehaviorTree(BehaviorTree tree)
         {
@@ -232,26 +236,6 @@ namespace MonsterBT.Editor
             return graphViewChange;
         }
 
-        private void CheckSelectionChange()
-        {
-            var selectedNodes = selection.OfType<BTNodeView>().ToList();
-            
-            if (selectedNodes.Count == 1)
-            {
-                // 选中了一个节点
-                OnNodeSelected?.Invoke(selectedNodes[0].Node);
-            }
-            else if (selectedNodes.Count == 0)
-            {
-                // 没有选中任何节点
-                OnNodeDeselected?.Invoke();
-            }
-            else
-            {
-                // 选中了多个节点，暂时取消选择
-                OnNodeDeselected?.Invoke();
-            }
-        }
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
         {
@@ -265,7 +249,7 @@ namespace MonsterBT.Editor
 
         #endregion
 
-        #region ContextMenu Ops
+        #region ContextMenu Methods
 
         private BTNode copiedNode;
         private Vector2 mousePosition;
@@ -451,6 +435,41 @@ namespace MonsterBT.Editor
 
         public event Action<BTNode> OnNodeSelected;
         public event Action OnNodeDeselected;
+
+        private void CheckSelectionChange()
+        {
+            var selectedNodes = selection.OfType<BTNodeView>().ToList();
+            Debug.Log($"BTNodeGraphView: 选择变化检查 - 选中节点数: {selectedNodes.Count}");
+
+            switch (selectedNodes.Count)
+            {
+                case 1:
+                    // 选中了一个节点
+                    Debug.Log($"BTNodeGraphView: 触发节点选中事件 - {selectedNodes[0].Node.name}");
+                    OnNodeSelected?.Invoke(selectedNodes[0].Node);
+                    break;
+                default:
+                    // 选中了0或多个节点，取消选择
+                    Debug.Log("BTNodeGraphView: 触发节点取消选中事件");
+                    OnNodeDeselected?.Invoke();
+                    break;
+            }
+        }
+
+        private void OnMouseDown(MouseDownEvent evt)
+        {
+            // 延迟检查选择变化，因为选择在鼠标事件后更新
+            schedule.Execute(CheckSelectionChange).ExecuteLater(10);
+        }
+
+        private void OnKeyDown(KeyDownEvent evt)
+        {
+            // 键盘选择变化（如ESC取消选择）
+            if (evt.keyCode == KeyCode.Escape)
+            {
+                schedule.Execute(CheckSelectionChange).ExecuteLater(10);
+            }
+        }
 
         #endregion
 

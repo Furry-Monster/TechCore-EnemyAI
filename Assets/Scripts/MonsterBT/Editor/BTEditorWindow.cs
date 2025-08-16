@@ -1,4 +1,3 @@
-using System;
 using MonsterBT.Runtime;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -87,8 +86,14 @@ namespace MonsterBT.Editor
             // 连接GraphView和Inspector
             if (graphView != null && inspector != null)
             {
-                graphView.OnNodeSelected += inspector.SetSelectedNode;
-                graphView.OnNodeDeselected += inspector.ClearSelection;
+                graphView.OnNodeSelected += OnNodeSelected;
+                graphView.OnNodeDeselected += OnNodeDeselected;
+                Debug.Log("BTEditorWindow: GraphView和Inspector事件已连接");
+            }
+            else
+            {
+                Debug.LogError(
+                    $"BTEditorWindow: 连接失败 - graphView: {graphView != null}, inspector: {inspector != null}");
             }
 
             // 设置节点库添加事件
@@ -187,6 +192,18 @@ namespace MonsterBT.Editor
         #endregion
 
         #region Inspector Callbacks
+
+        private void OnNodeSelected(BTNode node)
+        {
+            Debug.Log($"BTEditorWindow: 节点选中 - {node.name}");
+            inspector?.SetSelectedNode(node);
+        }
+
+        private void OnNodeDeselected()
+        {
+            Debug.Log("BTEditorWindow: 节点取消选中");
+            inspector?.ClearSelection();
+        }
 
         #endregion
 
