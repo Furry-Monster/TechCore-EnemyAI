@@ -1,10 +1,15 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using MonsterBT.Runtime;
+using MonsterBT.Runtime.Actions;
+using MonsterBT.Runtime.Conditions;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Blackboard = UnityEditor.Experimental.GraphView.Blackboard;
+using Object = UnityEngine.Object;
 
 namespace MonsterBT.Editor
 {
@@ -25,11 +30,24 @@ namespace MonsterBT.Editor
             this.AddManipulator(new ContentDragger());
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
+            this.AddManipulator(new ContextualMenuManipulator(BuildContextualMenu));
 
-            var miniMap = new MiniMap();
-            miniMap.name = "mini-map";
+            SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
+
+            var miniMap = new MiniMap
+            {
+                name = "mini-map",
+            };
             miniMap.AddToClassList("mini-map");
             Add(miniMap);
+
+            var blackboard = new Blackboard
+            {
+                name = "blackboard",
+                title = "Variables"
+            };
+            blackboard.AddToClassList("blackboard");
+            Add(blackboard);
 
             var grid = new GridBackground();
             Insert(0, grid);
@@ -217,6 +235,199 @@ namespace MonsterBT.Editor
                     endPort.direction != startPort.direction &&
                     endPort.node != startPort.node)
                 .ToList();
+        }
+
+        private BTNode copiedNode;
+        private Vector2 mousePosition;
+
+        public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
+        {
+            mousePosition = evt.localMousePosition;
+
+            switch (evt.target)
+            {
+                case GraphView:
+                    BuildGraphContextMenu(evt);
+                    break;
+                case BTNodeView nodeView:
+                    BuildNodeContextMenu(evt, nodeView);
+                    break;
+            }
+        }
+
+        private void BuildGraphContextMenu(ContextualMenuPopulateEvent evt)
+        {
+            // 复合节点
+            evt.menu.AppendAction("Create Node/Composite/Sequence", _ => CreateNode<SequenceNode>(),
+                DropdownMenuAction.AlwaysEnabled);
+            evt.menu.AppendAction("Create Node/Composite/Selector", _ => CreateNode<SelectorNode>(),
+                DropdownMenuAction.AlwaysEnabled);
+
+            // 装饰器节点
+            evt.menu.AppendAction("Create Node/Decorator/Inverter", _ => CreateNode<Inverter>(),
+                DropdownMenuAction.AlwaysEnabled);
+
+            // 行为节点
+            evt.menu.AppendAction("Create Node/Action/Move To Target",
+                _ => CreateNode<MoveToTargetAction>(), DropdownMenuAction.AlwaysEnabled);
+            evt.menu.AppendAction("Create Node/Action/Wait", _ => CreateNode<WaitAction>(),
+                DropdownMenuAction.AlwaysEnabled);
+            evt.menu.AppendAction("Create Node/Action/Debug Log",
+                _ => CreateNode<DebugLogAction>(), DropdownMenuAction.AlwaysEnabled);
+
+            // 条件节点
+            evt.menu.AppendAction("Create Node/Condition/Distance Check",
+                _ => CreateNode<DistanceCondition>(), DropdownMenuAction.AlwaysEnabled);
+
+            // 粘贴功能
+            evt.menu.AppendAction("Paste", _ => PasteNode(),
+                action => copiedNode == null
+                    ? DropdownMenuAction.AlwaysDisabled(action)
+                    : DropdownMenuAction.AlwaysEnabled(action));
+
+            // Blackboard变量管理
+            evt.menu.AppendAction("Blackboard/Add Boolean", _ => AddBlackboardVariable("NewBool", typeof(bool)),
+                DropdownMenuAction.AlwaysEnabled);
+            evt.menu.AppendAction("Blackboard/Add Float", _ => AddBlackboardVariable("NewFloat", typeof(float)),
+                DropdownMenuAction.AlwaysEnabled);
+            evt.menu.AppendAction("Blackboard/Add Vector3", _ => AddBlackboardVariable("NewVector3", typeof(Vector3)),
+                DropdownMenuAction.AlwaysEnabled);
+            evt.menu.AppendAction("Blackboard/Add GameObject",
+                _ => AddBlackboardVariable("NewGameObject", typeof(GameObject)), DropdownMenuAction.AlwaysEnabled);
+            evt.menu.AppendAction("Blackboard/Add String", _ => AddBlackboardVariable("NewString", typeof(string)),
+                DropdownMenuAction.AlwaysEnabled);
+        }
+
+        private void BuildNodeContextMenu(ContextualMenuPopulateEvent evt, BTNodeView nodeView)
+        {
+            // 基本操作
+            evt.menu.AppendAction("Copy", _ => CopyNode(nodeView), DropdownMenuAction.AlwaysEnabled);
+            evt.menu.AppendAction("Cut", _ => CutNode(nodeView), DropdownMenuAction.AlwaysEnabled);
+            evt.menu.AppendAction("Duplicate", _ => DuplicateNode(nodeView), DropdownMenuAction.AlwaysEnabled);
+            evt.menu.AppendAction("Delete", _ => DeleteNode(nodeView), DropdownMenuAction.AlwaysEnabled);
+        }
+
+        private void CreateNode<T>() where T : BTNode
+        {
+            if (behaviorTree == null)
+                return;
+
+            var node = ScriptableObject.CreateInstance<T>();
+            node.name = typeof(T).Name;
+
+            // 添加到行为树资源
+            AssetDatabase.AddObjectToAsset(node, behaviorTree);
+
+            // 创建视图
+            var nodeView = new BTNodeView(node);
+            nodeView.SetPosition(new Rect(mousePosition, Vector2.zero));
+
+            nodeViews[node] = nodeView;
+            AddElement(nodeView);
+
+            // 标记资源已修改
+            EditorUtility.SetDirty(behaviorTree);
+            AssetDatabase.SaveAssets();
+        }
+
+        private void CopyNode(BTNodeView nodeView)
+        {
+            copiedNode = nodeView.Node;
+        }
+
+        private void CutNode(BTNodeView nodeView)
+        {
+            CopyNode(nodeView);
+            DeleteNode(nodeView);
+        }
+
+        private void DuplicateNode(BTNodeView nodeView)
+        {
+            if (behaviorTree == null)
+                return;
+
+            var originalNode = nodeView.Node;
+            var duplicatedNode = Object.Instantiate(originalNode);
+            duplicatedNode.name = originalNode.name + " (Copy)";
+
+            // 添加到行为树资源
+            AssetDatabase.AddObjectToAsset(duplicatedNode, behaviorTree);
+
+            // 创建视图
+            var duplicatedView = new BTNodeView(duplicatedNode);
+            var originalPos = nodeView.GetPosition();
+            duplicatedView.SetPosition(new Rect(originalPos.x + 200, originalPos.y, originalPos.width,
+                originalPos.height));
+
+            nodeViews[duplicatedNode] = duplicatedView;
+            AddElement(duplicatedView);
+
+            // 标记资源已修改
+            EditorUtility.SetDirty(behaviorTree);
+            AssetDatabase.SaveAssets();
+        }
+
+        private void DeleteNode(BTNodeView nodeView)
+        {
+            if (nodeView.Node is RootNode)
+            {
+                Debug.LogWarning("Cannot delete root node!");
+                return;
+            }
+
+            RemoveElement(nodeView);
+            nodeViews.Remove(nodeView.Node);
+
+            // 从资源中移除
+            Object.DestroyImmediate(nodeView.Node, true);
+
+            // 标记资源已修改
+            EditorUtility.SetDirty(behaviorTree);
+            AssetDatabase.SaveAssets();
+        }
+
+        private void PasteNode()
+        {
+            if (copiedNode == null || behaviorTree == null)
+                return;
+
+            var pastedNode = Object.Instantiate(copiedNode);
+            pastedNode.name = copiedNode.name + " (Paste)";
+
+            // 添加到行为树资源
+            AssetDatabase.AddObjectToAsset(pastedNode, behaviorTree);
+
+            // 创建视图
+            var pastedView = new BTNodeView(pastedNode);
+            pastedView.SetPosition(new Rect(mousePosition, Vector2.zero));
+
+            nodeViews[pastedNode] = pastedView;
+            AddElement(pastedView);
+
+            // 标记资源已修改
+            EditorUtility.SetDirty(behaviorTree);
+            AssetDatabase.SaveAssets();
+        }
+
+        private void AddBlackboardVariable(string varName, Type varType)
+        {
+            var blackboard = this.Q<Blackboard>();
+            if (blackboard == null)
+                return;
+
+            var field = new BlackboardField { text = varName, typeText = GetTypeDisplayName(varType) };
+            blackboard.Add(field);
+        }
+
+        private string GetTypeDisplayName(Type type)
+        {
+            if (type == typeof(bool)) return "bool";
+            if (type == typeof(float)) return "float";
+            if (type == typeof(Vector3)) return "Vector3";
+            if (type == typeof(GameObject)) return "GameObject";
+            if (type == typeof(string)) return "string";
+
+            return type.Name;
         }
     }
 }

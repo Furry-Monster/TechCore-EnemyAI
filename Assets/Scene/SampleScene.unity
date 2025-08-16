@@ -991,7 +991,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb7d3e86b51c0d6e4b8ee021a70c7c27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  behaviorTreeAsset: {fileID: 11400000, guid: 93342144f0c032b57bf6d9044c16ca3c, type: 2}
+  behaviorTreeAsset: {fileID: 0}
   runOnStart: 1
   debugMode: 0
 --- !u!1 &2101720455
