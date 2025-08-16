@@ -57,10 +57,6 @@
                     <ui:Label text="Node Properties" class="sidebar-title" />
                     <ui:VisualElement name="property-container" />
                 </ui:VisualElement>
-                <ui:VisualElement name="blackboard-section" class="sidebar-section">
-                    <ui:Label text="Blackboard" class="sidebar-title" />
-                    <ui:VisualElement name="blackboard-container" class="blackboard-panel" />
-                </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="status-bar" class="status-bar">

@@ -77,10 +77,9 @@ namespace MonsterBT.Editor
 
             graphViewChanged += OnGraphViewChanged;
 
-            // 如果有行为树，创建节点视图
             if (behaviorTree?.RootNode != null)
             {
-                CreateNodeView(behaviorTree.RootNode);
+                CreateNodeViewFromNode(behaviorTree.RootNode);
                 CreateNodeViewsRecursive(behaviorTree.RootNode);
                 CreateConnections();
             }
@@ -95,7 +94,7 @@ namespace MonsterBT.Editor
 
                 foreach (var child in composite.Children)
                 {
-                    CreateNodeView(child);
+                    CreateNodeViewFromNode(child);
                     CreateNodeViewsRecursive(child);
                 }
             }
@@ -104,7 +103,7 @@ namespace MonsterBT.Editor
                 if (decorator.Child == null)
                     return;
 
-                CreateNodeView(decorator.Child);
+                CreateNodeViewFromNode(decorator.Child);
                 CreateNodeViewsRecursive(decorator.Child);
             }
             else if (node is RootNode root)
@@ -112,19 +111,20 @@ namespace MonsterBT.Editor
                 if (root.Child == null)
                     return;
 
-                CreateNodeView(root.Child);
+                CreateNodeViewFromNode(root.Child);
                 CreateNodeViewsRecursive(root.Child);
             }
         }
 
-        private void CreateNodeView(BTNode node)
+        private BTNodeView CreateNodeViewFromNode(BTNode node)
         {
             if (nodeViews.ContainsKey(node))
-                return;
+                return null;
 
             var nodeView = new BTNodeView(node);
             nodeViews[node] = nodeView;
             AddElement(nodeView);
+            return nodeView;
         }
 
         private void CreateConnections()
@@ -237,6 +237,8 @@ namespace MonsterBT.Editor
                 .ToList();
         }
 
+        #region ContextMenu Ops
+
         private BTNode copiedNode;
         private Vector2 mousePosition;
 
@@ -257,16 +259,16 @@ namespace MonsterBT.Editor
 
         private void BuildGraphContextMenu(ContextualMenuPopulateEvent evt)
         {
+            #region Node Ops
+
             // 复合节点
             evt.menu.AppendAction("Create Node/Composite/Sequence", _ => CreateNode<SequenceNode>(),
                 DropdownMenuAction.AlwaysEnabled);
             evt.menu.AppendAction("Create Node/Composite/Selector", _ => CreateNode<SelectorNode>(),
                 DropdownMenuAction.AlwaysEnabled);
-
             // 装饰器节点
             evt.menu.AppendAction("Create Node/Decorator/Inverter", _ => CreateNode<Inverter>(),
                 DropdownMenuAction.AlwaysEnabled);
-
             // 行为节点
             evt.menu.AppendAction("Create Node/Action/Move To Target",
                 _ => CreateNode<MoveToTargetAction>(), DropdownMenuAction.AlwaysEnabled);
@@ -274,16 +276,13 @@ namespace MonsterBT.Editor
                 DropdownMenuAction.AlwaysEnabled);
             evt.menu.AppendAction("Create Node/Action/Debug Log",
                 _ => CreateNode<DebugLogAction>(), DropdownMenuAction.AlwaysEnabled);
-
             // 条件节点
             evt.menu.AppendAction("Create Node/Condition/Distance Check",
                 _ => CreateNode<DistanceCondition>(), DropdownMenuAction.AlwaysEnabled);
 
-            // 粘贴功能
-            evt.menu.AppendAction("Paste", _ => PasteNode(),
-                action => copiedNode == null
-                    ? DropdownMenuAction.AlwaysDisabled(action)
-                    : DropdownMenuAction.AlwaysEnabled(action));
+            #endregion
+
+            #region Blackboard Ops
 
             // Blackboard变量管理
             evt.menu.AppendAction("Blackboard/Add Boolean", _ => AddBlackboardVariable("NewBool", typeof(bool)),
@@ -296,6 +295,14 @@ namespace MonsterBT.Editor
                 _ => AddBlackboardVariable("NewGameObject", typeof(GameObject)), DropdownMenuAction.AlwaysEnabled);
             evt.menu.AppendAction("Blackboard/Add String", _ => AddBlackboardVariable("NewString", typeof(string)),
                 DropdownMenuAction.AlwaysEnabled);
+
+            #endregion
+
+            // 粘贴功能
+            evt.menu.AppendAction("Paste", _ => PasteNode(),
+                action => copiedNode == null
+                    ? DropdownMenuAction.AlwaysDisabled(action)
+                    : DropdownMenuAction.AlwaysEnabled(action));
         }
 
         private void BuildNodeContextMenu(ContextualMenuPopulateEvent evt, BTNodeView nodeView)
@@ -315,17 +322,11 @@ namespace MonsterBT.Editor
             var node = ScriptableObject.CreateInstance<T>();
             node.name = typeof(T).Name;
 
-            // 添加到行为树资源
             AssetDatabase.AddObjectToAsset(node, behaviorTree);
 
-            // 创建视图
-            var nodeView = new BTNodeView(node);
+            var nodeView = CreateNodeViewFromNode(node);
             nodeView.SetPosition(new Rect(mousePosition, Vector2.zero));
 
-            nodeViews[node] = nodeView;
-            AddElement(nodeView);
-
-            // 标记资源已修改
             EditorUtility.SetDirty(behaviorTree);
             AssetDatabase.SaveAssets();
         }
@@ -350,19 +351,13 @@ namespace MonsterBT.Editor
             var duplicatedNode = Object.Instantiate(originalNode);
             duplicatedNode.name = originalNode.name + " (Copy)";
 
-            // 添加到行为树资源
             AssetDatabase.AddObjectToAsset(duplicatedNode, behaviorTree);
 
-            // 创建视图
-            var duplicatedView = new BTNodeView(duplicatedNode);
+            var duplicatedView = CreateNodeViewFromNode(duplicatedNode);
             var originalPos = nodeView.GetPosition();
             duplicatedView.SetPosition(new Rect(originalPos.x + 200, originalPos.y, originalPos.width,
                 originalPos.height));
 
-            nodeViews[duplicatedNode] = duplicatedView;
-            AddElement(duplicatedView);
-
-            // 标记资源已修改
             EditorUtility.SetDirty(behaviorTree);
             AssetDatabase.SaveAssets();
         }
@@ -378,10 +373,8 @@ namespace MonsterBT.Editor
             RemoveElement(nodeView);
             nodeViews.Remove(nodeView.Node);
 
-            // 从资源中移除
             Object.DestroyImmediate(nodeView.Node, true);
 
-            // 标记资源已修改
             EditorUtility.SetDirty(behaviorTree);
             AssetDatabase.SaveAssets();
         }
@@ -394,17 +387,11 @@ namespace MonsterBT.Editor
             var pastedNode = Object.Instantiate(copiedNode);
             pastedNode.name = copiedNode.name + " (Paste)";
 
-            // 添加到行为树资源
             AssetDatabase.AddObjectToAsset(pastedNode, behaviorTree);
 
-            // 创建视图
-            var pastedView = new BTNodeView(pastedNode);
+            var pastedView = CreateNodeViewFromNode(pastedNode);
             pastedView.SetPosition(new Rect(mousePosition, Vector2.zero));
 
-            nodeViews[pastedNode] = pastedView;
-            AddElement(pastedView);
-
-            // 标记资源已修改
             EditorUtility.SetDirty(behaviorTree);
             AssetDatabase.SaveAssets();
         }
@@ -429,5 +416,8 @@ namespace MonsterBT.Editor
 
             return type.Name;
         }
+
+        #endregion
+
     }
 }
