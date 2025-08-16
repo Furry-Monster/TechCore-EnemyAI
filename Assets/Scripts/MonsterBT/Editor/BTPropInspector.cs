@@ -43,15 +43,10 @@ namespace MonsterBT.Editor
 
         private void LoadLayoutAndStyles()
         {
-            // 加载UXML布局
             var uxml = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
                 "Assets/Scripts/MonsterBT/Editor/BTPropInspectorLayout.uxml");
-            if (uxml != null)
-            {
-                uxml.CloneTree(this);
-            }
+            uxml?.CloneTree(this);
 
-            // 加载USS样式
             var uss = AssetDatabase.LoadAssetAtPath<StyleSheet>(
                 "Assets/Scripts/MonsterBT/Editor/BTPropInspectorStyle.uss");
             if (uss != null)
@@ -81,20 +76,20 @@ namespace MonsterBT.Editor
             }
 
             HideEmptyState();
-            BuildInspectorForNode(currentNode);
+            BuildGeneralProps(currentNode);
         }
 
         private void ShowEmptyState()
         {
-            emptyStateLabel.style.display = DisplayStyle.Flex;
+            emptyStateLabel.SetEnabled(true);
         }
 
         private void HideEmptyState()
         {
-            emptyStateLabel.style.display = DisplayStyle.None;
+            emptyStateLabel.SetEnabled(false);
         }
 
-        private void BuildInspectorForNode(BTNode node)
+        private void BuildGeneralProps(BTNode node)
         {
             // 节点名称
             var nameField = new TextField("Name")
@@ -126,10 +121,10 @@ namespace MonsterBT.Editor
             contentScrollView.Add(descriptionField);
 
             // 自定义属性
-            BuildCustomProperties(node);
+            BuildCustomProps(node);
         }
 
-        private void BuildCustomProperties(BTNode node)
+        private void BuildCustomProps(BTNode node)
         {
             var fields = GetEditableFields(node);
             if (fields.Length == 0) return;

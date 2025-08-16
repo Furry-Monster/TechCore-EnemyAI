@@ -86,8 +86,8 @@ namespace MonsterBT.Editor
             // 连接GraphView和Inspector
             if (graphView != null && inspector != null)
             {
-                graphView.OnNodeSelected += OnNodeSelected;
-                graphView.OnNodeDeselected += OnNodeDeselected;
+                graphView.OnNodeSelected += inspector.SetSelectedNode;
+                graphView.OnNodeDeselected += inspector.ClearSelection;
                 Debug.Log("BTEditorWindow: GraphView和Inspector事件已连接");
             }
             else
@@ -187,22 +187,6 @@ namespace MonsterBT.Editor
 
         private void OnDragSpawnNode(MouseDownEvent evt)
         {
-        }
-
-        #endregion
-
-        #region Inspector Callbacks
-
-        private void OnNodeSelected(BTNode node)
-        {
-            Debug.Log($"BTEditorWindow: 节点选中 - {node.name}");
-            inspector?.SetSelectedNode(node);
-        }
-
-        private void OnNodeDeselected()
-        {
-            Debug.Log("BTEditorWindow: 节点取消选中");
-            inspector?.ClearSelection();
         }
 
         #endregion

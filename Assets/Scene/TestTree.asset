@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: SequenceNode
   m_EditorClassIdentifier: 
   nodeName: Node
+  description: 
   position: {x: 663, y: 100}
   children:
   - {fileID: 4553742961081212638}
@@ -31,6 +32,7 @@ MonoBehaviour:
   m_Name: DebugLogAction (Paste)
   m_EditorClassIdentifier: 
   nodeName: Node
+  description: 
   position: {x: 1005, y: 100}
   message: Debug Log Action
   logType: 3
@@ -61,6 +63,7 @@ MonoBehaviour:
   m_Name: Inverter
   m_EditorClassIdentifier: 
   nodeName: Node
+  description: 
   position: {x: 1005, y: 361}
   child: {fileID: 88198486191775261}
 --- !u!114 &88198486191775261
@@ -76,6 +79,7 @@ MonoBehaviour:
   m_Name: Inverter
   m_EditorClassIdentifier: 
   nodeName: Node
+  description: 
   position: {x: 1324, y: 361}
   child: {fileID: 7058665364046921447}
 --- !u!114 &4553742961081212638
@@ -91,6 +95,7 @@ MonoBehaviour:
   m_Name: DebugLogAction
   m_EditorClassIdentifier: 
   nodeName: Node
+  description: 
   position: {x: 1005, y: -138}
   message: Debug Log Action
   logType: 3
@@ -107,6 +112,7 @@ MonoBehaviour:
   m_Name: DebugLogAction
   m_EditorClassIdentifier: 
   nodeName: Node
+  description: 
   position: {x: 1619, y: 361}
   message: Debug Log Action
   logType: 3
@@ -120,8 +126,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1f12988c564c2ab858f100b28b9ed2fb, type: 3}
-  m_Name: Root
+  m_Name: ROOT
   m_EditorClassIdentifier: 
   nodeName: Node
+  description: 
   position: {x: 400, y: 100}
   child: {fileID: -6670785265910811436}

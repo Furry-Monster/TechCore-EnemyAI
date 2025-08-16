@@ -439,18 +439,15 @@ namespace MonsterBT.Editor
         private void CheckSelectionChange()
         {
             var selectedNodes = selection.OfType<BTNodeView>().ToList();
-            Debug.Log($"BTNodeGraphView: 选择变化检查 - 选中节点数: {selectedNodes.Count}");
 
             switch (selectedNodes.Count)
             {
                 case 1:
                     // 选中了一个节点
-                    Debug.Log($"BTNodeGraphView: 触发节点选中事件 - {selectedNodes[0].Node.name}");
                     OnNodeSelected?.Invoke(selectedNodes[0].Node);
                     break;
                 default:
                     // 选中了0或多个节点，取消选择
-                    Debug.Log("BTNodeGraphView: 触发节点取消选中事件");
                     OnNodeDeselected?.Invoke();
                     break;
             }
