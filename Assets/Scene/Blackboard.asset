@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Blackboard
   m_EditorClassIdentifier: 
   data:
-    serializableDict: []
+    serializableDict:
+    - key: 

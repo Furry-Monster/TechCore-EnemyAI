@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ae69903f07736620982525bad125447, type: 3}
   m_Name: SequenceNode
   m_EditorClassIdentifier: 
-  description: 1000
+  description: 
   position: {x: 595, y: 100}
   children:
   - {fileID: 4553742961081212638}
