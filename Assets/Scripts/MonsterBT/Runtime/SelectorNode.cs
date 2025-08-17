@@ -8,7 +8,7 @@ namespace MonsterBT.Runtime
     [CreateAssetMenu(fileName = "SelectorNode", menuName = "MonsterBT/SelectorNode")]
     public class SelectorNode : CompositeNode
     {
-        private int currentChildIndex = 0;
+        private int currentChildIndex;
 
         protected override void OnStart()
         {

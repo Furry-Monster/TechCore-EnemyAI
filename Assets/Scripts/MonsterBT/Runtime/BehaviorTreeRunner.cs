@@ -6,10 +6,10 @@ namespace MonsterBT.Runtime
     {
         [SerializeField] private BehaviorTree behaviorTreeAsset;
         [SerializeField] private bool runOnStart = true;
-        [SerializeField] private bool debugMode = false;
+        [SerializeField] private bool debugMode;
 
         private BehaviorTree runtimeTree;
-        private bool isRunning = false;
+        private bool isRunning;
 
         public BehaviorTree RuntimeTree => runtimeTree;
         public bool IsRunning => isRunning;

@@ -24,7 +24,7 @@ namespace MonsterBT.Runtime
         }
 
         protected BTNodeState state = BTNodeState.Running;
-        protected bool started = false;
+        protected bool started;
         protected Blackboard blackboard;
 
         public BTNodeState State => state;
@@ -55,7 +55,7 @@ namespace MonsterBT.Runtime
 
         public virtual BTNode Clone()
         {
-            return GameObject.Instantiate(this);
+            return Instantiate(this);
         }
 
         public void Abort()
