@@ -25,12 +25,6 @@ namespace MonsterBT.Editor
             window.minSize = new Vector2(1920, 1080);
         }
 
-        public void OnEnable()
-        {
-            if (currentBehaviorTree != null && graphView != null)
-                graphView.SetBehaviorTree(currentBehaviorTree);
-        }
-
         public void CreateGUI()
         {
             var root = rootVisualElement;
@@ -43,6 +37,19 @@ namespace MonsterBT.Editor
                 template.CloneTree(root);
                 SetupUIElements();
             }
+
+            if (currentBehaviorTree != null && graphView != null)
+                graphView.SetBehaviorTree(currentBehaviorTree);
+        }
+
+        public void OnDestroy()
+        {
+            if (graphView == null || inspector == null)
+                return;
+
+            graphView.OnNodeSelected -= inspector.SetSelectedNode;
+            graphView.OnNodeDeselected -= inspector.ClearSelection;
+            inspector.OnPropertyChanged -= graphView.HandlePropertyChanged;
         }
 
         private void SetupUIElements()

@@ -203,7 +203,7 @@ namespace MonsterBT.Editor
 
         #region Field Elements Creator (可扩展)
 
-        public Action<BTNode, string> OnPropertyChanged;
+        public event Action<BTNode, string> OnPropertyChanged;
 
         private TextField CreateStringField(FieldInfo field, BTNode node, string displayName)
         {

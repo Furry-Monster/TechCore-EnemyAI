@@ -111,11 +111,11 @@ namespace MonsterBT.Editor
             switch (propertyName)
             {
                 case "name":
-                    title = string.IsNullOrEmpty(Node?.name) ? Node?.GetType().Name : Node.name;
+                    title = string.IsNullOrEmpty(Node.name) ? Node.GetType().Name : Node.name;
                     break;
                 case "description":
                     descriptionLabel.text =
-                        string.IsNullOrEmpty(Node?.Description) ? GetNodeDescription() : Node.Description;
+                        string.IsNullOrEmpty(Node.Description) ? GetNodeDescription() : Node.Description;
                     break;
             }
         }

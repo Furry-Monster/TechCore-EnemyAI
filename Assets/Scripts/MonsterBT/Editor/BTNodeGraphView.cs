@@ -60,10 +60,16 @@ namespace MonsterBT.Editor
 
             graphViewChanged += OnGraphViewChanged;
 
-            // 使用更可靠的事件监听方式
-            this.schedule.Execute(CheckSelection).Every(100);
+            // 轮询监听
+            schedule.Execute(CheckSelection).Every(100);
 
             PopulateView();
+        }
+
+        ~BTNodeGraphView()
+        {
+            // 清理事件订阅
+            graphViewChanged -= OnGraphViewChanged;
         }
 
         public void SetBehaviorTree(BehaviorTree tree)
