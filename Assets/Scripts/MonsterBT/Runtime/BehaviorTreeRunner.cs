@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace MonsterBT.Runtime
@@ -6,6 +7,7 @@ namespace MonsterBT.Runtime
     {
         [SerializeField] private BehaviorTree behaviorTreeAsset;
         [SerializeField] private bool runOnStart = true;
+        [SerializeField] private bool loop = true;
         [SerializeField] private bool debugMode;
 
         private BehaviorTree runtimeTree;
@@ -13,6 +15,7 @@ namespace MonsterBT.Runtime
 
         public BehaviorTree RuntimeTree => runtimeTree;
         public bool IsRunning => isRunning;
+        public bool DebugMode => debugMode;
 
         private void Start()
         {
@@ -29,16 +32,15 @@ namespace MonsterBT.Runtime
                 var state = runtimeTree.Update();
 
                 if (debugMode)
-                {
                     Debug.Log($"[BehaviorTreeRunner] Tree state: {state}");
-                }
 
-                // 可以根据需要处理树的完成状态
-                if (state == BTNodeState.Success || state == BTNodeState.Failure)
+                // 根据需要处理树的完成状态
+                if (state is BTNodeState.Success or BTNodeState.Failure)
                 {
-                    // 树执行完成，可以选择重新开始或停止
-                    // 这里选择重新开始（循环执行）
-                    // StopTree();
+                    if (!loop)
+                    {
+                        StopTree();
+                    }
                 }
             }
         }
@@ -61,24 +63,20 @@ namespace MonsterBT.Runtime
                 isRunning = true;
 
                 if (debugMode)
-                {
                     Debug.Log($"[BehaviorTreeRunner] Started behavior tree: {behaviorTreeAsset.name}");
-                }
             }
         }
 
         public void StopTree()
         {
-            if (runtimeTree != null)
-            {
-                runtimeTree.Abort();
-                isRunning = false;
+            if (runtimeTree == null)
+                return;
 
-                if (debugMode)
-                {
-                    Debug.Log("[BehaviorTreeRunner] Stopped behavior tree");
-                }
-            }
+            runtimeTree.Abort();
+            isRunning = false;
+
+            if (debugMode)
+                Debug.Log("[BehaviorTreeRunner] Stopped behavior tree");
         }
 
         public void RestartTree()

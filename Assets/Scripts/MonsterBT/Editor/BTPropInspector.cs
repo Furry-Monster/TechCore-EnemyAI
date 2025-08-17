@@ -127,7 +127,8 @@ namespace MonsterBT.Editor
         private void BuildCustomProps(BTNode node)
         {
             var fields = GetEditableFields(node);
-            if (fields.Length == 0) return;
+            if (fields.Length == 0)
+                return;
 
             // 添加分隔符
             var separator = new VisualElement();
@@ -137,11 +138,11 @@ namespace MonsterBT.Editor
             foreach (var field in fields)
             {
                 var fieldEditor = CreateFieldEditor(field, node);
-                if (fieldEditor != null)
-                {
-                    fieldEditor.AddToClassList("inspector-field");
-                    contentScrollView.Add(fieldEditor);
-                }
+                if (fieldEditor == null)
+                    continue;
+
+                fieldEditor.AddToClassList("inspector-field");
+                contentScrollView.Add(fieldEditor);
             }
         }
 
@@ -149,15 +150,25 @@ namespace MonsterBT.Editor
 
         #region Field Editors
 
+        /// <summary>
+        /// 遵从Unity设计，仅仅考虑非静态的Public字段和[SerializedField]标记的字段
+        /// </summary>
+        /// <param name="node">需要被解析的节点实例</param>
+        /// <returns>字段反射表</returns>
         private FieldInfo[] GetEditableFields(BTNode node)
         {
             return node.GetType()
                 .GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                .Where(f => f.IsPublic || f.GetCustomAttribute<SerializeField>() != null)
+                .Where(f => f.IsPublic || f.GetCustomAttribute<SerializeField>() != null) // 遵从Unity的设计
                 .Where(f => !IsIgnoredField(f))
                 .ToArray();
         }
 
+        /// <summary>
+        /// 是否为默认会被忽视的序列化的字段
+        /// </summary>
+        /// <param name="field">需要被检测的反射字段</param>
+        /// <returns>true / false</returns>
         private bool IsIgnoredField(FieldInfo field)
         {
             string[] ignoredFields = { "name", "hideFlags", "description", "position" };
@@ -165,7 +176,13 @@ namespace MonsterBT.Editor
                    field.Name.StartsWith("m_");
         }
 
-        private VisualElement CreateFieldEditor(FieldInfo field, BTNode node)
+        /// <summary>
+        /// 为节点node的指定field字段(通过反射),创建Inspector视图(VisualElement类型)
+        /// </summary>
+        /// <param name="field">需要被展示的字段反射表</param>
+        /// <param name="node">字段所属的节点实例，该实例将被解析</param>
+        /// <returns>创建的视图元素</returns>
+        private static VisualElement CreateFieldEditor(FieldInfo field, BTNode node)
         {
             var fieldType = field.FieldType;
             string fieldName = ObjectNames.NicifyVariableName(field.Name);
@@ -182,7 +199,9 @@ namespace MonsterBT.Editor
             };
         }
 
-        private TextField CreateStringField(FieldInfo field, BTNode node, string displayName)
+        #region Field Elements Creator (可扩展)
+
+        private static TextField CreateStringField(FieldInfo field, BTNode node, string displayName)
         {
             var textField = new TextField(displayName)
             {
@@ -199,7 +218,7 @@ namespace MonsterBT.Editor
             return textField;
         }
 
-        private FloatField CreateFloatField(FieldInfo field, BTNode node, string displayName)
+        private static FloatField CreateFloatField(FieldInfo field, BTNode node, string displayName)
         {
             var floatField = new FloatField(displayName)
             {
@@ -216,7 +235,7 @@ namespace MonsterBT.Editor
             return floatField;
         }
 
-        private IntegerField CreateIntField(FieldInfo field, BTNode node, string displayName)
+        private static IntegerField CreateIntField(FieldInfo field, BTNode node, string displayName)
         {
             var intField = new IntegerField(displayName)
             {
@@ -233,7 +252,7 @@ namespace MonsterBT.Editor
             return intField;
         }
 
-        private Toggle CreateBoolField(FieldInfo field, BTNode node, string displayName)
+        private static Toggle CreateBoolField(FieldInfo field, BTNode node, string displayName)
         {
             var toggle = new Toggle(displayName)
             {
@@ -250,7 +269,7 @@ namespace MonsterBT.Editor
             return toggle;
         }
 
-        private Vector3Field CreateVector3Field(FieldInfo field, BTNode node, string displayName)
+        private static Vector3Field CreateVector3Field(FieldInfo field, BTNode node, string displayName)
         {
             var vector3Field = new Vector3Field(displayName)
             {
@@ -267,7 +286,7 @@ namespace MonsterBT.Editor
             return vector3Field;
         }
 
-        private EnumField CreateEnumField(FieldInfo field, BTNode node, string displayName)
+        private static EnumField CreateEnumField(FieldInfo field, BTNode node, string displayName)
         {
             var enumValue = (Enum)field.GetValue(node);
             var enumField = new EnumField(displayName, enumValue);
@@ -281,6 +300,8 @@ namespace MonsterBT.Editor
 
             return enumField;
         }
+
+        #endregion
 
         #endregion
 
