@@ -24,18 +24,41 @@ namespace MonsterBT.Runtime.Utils
         // 运行时字典，用于处理数据
         private Dictionary<TKey, TValue> rawDict;
 
-        public int Count => rawDict.Count;
-        public bool IsReadOnly { get; } = false;
-        public ICollection<TKey> Keys => rawDict.Keys;
-        public ICollection<TValue> Values => rawDict.Values;
+        // 线程锁
+        private readonly object syncLock = new object();
 
-        public TValue this[TKey key]
+        public int Count
         {
-            get => rawDict[key];
-            set
+            get
             {
-                rawDict[key] = value;
-                SyncToSerializable();
+                lock (syncLock)
+                {
+                    return rawDict.Count;
+                }
+            }
+        }
+
+        public bool IsReadOnly => false;
+
+        public ICollection<TKey> Keys
+        {
+            get
+            {
+                lock (syncLock)
+                {
+                    return rawDict.Keys.ToList();
+                }
+            }
+        }
+
+        public ICollection<TValue> Values
+        {
+            get
+            {
+                lock (syncLock)
+                {
+                    return rawDict.Values.ToList();
+                }
             }
         }
 
@@ -47,38 +70,79 @@ namespace MonsterBT.Runtime.Utils
         public SerializableDictionary(IDictionary<TKey, TValue> dictionary)
         {
             rawDict = new Dictionary<TKey, TValue>(dictionary);
-            SyncToSerializable();
+            lock (syncLock)
+            {
+                SyncToSerializable();
+            }
         }
+
+        #region API Methods
+
+        public TValue this[TKey key]
+        {
+            get
+            {
+                lock (syncLock)
+                {
+                    return rawDict[key];
+                }
+            }
+            set
+            {
+                lock (syncLock)
+                {
+                    rawDict[key] = value;
+                    SyncToSerializable();
+                }
+            }
+        }
+
 
         public void Add(TKey key, TValue value)
         {
-            rawDict.Add(key, value);
-            SyncToSerializable();
+            lock (syncLock)
+            {
+                rawDict.Add(key, value);
+                SyncToSerializable();
+            }
         }
 
         public bool Remove(TKey key)
         {
-            bool removed = rawDict.Remove(key);
-            if (removed)
-                SyncToSerializable();
-            return removed;
+            lock (syncLock)
+            {
+                bool removed = rawDict.Remove(key);
+                if (removed)
+                    SyncToSerializable();
+                return removed;
+            }
         }
 
         public bool TryGetValue(TKey key, out TValue value)
         {
-            return rawDict.TryGetValue(key, out value);
+            lock (syncLock)
+            {
+                return rawDict.TryGetValue(key, out value);
+            }
         }
 
         public bool ContainsKey(TKey key)
         {
-            return rawDict.ContainsKey(key);
+            lock (syncLock)
+            {
+                return rawDict.ContainsKey(key);
+            }
         }
 
         public IEnumerator<SerializablePair<TKey, TValue>> GetEnumerator()
         {
-            return rawDict
-                .Select(kvp => new SerializablePair<TKey, TValue> { key = kvp.Key, value = kvp.Value })
-                .GetEnumerator();
+            lock (syncLock)
+            {
+                return rawDict
+                    .Select(kvp => new SerializablePair<TKey, TValue> { key = kvp.Key, value = kvp.Value })
+                    .ToList()
+                    .GetEnumerator();
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -93,14 +157,20 @@ namespace MonsterBT.Runtime.Utils
 
         public void Clear()
         {
-            rawDict.Clear();
-            serializableDict.Clear();
+            lock (syncLock)
+            {
+                rawDict.Clear();
+                serializableDict.Clear();
+            }
         }
 
         public bool Contains(SerializablePair<TKey, TValue> item)
         {
-            return rawDict.TryGetValue(item.key, out TValue value) &&
-                   EqualityComparer<TValue>.Default.Equals(value, item.value);
+            lock (syncLock)
+            {
+                return rawDict.TryGetValue(item.key, out TValue value) &&
+                       EqualityComparer<TValue>.Default.Equals(value, item.value);
+            }
         }
 
         public void CopyTo(SerializablePair<TKey, TValue>[] array, int arrayIndex)
@@ -109,25 +179,39 @@ namespace MonsterBT.Runtime.Utils
                 throw new ArgumentNullException(nameof(array));
             if (arrayIndex < 0 || arrayIndex > array.Length)
                 throw new ArgumentOutOfRangeException(nameof(arrayIndex));
-            if (array.Length - arrayIndex < Count)
-                throw new ArgumentException("Array is too small");
 
-            int index = arrayIndex;
-            foreach (var kvp in rawDict)
+            lock (syncLock)
             {
-                array[index++] = new SerializablePair<TKey, TValue> { key = kvp.Key, value = kvp.Value };
+                if (array.Length - arrayIndex < rawDict.Count)
+                    throw new ArgumentException("Array is too small");
+
+                int index = arrayIndex;
+                foreach (var kvp in rawDict)
+                {
+                    array[index++] = new SerializablePair<TKey, TValue> { key = kvp.Key, value = kvp.Value };
+                }
             }
         }
 
         public bool Remove(SerializablePair<TKey, TValue> item)
         {
-            if (rawDict.TryGetValue(item.key, out TValue value) &&
-                EqualityComparer<TValue>.Default.Equals(value, item.value))
+            lock (syncLock)
             {
-                return Remove(item.key);
+                if (rawDict.TryGetValue(item.key, out var value) &&
+                    EqualityComparer<TValue>.Default.Equals(value, item.value))
+                {
+                    bool removed = rawDict.Remove(item.key);
+                    if (removed)
+                        SyncToSerializable();
+                    return removed;
+                }
+                return false;
             }
-            return false;
         }
+
+        #endregion
+
+        #region Sync
 
         /// <summary>
         /// 同步到序列化字典,耗时
@@ -159,13 +243,29 @@ namespace MonsterBT.Runtime.Utils
         public void OnBeforeSerialize()
         {
             if (rawDict != null)
-                SyncToSerializable();
+            {
+                lock (syncLock)
+                {
+                    SyncToSerializable();
+                }
+            }
         }
 
         public void OnAfterDeserialize()
         {
-            rawDict ??= new Dictionary<TKey, TValue>();
-            SyncFromSerializable();
+            lock (syncLock)
+            {
+                // ReSharper disable once ConvertIfStatementToNullCoalescingAssignment
+                // NOTE:
+                // 如果 rawDict 为 null，在检查和赋值之间存在一个时间窗口。
+                // 尽管有锁保护，但在多线程环境下，??= 操作符本身不是原子的。
+                if (rawDict == null)
+                    rawDict = new Dictionary<TKey, TValue>();
+                SyncFromSerializable();
+            }
         }
+
+        #endregion
+
     }
 }
