@@ -6,6 +6,7 @@ using MonsterBT.Runtime.Actions;
 using MonsterBT.Runtime.Conditions;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Blackboard = UnityEditor.Experimental.GraphView.Blackboard;
@@ -16,7 +17,7 @@ namespace MonsterBT.Editor
     public class BTNodeGraphView : GraphView
     {
         private BehaviorTree behaviorTree;
-        private Dictionary<BTNode, BTNodeView> nodeViews;
+        private readonly Dictionary<BTNode, BTNodeView> nodeViews;
 
         #region General GraphView Methods
 
@@ -49,6 +50,7 @@ namespace MonsterBT.Editor
                 title = "Variables"
             };
             blackboard.AddToClassList("blackboard");
+            blackboard.addItemRequested += _ => Debug.Log("I don't know how to make this invisible.");
             Add(blackboard);
 
             var grid = new GridBackground();
@@ -76,6 +78,7 @@ namespace MonsterBT.Editor
         {
             behaviorTree = tree;
             PopulateView();
+            RefreshBlackboardView();
         }
 
         public void PopulateView()
@@ -413,12 +416,163 @@ namespace MonsterBT.Editor
 
         private void AddBlackboardVariable(string varName, Type varType)
         {
-            var blackboard = this.Q<Blackboard>();
-            if (blackboard == null)
-                return;
+            if (behaviorTree?.Blackboard == null) return;
 
-            var field = new BlackboardField { text = varName, typeText = GetTypeDisplayName(varType) };
-            blackboard.Add(field);
+            // 添加到Runtime Blackboard
+            object defaultValue = GetDefaultValue(varType);
+            behaviorTree.Blackboard.AddVariable(varName, varType, defaultValue);
+
+            // 刷新Editor显示
+            RefreshBlackboardView();
+
+            EditorUtility.SetDirty(behaviorTree.Blackboard);
+            AssetDatabase.SaveAssets();
+        }
+
+        private object GetDefaultValue(Type type)
+        {
+            if (type == typeof(bool)) return false;
+            if (type == typeof(float)) return 0f;
+            if (type == typeof(Vector3)) return Vector3.zero;
+            if (type == typeof(string)) return "";
+            if (type == typeof(GameObject)) return null;
+
+            return null;
+        }
+
+        private void RefreshBlackboardView()
+        {
+            var blackboard = this.Q<Blackboard>();
+            if (blackboard == null || behaviorTree?.Blackboard == null) return;
+
+            // 清除现有字段
+            blackboard.Clear();
+
+            // 重新添加所有变量
+            foreach (var varInfo in behaviorTree.Blackboard.GetVariableInfos())
+            {
+                if (!varInfo.isExposed) continue;
+
+                var variableRow = CreateVariableRow(varInfo.name, Type.GetType(varInfo.typeName));
+                blackboard.Add(variableRow);
+            }
+        }
+
+        private VisualElement CreateVariableRow(string varName, Type varType)
+        {
+            var row = new VisualElement();
+            row.AddToClassList("blackboard-variable-row");
+
+            // 变量信息行
+            var infoRow = new VisualElement();
+            infoRow.AddToClassList("blackboard-variable-info");
+
+            var nameLabel = new Label(varName);
+            nameLabel.AddToClassList("blackboard-variable-name");
+
+            var typeLabel = new Label(GetTypeDisplayName(varType));
+            typeLabel.AddToClassList("blackboard-variable-type");
+
+            var deleteButton = new Button(() => RemoveBlackboardVariable(varName))
+            {
+                text = "×"
+            };
+            deleteButton.AddToClassList("blackboard-delete-button");
+
+            infoRow.Add(nameLabel);
+            infoRow.Add(typeLabel);
+            infoRow.Add(deleteButton);
+
+            // 值编辑行
+            var valueRow = new VisualElement();
+            valueRow.AddToClassList("blackboard-variable-value");
+
+            var valueEditor = CreateValueEditor(varName, varType);
+            if (valueEditor != null)
+            {
+                valueEditor.AddToClassList("blackboard-value-editor");
+                valueRow.Add(valueEditor);
+            }
+
+            row.Add(infoRow);
+            row.Add(valueRow);
+
+            return row;
+        }
+
+        private VisualElement CreateValueEditor(string varName, Type varType)
+        {
+            if (varType == typeof(bool))
+            {
+                var toggle = new Toggle();
+                toggle.value = behaviorTree.Blackboard.GetBool(varName);
+                toggle.RegisterValueChangedCallback(evt =>
+                {
+                    behaviorTree.Blackboard.SetBool(varName, evt.newValue);
+                    EditorUtility.SetDirty(behaviorTree.Blackboard);
+                });
+                return toggle;
+            }
+            else if (varType == typeof(float))
+            {
+                var floatField = new FloatField();
+                floatField.value = behaviorTree.Blackboard.GetFloat(varName);
+                floatField.RegisterValueChangedCallback(evt =>
+                {
+                    behaviorTree.Blackboard.SetFloat(varName, evt.newValue);
+                    EditorUtility.SetDirty(behaviorTree.Blackboard);
+                });
+                return floatField;
+            }
+            else if (varType == typeof(string))
+            {
+                var textField = new TextField();
+                textField.value = behaviorTree.Blackboard.GetString(varName);
+                textField.RegisterValueChangedCallback(evt =>
+                {
+                    behaviorTree.Blackboard.SetString(varName, evt.newValue);
+                    EditorUtility.SetDirty(behaviorTree.Blackboard);
+                });
+                return textField;
+            }
+            else if (varType == typeof(Vector3))
+            {
+                var vector3Field = new Vector3Field();
+                vector3Field.value = behaviorTree.Blackboard.GetVector3(varName);
+                vector3Field.label = "";
+                vector3Field.RegisterValueChangedCallback(evt =>
+                {
+                    behaviorTree.Blackboard.SetVector3(varName, evt.newValue);
+                    EditorUtility.SetDirty(behaviorTree.Blackboard);
+                });
+                return vector3Field;
+            }
+            else if (varType == typeof(GameObject))
+            {
+                var objectField = new ObjectField();
+                objectField.objectType = typeof(GameObject);
+                objectField.label = "";
+                objectField.value = behaviorTree.Blackboard.GetGameObject(varName);
+                objectField.RegisterValueChangedCallback(evt =>
+                {
+                    behaviorTree.Blackboard.SetGameObject(varName, evt.newValue as GameObject);
+                    EditorUtility.SetDirty(behaviorTree.Blackboard);
+                });
+                return objectField;
+            }
+
+            return null;
+        }
+
+        private void RemoveBlackboardVariable(string varName)
+        {
+            if (behaviorTree?.Blackboard == null) return;
+
+            behaviorTree.Blackboard.RemoveVariable(varName);
+            RefreshBlackboardView();
+
+            EditorUtility.SetDirty(behaviorTree.Blackboard);
+            AssetDatabase.SaveAssets();
         }
 
         private string GetTypeDisplayName(Type type)
