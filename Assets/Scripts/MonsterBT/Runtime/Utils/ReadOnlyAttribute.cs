@@ -19,6 +19,12 @@ namespace MonsterBT.Runtime.Utils
             EditorGUI.PropertyField(position, property, label, true);
             GUI.enabled = true;
         }
+
+        // 更新高度，处理List等可展开的数据结构
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        {
+            return EditorGUI.GetPropertyHeight(property, label, true);
+        }
     }
 
 #endif

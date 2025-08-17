@@ -19,7 +19,7 @@ namespace MonsterBT.Editor
         private BehaviorTree behaviorTree;
         private readonly Dictionary<BTNode, BTNodeView> nodeViews;
 
-        #region General GraphView Methods
+        #region Content Methods
 
         public BTNodeGraphView()
         {
@@ -414,6 +414,10 @@ namespace MonsterBT.Editor
             AssetDatabase.SaveAssets();
         }
 
+        #endregion
+
+        #region Blackboard Methods
+
         private void AddBlackboardVariable(string varName, Type varType)
         {
             if (behaviorTree?.Blackboard == null) return;
@@ -422,33 +426,20 @@ namespace MonsterBT.Editor
             object defaultValue = GetDefaultValue(varType);
             behaviorTree.Blackboard.AddVariable(varName, varType, defaultValue);
 
-            // 刷新Editor显示
             RefreshBlackboardView();
 
             EditorUtility.SetDirty(behaviorTree.Blackboard);
             AssetDatabase.SaveAssets();
         }
 
-        private object GetDefaultValue(Type type)
-        {
-            if (type == typeof(bool)) return false;
-            if (type == typeof(float)) return 0f;
-            if (type == typeof(Vector3)) return Vector3.zero;
-            if (type == typeof(string)) return "";
-            if (type == typeof(GameObject)) return null;
-
-            return null;
-        }
 
         private void RefreshBlackboardView()
         {
             var blackboard = this.Q<Blackboard>();
             if (blackboard == null || behaviorTree?.Blackboard == null) return;
 
-            // 清除现有字段
             blackboard.Clear();
 
-            // 重新添加所有变量
             foreach (var varInfo in behaviorTree.Blackboard.GetVariableInfos())
             {
                 if (!varInfo.isExposed) continue;
@@ -504,8 +495,10 @@ namespace MonsterBT.Editor
         {
             if (varType == typeof(bool))
             {
-                var toggle = new Toggle();
-                toggle.value = behaviorTree.Blackboard.GetBool(varName);
+                var toggle = new Toggle
+                {
+                    value = behaviorTree.Blackboard.GetBool(varName)
+                };
                 toggle.RegisterValueChangedCallback(evt =>
                 {
                     behaviorTree.Blackboard.SetBool(varName, evt.newValue);
@@ -513,10 +506,13 @@ namespace MonsterBT.Editor
                 });
                 return toggle;
             }
-            else if (varType == typeof(float))
+
+            if (varType == typeof(float))
             {
-                var floatField = new FloatField();
-                floatField.value = behaviorTree.Blackboard.GetFloat(varName);
+                var floatField = new FloatField
+                {
+                    value = behaviorTree.Blackboard.GetFloat(varName)
+                };
                 floatField.RegisterValueChangedCallback(evt =>
                 {
                     behaviorTree.Blackboard.SetFloat(varName, evt.newValue);
@@ -524,10 +520,13 @@ namespace MonsterBT.Editor
                 });
                 return floatField;
             }
-            else if (varType == typeof(string))
+
+            if (varType == typeof(string))
             {
-                var textField = new TextField();
-                textField.value = behaviorTree.Blackboard.GetString(varName);
+                var textField = new TextField
+                {
+                    value = behaviorTree.Blackboard.GetString(varName)
+                };
                 textField.RegisterValueChangedCallback(evt =>
                 {
                     behaviorTree.Blackboard.SetString(varName, evt.newValue);
@@ -535,11 +534,13 @@ namespace MonsterBT.Editor
                 });
                 return textField;
             }
-            else if (varType == typeof(Vector3))
+
+            if (varType == typeof(Vector3))
             {
-                var vector3Field = new Vector3Field();
-                vector3Field.value = behaviorTree.Blackboard.GetVector3(varName);
-                vector3Field.label = "";
+                var vector3Field = new Vector3Field
+                {
+                    value = behaviorTree.Blackboard.GetVector3(varName),
+                };
                 vector3Field.RegisterValueChangedCallback(evt =>
                 {
                     behaviorTree.Blackboard.SetVector3(varName, evt.newValue);
@@ -547,12 +548,14 @@ namespace MonsterBT.Editor
                 });
                 return vector3Field;
             }
-            else if (varType == typeof(GameObject))
+
+            if (varType == typeof(GameObject))
             {
-                var objectField = new ObjectField();
-                objectField.objectType = typeof(GameObject);
-                objectField.label = "";
-                objectField.value = behaviorTree.Blackboard.GetGameObject(varName);
+                var objectField = new ObjectField
+                {
+                    objectType = typeof(GameObject),
+                    value = behaviorTree.Blackboard.GetGameObject(varName)
+                };
                 objectField.RegisterValueChangedCallback(evt =>
                 {
                     behaviorTree.Blackboard.SetGameObject(varName, evt.newValue as GameObject);
@@ -575,7 +578,18 @@ namespace MonsterBT.Editor
             AssetDatabase.SaveAssets();
         }
 
-        private string GetTypeDisplayName(Type type)
+        private static object GetDefaultValue(Type type)
+        {
+            if (type == typeof(bool)) return false;
+            if (type == typeof(float)) return 0f;
+            if (type == typeof(Vector3)) return Vector3.zero;
+            if (type == typeof(GameObject)) return null;
+            if (type == typeof(string)) return "";
+
+            return null;
+        }
+
+        private static string GetTypeDisplayName(Type type)
         {
             if (type == typeof(bool)) return "bool";
             if (type == typeof(float)) return "float";

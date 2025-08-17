@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using MonsterBT.Runtime.Utils;
 using UnityEngine;
 
@@ -16,11 +17,14 @@ namespace MonsterBT.Runtime
     [CreateAssetMenu(fileName = "Blackboard", menuName = "MonsterBT/Blackboard")]
     public class Blackboard : ScriptableObject
     {
-        [SerializeField] private SerializableDictionary<string, object> data =
-            new SerializableDictionary<string, object>();
-        
-        [SerializeField] private List<BlackboardVariableInfo> variableInfos = 
+        // 运行时黑板，用于和行为树交互，使用线程安全的字典
+        private readonly SerializableDictionary<string, object> data = new SerializableDictionary<string, object>();
+
+        // 黑板变量信息表，用于提供Editor界面信息
+        [SerializeField] [ReadOnly] private List<BlackboardVariableInfo> variableInfos =
             new List<BlackboardVariableInfo>();
+
+        #region Public Methods
 
         public T GetValue<T>(string key)
         {
@@ -52,7 +56,10 @@ namespace MonsterBT.Runtime
             data.Clear();
         }
 
-        // GameObject specific helpers
+        #endregion
+
+        #region Helpers
+
         public GameObject GetGameObject(string key) => GetValue<GameObject>(key);
         public void SetGameObject(string key, GameObject value) => SetValue(key, value);
 
@@ -71,39 +78,47 @@ namespace MonsterBT.Runtime
         public string GetString(string key) => GetValue<string>(key);
         public void SetString(string key, string value) => SetValue(key, value);
 
-#if UNITY_EDITOR
-        public IReadOnlyList<BlackboardVariableInfo> GetVariableInfos() => variableInfos;
-        
+        #endregion
+
+        #region Serialization
+
+        public IReadOnlyList<BlackboardVariableInfo> GetVariableInfos()
+        {
+            return variableInfos;
+        }
+
+        [SuppressMessage("ReSharper", "ParameterHidesMember")]
         public void AddVariable(string name, Type type, object defaultValue = null, bool isExposed = true)
         {
             if (HasKey(name)) return;
-            
+
             SetValue(name, defaultValue);
-            
+
             var info = new BlackboardVariableInfo
             {
                 name = name,
                 typeName = type.AssemblyQualifiedName,
                 isExposed = isExposed
             };
-            
+
             variableInfos.Add(info);
         }
-        
+
+        [SuppressMessage("ReSharper", "ParameterHidesMember")]
         public void RemoveVariable(string name)
         {
             RemoveKey(name);
             variableInfos.RemoveAll(info => info.name == name);
         }
-        
+
         public void RenameVariable(string oldName, string newName)
         {
             if (!HasKey(oldName) || HasKey(newName)) return;
-            
+
             var value = data[oldName];
             RemoveKey(oldName);
             SetValue(newName, value);
-            
+
             for (int i = 0; i < variableInfos.Count; i++)
             {
                 if (variableInfos[i].name == oldName)
@@ -115,17 +130,20 @@ namespace MonsterBT.Runtime
                 }
             }
         }
-        
+
+        [SuppressMessage("ReSharper", "ParameterHidesMember")]
         public Type GetVariableType(string name)
         {
             var info = variableInfos.Find(v => v.name == name);
             return string.IsNullOrEmpty(info.typeName) ? null : Type.GetType(info.typeName);
         }
-        
+
         public IEnumerable<string> GetAllKeys()
         {
             return data.Keys;
         }
-#endif
+
+        #endregion
+
     }
 }
