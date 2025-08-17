@@ -15,7 +15,7 @@ namespace MonsterBT.Runtime.Utils
 
     [Serializable]
     public class SerializableDictionary<TKey, TValue> :
-        ICollection<SerializablePair<TKey, TValue>>
+        ICollection<SerializablePair<TKey, TValue>>, ISerializationCallbackReceiver
     {
         // 序列化字典，用于显示在Inspector中
         [SerializeField]
@@ -154,6 +154,18 @@ namespace MonsterBT.Runtime.Utils
                     rawDict[pair.key] = pair.value;
                 }
             }
+        }
+
+        public void OnBeforeSerialize()
+        {
+            if (rawDict != null)
+                SyncToSerializable();
+        }
+
+        public void OnAfterDeserialize()
+        {
+            rawDict ??= new Dictionary<TKey, TValue>();
+            SyncFromSerializable();
         }
     }
 }
