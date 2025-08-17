@@ -1,22 +1,8 @@
-using System;
 using MonsterBT.Runtime.Utils;
 using UnityEngine;
 
 namespace MonsterBT.Runtime
 {
-    [Serializable]
-    public class BlackboardKey
-    {
-        public string name;
-        public Type valueType;
-
-        public BlackboardKey(string name, Type valueType)
-        {
-            this.name = name;
-            this.valueType = valueType;
-        }
-    }
-
     [CreateAssetMenu(fileName = "Blackboard", menuName = "MonsterBT/Blackboard")]
     public class Blackboard : ScriptableObject
     {
