@@ -428,7 +428,7 @@ namespace MonsterBT.Editor
 
         #endregion
 
-        #region Inspector Notifications
+        #region Inspector Methods
 
         public event Action<BTNode> OnNodeSelected;
         public event Action OnNodeDeselected;
@@ -453,6 +453,15 @@ namespace MonsterBT.Editor
                 {
                     OnNodeDeselected?.Invoke();
                 }
+            }
+        }
+
+        public void HandlePropertyChanged(BTNode node, string propertyName)
+        {
+            if (nodeViews.TryGetValue(node, out var nodeView))
+            {
+                Debug.Log(propertyName);
+                nodeView.RefreshContent(propertyName);
             }
         }
 

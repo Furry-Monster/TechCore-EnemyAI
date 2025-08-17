@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ae69903f07736620982525bad125447, type: 3}
   m_Name: SequenceNode
   m_EditorClassIdentifier: 
-  description: 
+  description: 1000
   position: {x: 595, y: 100}
   children:
   - {fileID: 4553742961081212638}
@@ -31,7 +31,7 @@ MonoBehaviour:
   m_Name: DebugLogAction
   m_EditorClassIdentifier: 
   description: 
-  position: {x: 1063.5, y: 100}
+  position: {x: 1020, y: 100}
   message: Debug Log Action
   logType: 3
 --- !u!114 &11400000
@@ -76,7 +76,7 @@ MonoBehaviour:
   m_Name: Inverter
   m_EditorClassIdentifier: 
   description: 
-  position: {x: 1434.96, y: 361}
+  position: {x: 1294, y: 361}
   child: {fileID: 7058665364046921447}
 --- !u!114 &4553742961081212638
 MonoBehaviour:

@@ -102,6 +102,7 @@ namespace MonsterBT.Editor
                 Undo.RecordObject(node, "Change Node Name");
                 node.name = evt.newValue;
                 EditorUtility.SetDirty(node);
+                OnPropertyChanged?.Invoke(node, "name");
             });
             contentScrollView.Add(nameField);
 
@@ -117,6 +118,7 @@ namespace MonsterBT.Editor
                 Undo.RecordObject(node, "Change Node Description");
                 node.Description = evt.newValue;
                 EditorUtility.SetDirty(node);
+                OnPropertyChanged?.Invoke(node, "description");
             });
             contentScrollView.Add(descriptionField);
 
@@ -182,7 +184,7 @@ namespace MonsterBT.Editor
         /// <param name="field">需要被展示的字段反射表</param>
         /// <param name="node">字段所属的节点实例，该实例将被解析</param>
         /// <returns>创建的视图元素</returns>
-        private static VisualElement CreateFieldEditor(FieldInfo field, BTNode node)
+        private VisualElement CreateFieldEditor(FieldInfo field, BTNode node)
         {
             var fieldType = field.FieldType;
             string fieldName = ObjectNames.NicifyVariableName(field.Name);
@@ -201,7 +203,9 @@ namespace MonsterBT.Editor
 
         #region Field Elements Creator (可扩展)
 
-        private static TextField CreateStringField(FieldInfo field, BTNode node, string displayName)
+        public Action<BTNode, string> OnPropertyChanged;
+
+        private TextField CreateStringField(FieldInfo field, BTNode node, string displayName)
         {
             var textField = new TextField(displayName)
             {
@@ -213,12 +217,13 @@ namespace MonsterBT.Editor
                 Undo.RecordObject(node, $"Change {displayName}");
                 field.SetValue(node, evt.newValue);
                 EditorUtility.SetDirty(node);
+                OnPropertyChanged?.Invoke(node, displayName);
             });
 
             return textField;
         }
 
-        private static FloatField CreateFloatField(FieldInfo field, BTNode node, string displayName)
+        private FloatField CreateFloatField(FieldInfo field, BTNode node, string displayName)
         {
             var floatField = new FloatField(displayName)
             {
@@ -230,12 +235,13 @@ namespace MonsterBT.Editor
                 Undo.RecordObject(node, $"Change {displayName}");
                 field.SetValue(node, evt.newValue);
                 EditorUtility.SetDirty(node);
+                OnPropertyChanged?.Invoke(node, displayName);
             });
 
             return floatField;
         }
 
-        private static IntegerField CreateIntField(FieldInfo field, BTNode node, string displayName)
+        private IntegerField CreateIntField(FieldInfo field, BTNode node, string displayName)
         {
             var intField = new IntegerField(displayName)
             {
@@ -247,12 +253,13 @@ namespace MonsterBT.Editor
                 Undo.RecordObject(node, $"Change {displayName}");
                 field.SetValue(node, evt.newValue);
                 EditorUtility.SetDirty(node);
+                OnPropertyChanged?.Invoke(node, displayName);
             });
 
             return intField;
         }
 
-        private static Toggle CreateBoolField(FieldInfo field, BTNode node, string displayName)
+        private Toggle CreateBoolField(FieldInfo field, BTNode node, string displayName)
         {
             var toggle = new Toggle(displayName)
             {
@@ -264,12 +271,13 @@ namespace MonsterBT.Editor
                 Undo.RecordObject(node, $"Change {displayName}");
                 field.SetValue(node, evt.newValue);
                 EditorUtility.SetDirty(node);
+                OnPropertyChanged?.Invoke(node, displayName);
             });
 
             return toggle;
         }
 
-        private static Vector3Field CreateVector3Field(FieldInfo field, BTNode node, string displayName)
+        private Vector3Field CreateVector3Field(FieldInfo field, BTNode node, string displayName)
         {
             var vector3Field = new Vector3Field(displayName)
             {
@@ -281,12 +289,13 @@ namespace MonsterBT.Editor
                 Undo.RecordObject(node, $"Change {displayName}");
                 field.SetValue(node, evt.newValue);
                 EditorUtility.SetDirty(node);
+                OnPropertyChanged?.Invoke(node, displayName);
             });
 
             return vector3Field;
         }
 
-        private static EnumField CreateEnumField(FieldInfo field, BTNode node, string displayName)
+        private EnumField CreateEnumField(FieldInfo field, BTNode node, string displayName)
         {
             var enumValue = (Enum)field.GetValue(node);
             var enumField = new EnumField(displayName, enumValue);
@@ -296,6 +305,7 @@ namespace MonsterBT.Editor
                 Undo.RecordObject(node, $"Change {displayName}");
                 field.SetValue(node, evt.newValue);
                 EditorUtility.SetDirty(node);
+                OnPropertyChanged?.Invoke(node, displayName);
             });
 
             return enumField;

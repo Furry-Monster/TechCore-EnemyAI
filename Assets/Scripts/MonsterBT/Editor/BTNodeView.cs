@@ -9,6 +9,7 @@ namespace MonsterBT.Editor
     public sealed class BTNodeView : Node
     {
         public BTNode Node { get; }
+        public Label descriptionLabel { get; private set; }
         public Port InputPort { get; private set; }
         public Port OutputPort { get; private set; }
 
@@ -27,13 +28,13 @@ namespace MonsterBT.Editor
         {
             title = string.IsNullOrEmpty(Node.name) ? Node.GetType().Name : Node.name;
 
-            var description = new Label(GetNodeDescription())
+            string description = string.IsNullOrEmpty(Node.Description) ? GetNodeDescription() : Node.Description;
+            descriptionLabel = new Label(description)
             {
                 name = "description"
             };
-            description.AddToClassList("node-description");
-
-            mainContainer.Add(description);
+            descriptionLabel.AddToClassList("node-description");
+            mainContainer.Add(descriptionLabel);
         }
 
         private void SetupPorts()
@@ -43,7 +44,7 @@ namespace MonsterBT.Editor
             {
                 InputPort = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single,
                     typeof(bool));
-                InputPort.portName = "";
+                InputPort.portName = "Input";
                 inputContainer.Add(InputPort);
             }
 
@@ -61,7 +62,7 @@ namespace MonsterBT.Editor
 
             if (OutputPort != null)
             {
-                OutputPort.portName = "";
+                OutputPort.portName = "Output";
                 outputContainer.Add(OutputPort);
             }
         }
@@ -103,6 +104,20 @@ namespace MonsterBT.Editor
             base.SetPosition(newPos);
             Node.Position = new Vector2(newPos.xMin, newPos.yMin);
             EditorUtility.SetDirty(Node);
+        }
+
+        public void RefreshContent(string propertyName)
+        {
+            switch (propertyName)
+            {
+                case "name":
+                    title = string.IsNullOrEmpty(Node?.name) ? Node?.GetType().Name : Node.name;
+                    break;
+                case "description":
+                    descriptionLabel.text =
+                        string.IsNullOrEmpty(Node?.Description) ? GetNodeDescription() : Node.Description;
+                    break;
+            }
         }
     }
 }
