@@ -88,7 +88,6 @@ namespace MonsterBT.Editor
             {
                 graphView.OnNodeSelected += inspector.SetSelectedNode;
                 graphView.OnNodeDeselected += inspector.ClearSelection;
-                Debug.Log("BTEditorWindow: GraphView和Inspector事件已连接");
             }
             else
             {
@@ -157,7 +156,6 @@ namespace MonsterBT.Editor
             if (string.IsNullOrEmpty(path))
                 return;
 
-            // 保存到Asset文件中
             AssetDatabase.CreateAsset(tree, path);
             AssetDatabase.AddObjectToAsset(rootNode, tree);
             AssetDatabase.SaveAssets();

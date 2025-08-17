@@ -72,7 +72,7 @@ namespace MonsterBT.Editor
             PopulateView();
         }
 
-        private void PopulateView()
+        public void PopulateView()
         {
             // 填充当前视图
             graphViewChanged -= OnGraphViewChanged;
