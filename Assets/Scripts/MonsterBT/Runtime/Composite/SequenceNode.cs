@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MonsterBT.Runtime
+namespace MonsterBT.Runtime.Composite
 {
     /// <summary>
     /// 顺序执行所有节点，任何一个执行失败都算作失败

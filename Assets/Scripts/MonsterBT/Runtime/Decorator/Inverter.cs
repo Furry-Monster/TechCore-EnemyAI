@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MonsterBT.Runtime
+namespace MonsterBT.Runtime.Decorator
 {
     /// <summary>
     /// 求逆装饰器
