@@ -19,7 +19,7 @@ namespace MonsterBT.Runtime
     public abstract class BTNode : ScriptableObject
     {
         [SerializeField] protected string description;
-        [SerializeField] [ReadOnly] protected Vector2 position;
+        [SerializeField][ReadOnly] protected Vector2 position;
 
         public string Description
         {

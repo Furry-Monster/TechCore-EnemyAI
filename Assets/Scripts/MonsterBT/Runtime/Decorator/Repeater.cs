@@ -9,10 +9,12 @@ namespace MonsterBT.Runtime.Decorator
     [CreateAssetMenu(fileName = "Repeater", menuName = "MonsterBTNode/Decorator/Repeater")]
     public class Repeater : DecoratorNode
     {
-        [SerializeField] [Tooltip("-1 表示无限重复")]
+        [SerializeField]
+        [Tooltip("-1 表示无限重复")]
         private int repeatTimes = 1;
 
-        [SerializeField] [Tooltip("子节点失败时是否重置计数")]
+        [SerializeField]
+        [Tooltip("子节点失败时是否重置计数")]
         private bool resetOnFailure = true;
 
         private int repeatCount;

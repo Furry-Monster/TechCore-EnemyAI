@@ -7,7 +7,7 @@ namespace MonsterBT.Runtime.Actions
     {
         [SerializeField] private string message = "Debug Log Action";
         [SerializeField] private LogType logType = LogType.Log;
-        
+
         protected override BTNodeState OnUpdate()
         {
             switch (logType)
@@ -22,7 +22,7 @@ namespace MonsterBT.Runtime.Actions
                     Debug.LogError($"[BT] {message}");
                     break;
             }
-            
+
             return BTNodeState.Success;
         }
     }

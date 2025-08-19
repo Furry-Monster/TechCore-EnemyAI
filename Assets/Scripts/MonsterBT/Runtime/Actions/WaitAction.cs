@@ -7,19 +7,19 @@ namespace MonsterBT.Runtime.Actions
     {
         [SerializeField] private float waitTime = 1f;
         private float startTime;
-        
+
         protected override void OnStart()
         {
             startTime = Time.time;
         }
-        
+
         protected override BTNodeState OnUpdate()
         {
             if (Time.time - startTime >= waitTime)
             {
                 return BTNodeState.Success;
             }
-            
+
             return BTNodeState.Running;
         }
     }

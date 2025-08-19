@@ -10,12 +10,14 @@ namespace MonsterBT.Runtime.Composite
     [CreateAssetMenu(fileName = "Random", menuName = "MonsterBTNode/Composite/Random")]
     public class Random : CompositeNode
     {
-        [SerializeField] [Tooltip("是否使用权重选择")] private bool isAverage;
+        [SerializeField][Tooltip("是否使用权重选择")] private bool isAverage;
 
-        [SerializeField] [Tooltip("子节点权重列表（仅在useWeights为true时生效）")]
+        [SerializeField]
+        [Tooltip("子节点权重列表（仅在useWeights为true时生效）")]
         private List<float> weights = new List<float>();
 
-        [SerializeField] [Tooltip("是否每次重新选择（false表示选中后执行完毕才重新选择）")]
+        [SerializeField]
+        [Tooltip("是否每次重新选择（false表示选中后执行完毕才重新选择）")]
         private bool reselectOnComplete = true;
 
         private BTNode selectedChild;

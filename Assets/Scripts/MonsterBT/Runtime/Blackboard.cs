@@ -21,7 +21,9 @@ namespace MonsterBT.Runtime
         private readonly SerializableDictionary<string, object> data = new SerializableDictionary<string, object>();
 
         // 黑板变量信息表，用于提供Editor界面信息
-        [SerializeField] [ReadOnly] private List<BlackboardVariableInfo> variableInfos =
+        [SerializeField]
+        [ReadOnly]
+        private List<BlackboardVariableInfo> variableInfos =
             new List<BlackboardVariableInfo>();
 
         #region Public Methods
