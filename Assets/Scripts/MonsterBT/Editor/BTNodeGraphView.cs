@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using MonsterBT.Runtime;
-using MonsterBT.Runtime.Actions;
-using MonsterBT.Runtime.Composite;
-using MonsterBT.Runtime.Conditions;
-using MonsterBT.Runtime.Decorator;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
@@ -291,28 +288,8 @@ namespace MonsterBT.Editor
 
         private void BuildGraphContextMenu(ContextualMenuPopulateEvent evt)
         {
-            #region Node Ops
-
-            // 复合节点
-            evt.menu.AppendAction("Create Node/Composite/Sequence", _ => CreateNode<SequenceNode>(),
-                DropdownMenuAction.AlwaysEnabled);
-            evt.menu.AppendAction("Create Node/Composite/Selector", _ => CreateNode<SelectorNode>(),
-                DropdownMenuAction.AlwaysEnabled);
-            // 装饰器节点
-            evt.menu.AppendAction("Create Node/Decorator/Inverter", _ => CreateNode<Inverter>(),
-                DropdownMenuAction.AlwaysEnabled);
-            // 行为节点
-            evt.menu.AppendAction("Create Node/Action/Move To Target",
-                _ => CreateNode<MoveToTargetAction>(), DropdownMenuAction.AlwaysEnabled);
-            evt.menu.AppendAction("Create Node/Action/Wait", _ => CreateNode<WaitAction>(),
-                DropdownMenuAction.AlwaysEnabled);
-            evt.menu.AppendAction("Create Node/Action/Debug Log",
-                _ => CreateNode<DebugLogAction>(), DropdownMenuAction.AlwaysEnabled);
-            // 条件节点
-            evt.menu.AppendAction("Create Node/Condition/Distance Check",
-                _ => CreateNode<DistanceCondition>(), DropdownMenuAction.AlwaysEnabled);
-
-            #endregion
+            // 自动生成所有节点类型的菜单
+            BuildNodeCreationMenu(evt);
 
             #region Blackboard Ops
 
@@ -455,6 +432,119 @@ namespace MonsterBT.Editor
 
             EditorUtility.SetDirty(behaviorTree);
             AssetDatabase.SaveAssets();
+        }
+
+        /// <summary>
+        /// 自动生成节点创建菜单
+        /// </summary>
+        /// <param name="evt"> 上下文菜单广播事件 </param>
+        private void BuildNodeCreationMenu(ContextualMenuPopulateEvent evt)
+        {
+            var nodeTypes = GetAllNodeTypes();
+
+            foreach (var (category, types) in nodeTypes)
+            {
+                foreach (var type in types)
+                {
+                    string displayName = GetNodeDisplayName(type);
+                    string menuPath = $"Create Node/{category}/{displayName}";
+
+                    evt.menu.AppendAction(menuPath, _ => CreateNode(type), DropdownMenuAction.AlwaysEnabled);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获取所有节点类型，按分类组织
+        /// </summary>
+        private Dictionary<string, List<Type>> GetAllNodeTypes()
+        {
+            var nodeTypes = new Dictionary<string, List<Type>>
+            {
+                ["Composite"] = new List<Type>(),
+                ["Decorator"] = new List<Type>(),
+                ["Action"] = new List<Type>(),
+                ["Condition"] = new List<Type>(),
+            };
+
+            // 获取当前程序集中所有继承自BTNode的类型
+            var assembly = typeof(BTNode).Assembly;
+            var allTypes = assembly.GetTypes()
+                .Where(type => typeof(BTNode).IsAssignableFrom(type) &&
+                               !type.IsAbstract &&
+                               type != typeof(BTNode) &&
+                               type != typeof(RootNode)) // 排除根节点
+                .ToList();
+
+            foreach (var type in allTypes)
+            {
+                string category = DetermineNodeCategory(type);
+                if (nodeTypes.ContainsKey(category))
+                {
+                    nodeTypes[category].Add(type);
+                }
+            }
+
+            // 简单按名称排个序
+            foreach (string category in nodeTypes.Keys.ToList())
+            {
+                nodeTypes[category] = nodeTypes[category].OrderBy(t => t.Name).ToList();
+            }
+
+            return nodeTypes;
+        }
+
+        /// <summary>
+        /// 根据类型确定节点分类
+        /// </summary>
+        /// <param name="type"> 需要检测的节点类型 </param>
+        private static string DetermineNodeCategory(Type type)
+        {
+            if (typeof(CompositeNode).IsAssignableFrom(type))
+                return "Composite";
+
+            if (typeof(DecoratorNode).IsAssignableFrom(type))
+                return "Decorator";
+
+            if (typeof(ActionNode).IsAssignableFrom(type))
+            {
+                // 进一步区分Action和Condition
+                if (type.Namespace?.Contains("Conditions") == true ||
+                    type.Name.Contains("Condition") ||
+                    type.Name.Contains("Check"))
+                {
+                    return "Condition";
+                }
+                return "Action";
+            }
+
+            return "Other";
+        }
+
+        /// <summary>
+        /// 获取节点的显示名称
+        /// </summary>
+        /// <param name="type"> 需要被检测的节点类型 </param>
+        private static string GetNodeDisplayName(Type type)
+        {
+            string typeName = type.Name;
+
+            // 移除后缀
+            if (typeName.EndsWith("Node"))
+                typeName = typeName.Substring(0, typeName.Length - 4);
+
+            if (typeName.EndsWith("Action"))
+                typeName = typeName.Substring(0, typeName.Length - 6);
+            else if (typeName.EndsWith("Condition"))
+                typeName = typeName.Substring(0, typeName.Length - 9);
+            else if (typeName.EndsWith("Decorator"))
+                typeName = typeName.Substring(0, typeName.Length - 9);
+            else if (typeName.EndsWith("Composite"))
+                typeName = typeName.Substring(0, typeName.Length - 9);
+
+            // 在大写字母前添加空格（类似Unity Editor设计）
+            // eg: MoveToTarget -> Move To Target
+            return Regex.Replace(typeName, "(?<!^)([A-Z])", " $1");
         }
 
         #endregion
