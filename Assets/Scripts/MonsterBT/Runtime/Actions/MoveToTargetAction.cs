@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace MonsterBT.Runtime.Actions
 {
-    [CreateAssetMenu(fileName = "MoveToTargetAction", menuName = "MonsterBT/Actions/MoveToTargetAction")]
+    [CreateAssetMenu(fileName = "MoveToTargetAction", menuName = "MonsterBTNode/Actions/MoveToTargetAction")]
     public class MoveToTargetAction : ActionNode
     {
         [SerializeField] private string targetKey = "Target";

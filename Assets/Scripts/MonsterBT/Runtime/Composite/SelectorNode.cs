@@ -5,7 +5,7 @@ namespace MonsterBT.Runtime.Composite
     /// <summary>
     /// 按顺序执行子节点，直到其中一个成功
     /// </summary>
-    [CreateAssetMenu(fileName = "SelectorNode", menuName = "MonsterBT/SelectorNode")]
+    [CreateAssetMenu(fileName = "Selector", menuName = "MonsterBTNode/Composite/Selector")]
     public class SelectorNode : CompositeNode
     {
         private int currentChildIndex;

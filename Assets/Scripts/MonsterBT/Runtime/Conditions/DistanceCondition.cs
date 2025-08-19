@@ -11,7 +11,7 @@ namespace MonsterBT.Runtime.Conditions
         GreaterThan
     }
 
-    [CreateAssetMenu(fileName = "DistanceCondition", menuName = "MonsterBT/Conditions/DistanceCondition")]
+    [CreateAssetMenu(fileName = "DistanceCondition", menuName = "MonsterBTNode/Conditions/DistanceCondition")]
     public class DistanceCondition : ActionNode
     {
         [SerializeField] private string targetKey = "Target";

@@ -5,7 +5,7 @@ namespace MonsterBT.Runtime.Composite
     /// <summary>
     /// 顺序执行所有节点，任何一个执行失败都算作失败
     /// </summary>
-    [CreateAssetMenu(fileName = "SequenceNode", menuName = "MonsterBT/SequenceNode")]
+    [CreateAssetMenu(fileName = "Sequence", menuName = "MonsterBTNode/Composite/Sequence")]
     public class SequenceNode : CompositeNode
     {
         private int currentChildIndex;

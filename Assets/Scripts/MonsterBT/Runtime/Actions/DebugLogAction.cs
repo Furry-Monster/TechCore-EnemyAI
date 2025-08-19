@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace MonsterBT.Runtime.Actions
 {
-    [CreateAssetMenu(fileName = "DebugLogAction", menuName = "MonsterBT/Actions/DebugLogAction")]
+    [CreateAssetMenu(fileName = "DebugLogAction", menuName = "MonsterBTNode/Actions/DebugLogAction")]
     public class DebugLogAction : ActionNode
     {
         [SerializeField] private string message = "Debug Log Action";

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace MonsterBT.Runtime.Actions
 {
-    [CreateAssetMenu(fileName = "WaitAction", menuName = "MonsterBT/Actions/WaitAction")]
+    [CreateAssetMenu(fileName = "WaitAction", menuName = "MonsterBTNode/Actions/WaitAction")]
     public class WaitAction : ActionNode
     {
         [SerializeField] private float waitTime = 1f;

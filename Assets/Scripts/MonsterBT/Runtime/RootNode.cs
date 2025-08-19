@@ -5,7 +5,7 @@ namespace MonsterBT.Runtime
     /// <summary>
     /// 根节点
     /// </summary>
-    [CreateAssetMenu(fileName = "RootNode", menuName = "MonsterBT/RootNode")]
+    [CreateAssetMenu(fileName = "RootNode", menuName = "MonsterBTNode/RootNode")]
     public class RootNode : BTNode
     {
         [SerializeField] private BTNode child;

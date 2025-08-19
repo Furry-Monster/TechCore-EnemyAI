@@ -5,7 +5,7 @@ namespace MonsterBT.Runtime.Decorator
     /// <summary>
     /// 求逆装饰器
     /// </summary>
-    [CreateAssetMenu(fileName = "Inverter", menuName = "MonsterBT/Inverter")]
+    [CreateAssetMenu(fileName = "Inverter", menuName = "MonsterBTNode/Decorator/Inverter")]
     public class Inverter : DecoratorNode
     {
         protected override BTNodeState OnUpdate()

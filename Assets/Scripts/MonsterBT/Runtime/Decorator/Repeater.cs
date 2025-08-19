@@ -6,7 +6,7 @@ namespace MonsterBT.Runtime.Decorator
     /// 重复装饰器
     /// 可以设置重复次数，-1表示无限重复
     /// </summary>
-    [CreateAssetMenu(fileName = "Repeater", menuName = "MonsterBT/Decorator/Repeater")]
+    [CreateAssetMenu(fileName = "Repeater", menuName = "MonsterBTNode/Decorator/Repeater")]
     public class Repeater : DecoratorNode
     {
         [SerializeField] [Tooltip("-1 表示无限重复")]
