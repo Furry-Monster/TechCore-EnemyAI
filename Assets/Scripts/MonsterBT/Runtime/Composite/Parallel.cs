@@ -21,7 +21,8 @@ namespace MonsterBT.Runtime.Composite
     }
 
     /// <summary>
-    /// 参考虚幻引擎UE5中"简单并行"的实现,这里限于Composition的设计，没有使用主任务的概念
+    /// 参考虚幻引擎UE5中"简单并行"的实现
+    /// 这里限于Composition的设计，没有使用主任务的概念
     /// </summary>
     [CreateAssetMenu(fileName = "Parallel", menuName = "MonsterBTNode/Composite/Parallel")]
     public class Parallel : CompositeNode

@@ -2,7 +2,7 @@
 
 - ✅ Selector - 选择器（或节点）
 - ✅ Sequence - 序列器（与节点）
-- Parallel - 并行节点（同时执行多个子节点）
+- ✅ Parallel - 并行节点（同时执行多个子节点）
 - RandomSelector - 随机选择器
 - WeightedSelector - 权重选择器
 - PrioritySelector - 优先级选择器
