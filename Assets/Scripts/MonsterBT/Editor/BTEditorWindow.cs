@@ -1,9 +1,10 @@
 using MonsterBT.Runtime;
+using MonsterBT.Runtime.Actions;
+using MonsterBT.Runtime.Conditions;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Object = UnityEngine.Object;
 
 namespace MonsterBT.Editor
 {
@@ -189,10 +190,33 @@ namespace MonsterBT.Editor
 
         private void OnClickSpawnNode(ClickEvent evt)
         {
+            if (graphView == null || currentBehaviorTree == null)
+                return;
+
+            var targetElement = evt.currentTarget as VisualElement;
+            if (targetElement == null)
+                return;
+
+            // 根据节点库中的元素名称确定要创建的节点类型
+            var nodeType = targetElement.name switch
+            {
+                "selector-item" => typeof(SelectorNode),
+                "sequence-item" => typeof(SequenceNode),
+                "inverter-item" => typeof(Inverter),
+                "debug-log-item" => typeof(DebugLogAction),
+                "wait-item" => typeof(WaitAction),
+                "move-to-target-item" => typeof(MoveToTargetAction),
+                "distance-condition-item" => typeof(DistanceCondition),
+                _ => null
+            };
+
+            if (nodeType != null)
+                graphView.CreateNode(nodeType);
         }
 
         private void OnDragSpawnNode(MouseDownEvent evt)
         {
+            //TODO: 实现拖动到指定位置创建节点
         }
 
         #endregion

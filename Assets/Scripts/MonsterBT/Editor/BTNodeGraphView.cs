@@ -269,7 +269,7 @@ namespace MonsterBT.Editor
 
         #region ContextMenu Methods
 
-        private BTNode copiedNode;
+        private BTNode copiedNode; // 拷贝缓冲
         private Vector2 mousePosition;
 
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
@@ -345,6 +345,10 @@ namespace MonsterBT.Editor
             evt.menu.AppendAction("Delete", _ => DeleteNode(nodeView), DropdownMenuAction.AlwaysEnabled);
         }
 
+        /// <summary>
+        /// 实际地创建一个节点，会同时创建持久化的SO和Editor下的NodeView视图
+        /// </summary>
+        /// <typeparam name="T">节点类型，需继承BTNode</typeparam>
         public void CreateNode<T>() where T : BTNode
         {
             if (behaviorTree == null)
@@ -352,6 +356,30 @@ namespace MonsterBT.Editor
 
             var node = ScriptableObject.CreateInstance<T>();
             node.name = typeof(T).Name;
+
+            AssetDatabase.AddObjectToAsset(node, behaviorTree);
+
+            var nodeView = CreateNodeViewFromNode(node);
+            nodeView.SetPosition(new Rect(mousePosition, Vector2.zero));
+
+            EditorUtility.SetDirty(behaviorTree);
+            AssetDatabase.SaveAssets();
+        }
+
+        /// <summary>
+        /// 同上创建节点SO+创建节点GraphView视图(无泛型，手动约束)
+        /// </summary>
+        /// <param name="type">节点类型</param>
+        public void CreateNode(Type type)
+        {
+            if (behaviorTree == null)
+                return;
+
+            // 运行时检测
+            if (!typeof(BTNode).IsAssignableFrom(type)) return;
+
+            var node = ScriptableObject.CreateInstance(type) as BTNode;
+            node!.name = type.Name;
 
             AssetDatabase.AddObjectToAsset(node, behaviorTree);
 
@@ -431,7 +459,7 @@ namespace MonsterBT.Editor
 
         #region Blackboard Methods
 
-        private void AddBlackboardVariable(string varName, Type varType)
+        public void AddBlackboardVariable(string varName, Type varType)
         {
             if (behaviorTree?.Blackboard == null) return;
 
@@ -446,7 +474,7 @@ namespace MonsterBT.Editor
         }
 
 
-        private void RefreshBlackboardView()
+        public void RefreshBlackboardView()
         {
             var blackboard = this.Q<Blackboard>();
             if (blackboard == null || behaviorTree?.Blackboard == null) return;
@@ -580,7 +608,7 @@ namespace MonsterBT.Editor
             return null;
         }
 
-        private void RemoveBlackboardVariable(string varName)
+        public void RemoveBlackboardVariable(string varName)
         {
             if (behaviorTree?.Blackboard == null) return;
 
