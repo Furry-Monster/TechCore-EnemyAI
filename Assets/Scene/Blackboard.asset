@@ -12,11 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a7afe406746554608b6b71054fb3fd4, type: 3}
   m_Name: Blackboard
   m_EditorClassIdentifier: 
-  data:
-    serializableDict:
-    - key: NewVector3
-    - key: NewBool
-    - key: NewFloat
   variableInfos:
   - name: NewVector3
     typeName: UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,

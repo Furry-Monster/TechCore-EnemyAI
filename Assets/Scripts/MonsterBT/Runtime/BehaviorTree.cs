@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace MonsterBT.Runtime
 {
+    /// <summary>
+    /// 行为树SO
+    /// </summary>
     [CreateAssetMenu(fileName = "BehaviorTree", menuName = "MonsterBT/BehaviorTree")]
     public class BehaviorTree : ScriptableObject
     {

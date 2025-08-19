@@ -95,7 +95,6 @@ namespace MonsterBT.Editor
             {
                 graphView.OnNodeSelected += inspector.SetSelectedNode;
                 graphView.OnNodeDeselected += inspector.ClearSelection;
-
                 inspector.OnPropertyChanged += graphView.HandlePropertyChanged;
             }
             else

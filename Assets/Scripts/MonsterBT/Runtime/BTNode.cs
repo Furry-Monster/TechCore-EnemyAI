@@ -4,7 +4,17 @@ using UnityEngine;
 namespace MonsterBT.Runtime
 {
     /// <summary>
-    /// 行为树基类
+    /// 节点状态
+    /// </summary>
+    public enum BTNodeState
+    {
+        Running,
+        Success,
+        Failure
+    }
+
+    /// <summary>
+    /// 行为树节点SO基类
     /// </summary>
     public abstract class BTNode : ScriptableObject
     {
@@ -75,4 +85,5 @@ namespace MonsterBT.Runtime
         {
         }
     }
+
 }

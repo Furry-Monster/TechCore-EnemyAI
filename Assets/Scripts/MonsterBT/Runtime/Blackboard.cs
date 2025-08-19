@@ -87,6 +87,13 @@ namespace MonsterBT.Runtime
             return variableInfos;
         }
 
+        /// <summary>
+        /// 添加变量
+        /// </summary>
+        /// <param name="name">变量名（Key名）</param>
+        /// <param name="type">变量类型</param>
+        /// <param name="defaultValue">默认值，可为空</param>
+        /// <param name="isExposed">是否在Editor暴露</param>
         [SuppressMessage("ReSharper", "ParameterHidesMember")]
         public void AddVariable(string name, Type type, object defaultValue = null, bool isExposed = true)
         {
@@ -104,6 +111,10 @@ namespace MonsterBT.Runtime
             variableInfos.Add(info);
         }
 
+        /// <summary>
+        /// 删除指定变量
+        /// </summary>
+        /// <param name="name">Key名</param>
         [SuppressMessage("ReSharper", "ParameterHidesMember")]
         public void RemoveVariable(string name)
         {
@@ -111,6 +122,11 @@ namespace MonsterBT.Runtime
             variableInfos.RemoveAll(info => info.name == name);
         }
 
+        /// <summary>
+        /// 重命名变量
+        /// </summary>
+        /// <param name="oldName">旧Key名</param>
+        /// <param name="newName">新Key名</param>
         public void RenameVariable(string oldName, string newName)
         {
             if (!HasKey(oldName) || HasKey(newName)) return;
@@ -131,6 +147,11 @@ namespace MonsterBT.Runtime
             }
         }
 
+        /// <summary>
+        /// 获取指定Key名变量的类型
+        /// </summary>
+        /// <param name="name">Key名</param>
+        /// <returns>变量类型</returns>
         [SuppressMessage("ReSharper", "ParameterHidesMember")]
         public Type GetVariableType(string name)
         {
@@ -138,6 +159,10 @@ namespace MonsterBT.Runtime
             return string.IsNullOrEmpty(info.typeName) ? null : Type.GetType(info.typeName);
         }
 
+        /// <summary>
+        /// 获取所有Key
+        /// </summary>
+        /// <returns>Key的一个迭代器</returns>
         public IEnumerable<string> GetAllKeys()
         {
             return data.Keys;

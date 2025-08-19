@@ -29,6 +29,7 @@ namespace MonsterBT.Editor
             styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>(
                 "Assets/Scripts/MonsterBT/Editor/BTNodeGraphStyle.uss"));
 
+            // 添加manipulators
             this.AddManipulator(new ContentZoomer());
             this.AddManipulator(new ContentDragger());
             this.AddManipulator(new SelectionDragger());
@@ -37,6 +38,7 @@ namespace MonsterBT.Editor
 
             SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
 
+            // 添加minimap
             var miniMap = new MiniMap
             {
                 name = "mini-map",
@@ -44,6 +46,7 @@ namespace MonsterBT.Editor
             miniMap.AddToClassList("mini-map");
             Add(miniMap);
 
+            // 添加blackboard
             var blackboard = new Blackboard
             {
                 name = "blackboard",
@@ -53,6 +56,7 @@ namespace MonsterBT.Editor
             blackboard.addItemRequested += _ => Debug.Log("I don't know how to make this invisible.");
             Add(blackboard);
 
+            // 添加grid
             var grid = new GridBackground();
             Insert(0, grid);
             grid.StretchToParentSize();
@@ -65,6 +69,7 @@ namespace MonsterBT.Editor
             // 轮询监听
             schedule.Execute(CheckSelection).Every(100);
 
+            // 广播视图更新
             PopulateView();
         }
 
@@ -81,6 +86,9 @@ namespace MonsterBT.Editor
             RefreshBlackboardView();
         }
 
+        /// <summary>
+        /// 广播视图更新，此方法将从头递归地、重新加载整个行为树视图，不应频繁调用
+        /// </summary>
         public void PopulateView()
         {
             // 填充当前视图
@@ -183,6 +191,11 @@ namespace MonsterBT.Editor
             AddElement(edge);
         }
 
+        /// <summary>
+        /// 仅仅更新修改过的GraphView元素，相比广播，性能更优，通过事件自动调用
+        /// </summary>
+        /// <param name="graphViewChange">原始元素更新记录</param>
+        /// <returns>处理后的元素更新记录</returns>
         private GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
         {
             // 处理删除的元素
@@ -241,7 +254,6 @@ namespace MonsterBT.Editor
 
             return graphViewChange;
         }
-
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
         {
@@ -313,6 +325,7 @@ namespace MonsterBT.Editor
                 _ => AddBlackboardVariable("NewGameObject", typeof(GameObject)), DropdownMenuAction.AlwaysEnabled);
             evt.menu.AppendAction("Blackboard/Add String", _ => AddBlackboardVariable("NewString", typeof(string)),
                 DropdownMenuAction.AlwaysEnabled);
+            evt.menu.AppendAction("Blackboard/Refresh", _ => RefreshBlackboardView(), DropdownMenuAction.AlwaysEnabled);
 
             #endregion
 
@@ -609,6 +622,7 @@ namespace MonsterBT.Editor
 
         private BTNode lastSelectedNode;
 
+        // TODO:从100ms的轮询优化到其他方式
         private void CheckSelection()
         {
             var selectedNodes = selection.OfType<BTNodeView>().ToList();
@@ -634,7 +648,6 @@ namespace MonsterBT.Editor
         {
             if (nodeViews.TryGetValue(node, out var nodeView))
             {
-                Debug.Log(propertyName);
                 nodeView.RefreshContent(propertyName);
             }
         }

@@ -6,6 +6,11 @@ using UnityEngine;
 
 namespace MonsterBT.Runtime.Utils
 {
+    /// <summary>
+    /// 可序列化键值对KVP
+    /// </summary>
+    /// <typeparam name="TKey">Key类型</typeparam>
+    /// <typeparam name="TValue">Value类型</typeparam>
     [Serializable]
     public struct SerializablePair<TKey, TValue>
     {
@@ -13,6 +18,11 @@ namespace MonsterBT.Runtime.Utils
         public TValue value;
     }
 
+    /// <summary>
+    /// 线程安全的Editor可序列化字典
+    /// </summary>
+    /// <typeparam name="TKey">Key类型</typeparam>
+    /// <typeparam name="TValue">Value类型</typeparam>
     [Serializable]
     public class SerializableDictionary<TKey, TValue> :
         ICollection<SerializablePair<TKey, TValue>>, ISerializationCallbackReceiver

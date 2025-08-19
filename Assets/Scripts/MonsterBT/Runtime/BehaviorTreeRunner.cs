@@ -1,8 +1,10 @@
-using System;
 using UnityEngine;
 
 namespace MonsterBT.Runtime
 {
+    /// <summary>
+    /// 行为树执行器，挂载到对应的GO上即可
+    /// </summary>
     public class BehaviorTreeRunner : MonoBehaviour
     {
         [SerializeField] private BehaviorTree behaviorTreeAsset;
