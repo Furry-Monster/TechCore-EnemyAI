@@ -23,7 +23,7 @@ namespace MonsterBT.Runtime
 
         public override BTNode Clone()
         {
-            CompositeNode node = Instantiate(this);
+            var node = Instantiate(this);
             node.children = new List<BTNode>();
 
             foreach (var child in children)

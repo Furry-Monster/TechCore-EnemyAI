@@ -202,8 +202,8 @@ namespace MonsterBT.Editor
             // 根据节点库中的元素名称确定要创建的节点类型
             var nodeType = targetElement.name switch
             {
-                "selector-item" => typeof(SelectorNode),
-                "sequence-item" => typeof(SequenceNode),
+                "selector-item" => typeof(Selector),
+                "sequence-item" => typeof(Sequence),
                 "inverter-item" => typeof(Inverter),
                 "debug-log-item" => typeof(DebugLogAction),
                 "wait-item" => typeof(WaitAction),

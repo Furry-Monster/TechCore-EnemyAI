@@ -3,10 +3,10 @@ using UnityEngine;
 namespace MonsterBT.Runtime.Composite
 {
     /// <summary>
-    /// 顺序执行所有节点，任何一个执行失败都算作失败
+    /// 按顺序执行子节点，直到其中一个成功
     /// </summary>
-    [CreateAssetMenu(fileName = "Sequence", menuName = "MonsterBTNode/Composite/Sequence")]
-    public class SequenceNode : CompositeNode
+    [CreateAssetMenu(fileName = "Selector", menuName = "MonsterBTNode/Composite/Selector")]
+    public class Selector : CompositeNode
     {
         private int currentChildIndex;
 
@@ -29,15 +29,15 @@ namespace MonsterBT.Runtime.Composite
                 {
                     case BTNodeState.Running:
                         return BTNodeState.Running;
-                    case BTNodeState.Failure:
-                        return BTNodeState.Failure;
                     case BTNodeState.Success:
+                        return BTNodeState.Success;
+                    case BTNodeState.Failure:
                         currentChildIndex++;
                         break;
                 }
             }
 
-            return BTNodeState.Success;
+            return BTNodeState.Failure;
         }
 
         protected override void OnStop()

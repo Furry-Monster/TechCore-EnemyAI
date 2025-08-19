@@ -93,8 +93,8 @@ namespace MonsterBT.Editor
             return Node switch
             {
                 RootNode => "Root of the behavior tree",
-                SelectorNode => "Execute children until one succeeds",
-                SequenceNode => "Execute children in sequence until one fails",
+                Selector => "Execute children until one succeeds",
+                Sequence => "Execute children in sequence until one fails",
                 Inverter => "Invert the result of child node",
                 ActionNode action => $"Action: {action.GetType().Name}",
                 _ => "Behavior tree node"
