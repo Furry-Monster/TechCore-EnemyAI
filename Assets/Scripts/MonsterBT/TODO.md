@@ -10,13 +10,13 @@
 # 装饰器节点 (Decorator Nodes)
 
 - ✅ Inverter - 反转器
-- Repeater - 重复器（重复N次或无限重复）
+- ✅ Repeater - 重复器（重复N次或无限重复）
 - Cooldown - 冷却器（限制执行频率）
 - Timeout - 超时器（限制执行时间）
-- UntilSuccess - 直到成功
-- UntilFailure - 直到失败
-- ForceSuccess - 强制成功
-- ForceFailure - 强制失败
+- ✅ UntilSuccess - 直到成功
+- ✅ UntilFailure - 直到失败
+- ✅ ForceSuccess - 强制成功
+- ✅ ForceFailure - 强制失败
 
 # 动作节点 (Action Nodes)
 

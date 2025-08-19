@@ -993,7 +993,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   behaviorTreeAsset: {fileID: 11400000, guid: 93342144f0c032b57bf6d9044c16ca3c, type: 2}
   runOnStart: 1
-  loop: 1
+  loop: 0
   debugMode: 1
 --- !u!1 &2101720455
 GameObject:
