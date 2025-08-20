@@ -14,7 +14,7 @@
 }
 
 .empty-state {
-    -unity-text-align: middle-center;
+    -unity-text-align: upper-center;
     color: rgb(153, 153, 153);
     font-size: 14px;
     margin-top: 20px;

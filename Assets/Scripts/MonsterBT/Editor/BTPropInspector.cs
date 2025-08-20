@@ -17,16 +17,25 @@ namespace MonsterBT.Editor
 
         public BTPropInspector()
         {
+            // 应用样式
             var uss = AssetDatabase.LoadAssetAtPath<StyleSheet>(
                 "Assets/Scripts/MonsterBT/Editor/BTPropInspectorStyle.uss");
             if (uss != null) styleSheets.Add(uss);
+            name = "inspector-container";
             AddToClassList("inspector-container");
 
-            contentScrollView = new ScrollView();
+            // 添加控件
+            contentScrollView = new ScrollView()
+            {
+                name = "content-scroll"
+            };
             contentScrollView.AddToClassList("content-scroll");
             Add(contentScrollView);
 
-            emptyStateLabel = new Label("Select a node to view properties");
+            emptyStateLabel = new Label("No Node Selected")
+            {
+                name = "empty-state",
+            };
             emptyStateLabel.AddToClassList("empty-state");
             Add(emptyStateLabel);
         }
@@ -57,11 +66,11 @@ namespace MonsterBT.Editor
 
             if (currentNode == null)
             {
-                emptyStateLabel.SetEnabled(true);
+                emptyStateLabel.style.display = DisplayStyle.Flex;
                 return;
             }
 
-            emptyStateLabel.SetEnabled(false);
+            emptyStateLabel.style.display = DisplayStyle.None;
             BuildGeneralProps(currentNode);
         }
 
