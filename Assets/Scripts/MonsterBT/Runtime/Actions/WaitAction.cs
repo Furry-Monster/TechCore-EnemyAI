@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 namespace MonsterBT.Runtime.Actions
@@ -6,6 +7,7 @@ namespace MonsterBT.Runtime.Actions
     public class WaitAction : ActionNode
     {
         [SerializeField] private float waitTime = 1f;
+
         private float startTime;
 
         protected override void OnStart()

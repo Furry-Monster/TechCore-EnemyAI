@@ -65,7 +65,7 @@ namespace MonsterBT.Editor
 
             graphViewChanged += OnGraphViewChanged;
 
-            // 轮询监听
+            // 轮询监听选中节点变化
             schedule.Execute(CheckSelection).Every(100);
 
             // 广播视图更新
