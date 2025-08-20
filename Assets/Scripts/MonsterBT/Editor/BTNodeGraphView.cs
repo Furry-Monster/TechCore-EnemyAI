@@ -597,12 +597,11 @@ namespace MonsterBT.Editor
                 value = varName
             };
             nameField.AddToClassList("blackboard-variable-name");
-            nameField.RegisterValueChangedCallback(evt =>
+            nameField.RegisterCallback<FocusOutEvent>(evt =>
             {
-                if (!string.IsNullOrEmpty(evt.newValue) && evt.newValue != varName)
-                {
-                    RenameBlackboardVariable(varName, evt.newValue);
-                }
+                // 仅在失去焦点时修改黑板变量的名称
+                if (evt.target is TextField textField)
+                    RenameBlackboardVariable(varName, textField.value);
             });
 
             var typeLabel = new Label(GetTypeDisplayName(varType));
@@ -723,7 +722,11 @@ namespace MonsterBT.Editor
 
         public void RenameBlackboardVariable(string oldName, string newName)
         {
-            if (behaviorTree?.Blackboard == null) return;
+            if (behaviorTree?.Blackboard == null)
+                return;
+
+            if (string.IsNullOrEmpty(newName) || oldName == newName)
+                return;
 
             // 检查新名称是否已存在
             if (behaviorTree.Blackboard.HasKey(newName))

@@ -37,7 +37,7 @@ MonoBehaviour:
   stringValue: 
   floatValue: 0
   boolValue: 0
-  vector3Value: {x: 0, y: 0, z: 0}
+  vector3Value: {x: 50.7, y: 0, z: 0}
   gameObjectValue: {fileID: 0}
 --- !u!114 &11400000
 MonoBehaviour:
@@ -115,7 +115,7 @@ MonoBehaviour:
   position: {x: 391, y: 100}
   child: {fileID: -6670785265910811436}
   repeatTimes: 5
-  resetOnFailure: 1
+  resetOnFailure: 0
 --- !u!114 &7058665364046921447
 MonoBehaviour:
   m_ObjectHideFlags: 0

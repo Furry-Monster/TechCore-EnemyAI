@@ -13,13 +13,9 @@ MonoBehaviour:
   m_Name: Blackboard
   m_EditorClassIdentifier: 
   variableInfos:
-  - name: NewVector3
-    typeName: UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
-    isExposed: 1
-  - name: NewBool
-    typeName: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
-    isExposed: 1
-  - name: NewFloat
+  - name: float
     typeName: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    isExposed: 1
+  - name: newbool
+    typeName: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
     isExposed: 1
