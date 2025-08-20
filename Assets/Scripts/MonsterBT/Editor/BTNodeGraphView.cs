@@ -103,6 +103,7 @@ namespace MonsterBT.Editor
             {
                 CreateNodeViewFromNode(behaviorTree.RootNode);
                 CreateNodeViewsRecursive(behaviorTree.RootNode);
+                LoadOtherNodes();
                 CreateConnections();
             }
         }
@@ -135,6 +136,29 @@ namespace MonsterBT.Editor
 
                 CreateNodeViewFromNode(root.Child);
                 CreateNodeViewsRecursive(root.Child);
+            }
+        }
+
+        /// <summary>
+        /// 加载所有存储在BehaviorTreeAsset中但尚未连接的节点
+        /// </summary>
+        private void LoadOtherNodes()
+        {
+            if (behaviorTree == null)
+                return;
+
+            // 获取asset中所有的BTNode对象
+            var allNodesInAsset = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(behaviorTree))
+                .OfType<BTNode>()
+                .ToList();
+
+            // 为所有尚未加载的节点创建视图
+            foreach (var node in allNodesInAsset)
+            {
+                if (!nodeViews.ContainsKey(node))
+                {
+                    CreateNodeViewFromNode(node);
+                }
             }
         }
 
@@ -291,8 +315,6 @@ namespace MonsterBT.Editor
             // 自动生成所有节点类型的菜单
             BuildNodeCreationMenu(evt);
 
-            #region Blackboard Ops
-
             // Blackboard变量管理
             evt.menu.AppendAction("Blackboard/Add Boolean", _ => AddBlackboardVariable("NewBool", typeof(bool)),
                 DropdownMenuAction.AlwaysEnabled);
@@ -306,13 +328,13 @@ namespace MonsterBT.Editor
                 DropdownMenuAction.AlwaysEnabled);
             evt.menu.AppendAction("Blackboard/Refresh", _ => RefreshBlackboardView(), DropdownMenuAction.AlwaysEnabled);
 
-            #endregion
-
             // 粘贴功能
             evt.menu.AppendAction("Paste", _ => PasteNode(),
                 action => copiedNode == null
                     ? DropdownMenuAction.AlwaysDisabled(action)
                     : DropdownMenuAction.AlwaysEnabled(action));
+            // 重新载入
+            evt.menu.AppendAction("Reload", _ => PopulateView(), DropdownMenuAction.AlwaysEnabled);
         }
 
         private void BuildNodeContextMenu(ContextualMenuPopulateEvent evt, BTNodeView nodeView)

@@ -32,10 +32,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   description: 
   position: {x: 1014.00006, y: 99.999985}
-  key: 
+  key: float
   valueType: 1
   stringValue: 
-  floatValue: 0
+  floatValue: 100
   boolValue: 0
   vector3Value: {x: 50.7, y: 0, z: 0}
   gameObjectValue: {fileID: 0}
@@ -147,3 +147,21 @@ MonoBehaviour:
   description: 
   position: {x: 174, y: 100}
   child: {fileID: 5871544084868335353}
+--- !u!114 &8620091941996970632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e099a95fa0d245a292cf6e49cddf02f9, type: 3}
+  m_Name: Parallel
+  m_EditorClassIdentifier: 
+  description: 
+  position: {x: 473, y: 400}
+  children: []
+  finishMode: 0
+  successCount: 1
+  failureCount: 1
