@@ -10,14 +10,12 @@ namespace MonsterBT.Runtime.Composite
     [CreateAssetMenu(fileName = "Random", menuName = "MonsterBTNode/Composite/Random")]
     public class Random : CompositeNode
     {
-        [SerializeField][Tooltip("是否使用权重选择")] private bool isAverage;
+        [SerializeField] [Tooltip("是否使用权重选择")] private bool isAverage;
 
-        [SerializeField]
-        [Tooltip("子节点权重列表（仅在useWeights为true时生效）")]
+        [SerializeField] [Tooltip("子节点权重列表（仅在useWeights为true时生效）")]
         private List<float> weights = new List<float>();
 
-        [SerializeField]
-        [Tooltip("是否每次重新选择（false表示选中后执行完毕才重新选择）")]
+        [SerializeField] [Tooltip("是否每次重新选择（false表示选中后执行完毕才重新选择）")]
         private bool reselectOnComplete = true;
 
         private BTNode selectedChild;
@@ -66,31 +64,25 @@ namespace MonsterBT.Runtime.Composite
                 return;
 
             // 过滤掉null的子节点
-            var validChildren = new List<BTNode>();
             var validIndices = new List<int>();
             for (int i = 0; i < Children.Count; i++)
             {
                 if (Children[i] == null)
                     continue;
 
-                validChildren.Add(Children[i]);
                 validIndices.Add(i);
             }
 
-            if (validChildren.Count == 0)
+            if (validIndices.Count == 0)
                 return;
 
             // 获得随机索引
-            if (!isAverage && weights.Count >= validChildren.Count)
-            {
+            if (!isAverage && weights.Count >= validIndices.Count)
                 // 按权重选择
                 selectedIndex = SelectWeightedRandom(validIndices);
-            }
             else
-            {
                 // 如果权重不足或者设置平均选取，则简单随机选择
                 selectedIndex = validIndices[UnityEngine.Random.Range(0, validIndices.Count)];
-            }
 
             selectedChild = Children[selectedIndex];
 
@@ -117,11 +109,10 @@ namespace MonsterBT.Runtime.Composite
                 return validIndices[UnityEngine.Random.Range(0, validIndices.Count)];
             }
 
-            // 生成随机值
+            // 利用随机值随机选取
             float randomValue = UnityEngine.Random.Range(0f, totalWeight);
             float currentWeight = 0f;
 
-            // 根据权重选择
             foreach (int index in validIndices)
             {
                 float weight = index < weights.Count ? weights[index] : 1f;
