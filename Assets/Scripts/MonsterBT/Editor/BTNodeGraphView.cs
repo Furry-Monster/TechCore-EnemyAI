@@ -553,7 +553,8 @@ namespace MonsterBT.Editor
 
         public void AddBlackboardVariable(string varName, Type varType)
         {
-            if (behaviorTree?.Blackboard == null) return;
+            if (behaviorTree?.Blackboard == null)
+                return;
 
             // 添加到Runtime Blackboard
             object defaultValue = GetDefaultValue(varType);
@@ -591,8 +592,18 @@ namespace MonsterBT.Editor
             var infoRow = new VisualElement();
             infoRow.AddToClassList("blackboard-variable-info");
 
-            var nameLabel = new Label(varName);
-            nameLabel.AddToClassList("blackboard-variable-name");
+            var nameField = new TextField
+            {
+                value = varName
+            };
+            nameField.AddToClassList("blackboard-variable-name");
+            nameField.RegisterValueChangedCallback(evt =>
+            {
+                if (!string.IsNullOrEmpty(evt.newValue) && evt.newValue != varName)
+                {
+                    RenameBlackboardVariable(varName, evt.newValue);
+                }
+            });
 
             var typeLabel = new Label(GetTypeDisplayName(varType));
             typeLabel.AddToClassList("blackboard-variable-type");
@@ -603,7 +614,7 @@ namespace MonsterBT.Editor
             };
             deleteButton.AddToClassList("blackboard-delete-button");
 
-            infoRow.Add(nameLabel);
+            infoRow.Add(nameField);
             infoRow.Add(typeLabel);
             infoRow.Add(deleteButton);
 
@@ -681,7 +692,6 @@ namespace MonsterBT.Editor
                 });
                 return vector3Field;
             }
-
             if (varType == typeof(GameObject))
             {
                 var objectField = new ObjectField
@@ -705,6 +715,25 @@ namespace MonsterBT.Editor
             if (behaviorTree?.Blackboard == null) return;
 
             behaviorTree.Blackboard.RemoveVariable(varName);
+            RefreshBlackboardView();
+
+            EditorUtility.SetDirty(behaviorTree.Blackboard);
+            AssetDatabase.SaveAssets();
+        }
+
+        public void RenameBlackboardVariable(string oldName, string newName)
+        {
+            if (behaviorTree?.Blackboard == null) return;
+
+            // 检查新名称是否已存在
+            if (behaviorTree.Blackboard.HasKey(newName))
+            {
+                Debug.LogWarning($"Variable '{newName}' already exists!");
+                RefreshBlackboardView(); // 刷新以恢复原始名称
+                return;
+            }
+
+            behaviorTree.Blackboard.RenameVariable(oldName, newName);
             RefreshBlackboardView();
 
             EditorUtility.SetDirty(behaviorTree.Blackboard);
