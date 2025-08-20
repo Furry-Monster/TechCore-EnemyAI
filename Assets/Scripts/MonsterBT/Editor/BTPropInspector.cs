@@ -12,14 +12,23 @@ namespace MonsterBT.Editor
     public class BTPropInspector : VisualElement
     {
         private BTNode currentNode;
-        private ScrollView contentScrollView;
-        private Label emptyStateLabel;
+        private readonly ScrollView contentScrollView;
+        private readonly Label emptyStateLabel;
 
         public BTPropInspector()
         {
-            LoadLayoutAndStyles();
-            InitializeElements();
-            ShowEmptyState();
+            var uss = AssetDatabase.LoadAssetAtPath<StyleSheet>(
+                "Assets/Scripts/MonsterBT/Editor/BTPropInspectorStyle.uss");
+            if (uss != null) styleSheets.Add(uss);
+            AddToClassList("inspector-container");
+
+            contentScrollView = new ScrollView();
+            contentScrollView.AddToClassList("content-scroll");
+            Add(contentScrollView);
+
+            emptyStateLabel = new Label("Select a node to view properties");
+            emptyStateLabel.AddToClassList("empty-state");
+            Add(emptyStateLabel);
         }
 
         #region Public Methods
@@ -40,30 +49,6 @@ namespace MonsterBT.Editor
 
         #endregion
 
-        #region Layout Creation
-
-        private void LoadLayoutAndStyles()
-        {
-            var uxml = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
-                "Assets/Scripts/MonsterBT/Editor/BTPropInspectorLayout.uxml");
-            uxml?.CloneTree(this);
-
-            var uss = AssetDatabase.LoadAssetAtPath<StyleSheet>(
-                "Assets/Scripts/MonsterBT/Editor/BTPropInspectorStyle.uss");
-            if (uss != null)
-            {
-                styleSheets.Add(uss);
-            }
-        }
-
-        private void InitializeElements()
-        {
-            contentScrollView = this.Q<ScrollView>("content-scroll");
-            emptyStateLabel = this.Q<Label>("empty-state");
-        }
-
-        #endregion
-
         #region Content Management
 
         private void RefreshInspector()
@@ -72,22 +57,12 @@ namespace MonsterBT.Editor
 
             if (currentNode == null)
             {
-                ShowEmptyState();
+                emptyStateLabel.SetEnabled(true);
                 return;
             }
 
-            HideEmptyState();
-            BuildGeneralProps(currentNode);
-        }
-
-        private void ShowEmptyState()
-        {
-            emptyStateLabel.SetEnabled(true);
-        }
-
-        private void HideEmptyState()
-        {
             emptyStateLabel.SetEnabled(false);
+            BuildGeneralProps(currentNode);
         }
 
         private void BuildGeneralProps(BTNode node)

@@ -740,27 +740,21 @@ namespace MonsterBT.Editor
             AssetDatabase.SaveAssets();
         }
 
-        private static object GetDefaultValue(Type type)
-        {
-            if (type == typeof(bool)) return false;
-            if (type == typeof(float)) return 0f;
-            if (type == typeof(Vector3)) return Vector3.zero;
-            if (type == typeof(GameObject)) return null;
-            if (type == typeof(string)) return "";
+        private static readonly Dictionary<Type, (object defaultValue, string displayName)> TypeInfo =
+            new Dictionary<Type, (object, string)>
+            {
+                { typeof(bool), (false, "bool") },
+                { typeof(float), (0f, "float") },
+                { typeof(Vector3), (Vector3.zero, "Vector3") },
+                { typeof(GameObject), (null, "GameObject") },
+                { typeof(string), ("", "string") }
+            };
 
-            return null;
-        }
+        private static object GetDefaultValue(Type type) =>
+            TypeInfo.TryGetValue(type, out var info) ? info.defaultValue : null;
 
-        private static string GetTypeDisplayName(Type type)
-        {
-            if (type == typeof(bool)) return "bool";
-            if (type == typeof(float)) return "float";
-            if (type == typeof(Vector3)) return "Vector3";
-            if (type == typeof(GameObject)) return "GameObject";
-            if (type == typeof(string)) return "string";
-
-            return type.Name;
-        }
+        private static string GetTypeDisplayName(Type type) =>
+            TypeInfo.TryGetValue(type, out var info) ? info.displayName : type.Name;
 
         #endregion
 
