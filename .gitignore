@@ -81,4 +81,5 @@ crashlytics-build.properties
 # Custom
 /[Aa]ssets/[Ss]cripts/MonsterBT/Docs/
 /[Aa]ssets/[Ss]cripts/MonsterFSM/Docs/
-/CLAUDE.md
+/[Aa]ssets/[Ss]cripts/MonsterBT/Docs.meta
+/[Aa]ssets/[Ss]cripts/MonsterFSM/Docs.meta
