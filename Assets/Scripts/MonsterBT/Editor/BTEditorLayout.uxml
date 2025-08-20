@@ -13,8 +13,9 @@
             <ui:Button name="play-button" text="▶ Play" class="toolbar-button" />
             <ui:Button name="debug-button" text="# Debug" class="toolbar-button" />
         </uie:Toolbar>
-        <ui:VisualElement name="main-content" style="flex-direction: row; flex: 1;">
-            <ui:VisualElement name="inspector-panel" class="sidebar">
+        <ui:TwoPaneSplitView name="main-content" orientation="Horizontal" style="flex: 1;"
+                             fixed-pane-initial-dimension="250">
+            <ui:VisualElement name="node-library-panel" class="sidebar">
                 <ui:Label text="Node Library" class="sidebar-title" />
                 <ui:VisualElement name="composite-nodes" class="sidebar-section">
                     <ui:Label text="Composite Nodes" class="sidebar-title" />
@@ -50,15 +51,17 @@
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="graph-container" class="graph-container" style="flex: 1;" />
-            <ui:VisualElement name="inspector-panel" class="sidebar">
-                <ui:Label text="Inspector" class="sidebar-title" />
-                <ui:VisualElement name="node-properties" class="sidebar-section">
-                    <ui:Label text="Node Properties" class="sidebar-title" />
-                    <ui:VisualElement name="property-container" />
+            <ui:TwoPaneSplitView orientation="Horizontal" fixed-pane-index="1" fixed-pane-initial-dimension="300">
+                <ui:VisualElement name="graph-container" class="graph-container" style="flex: 1;" />
+                <ui:VisualElement name="inspector-panel" class="sidebar">
+                    <ui:Label text="Inspector" class="sidebar-title" />
+                    <ui:VisualElement name="node-properties" class="sidebar-section">
+                        <ui:Label text="Node Properties" class="sidebar-title" />
+                        <ui:VisualElement name="property-container" />
+                    </ui:VisualElement>
                 </ui:VisualElement>
-            </ui:VisualElement>
-        </ui:VisualElement>
+            </ui:TwoPaneSplitView>
+        </ui:TwoPaneSplitView>
         <ui:VisualElement name="status-bar" class="status-bar">
             <ui:Label name="status-text" text="Ready" style="color: rgb(200, 200, 200); font-size: 11px;" />
             <ui:Label name="node-count" text="Nodes: 0" style="color: rgb(150, 150, 150); font-size: 10px;" />

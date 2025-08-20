@@ -83,7 +83,6 @@
 }
 
 .inspector-field .unity-toggle__input {
-    background-color: rgb(42, 42, 42);
     border-color: rgb(70, 70, 70);
 }
 
@@ -95,16 +94,57 @@
 /* Vector3 Field */
 .inspector-field .unity-vector3-field {
     margin-bottom: 4px;
+    flex-direction: row;
+}
+
+.inspector-field .unity-vector3-field__input {
+    flex-direction: row;
+    flex-grow: 1;
+}
+
+.inspector-field .unity-vector3-field .unity-float-field {
+    flex-grow: 1;
+    margin-left: 2px;
+    margin-right: 2px;
+    min-width: 50px;
 }
 
 .inspector-field .unity-vector3-field .unity-float-field__input {
     background-color: rgb(42, 42, 42);
     border-color: rgb(70, 70, 70);
     color: rgb(210, 210, 210);
+    min-width: 50px;
 }
 
 .inspector-field .unity-vector3-field .unity-float-field__input:focus {
     border-color: rgb(89, 155, 220);
+}
+
+.inspector-field .unity-vector3-field .unity-float-field__label {
+    color: rgb(196, 196, 196);
+    min-width: 12px;
+    max-width: 12px;
+    margin-right: 2px;
+}
+
+/* Object Field (GameObject) */
+.inspector-field .unity-object-field {
+    margin-bottom: 4px;
+}
+
+.inspector-field .unity-object-field__input {
+    background-color: rgb(42, 42, 42);
+    border-color: rgb(70, 70, 70);
+    color: rgb(210, 210, 210);
+}
+
+.inspector-field .unity-object-field__input:focus {
+    border-color: rgb(89, 155, 220);
+}
+
+.inspector-field .unity-object-field__selector {
+    background-color: rgb(42, 42, 42);
+    border-color: rgb(70, 70, 70);
 }
 
 /* Enum Field */

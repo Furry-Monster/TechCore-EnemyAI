@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using MonsterBT.Runtime;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -196,6 +197,7 @@ namespace MonsterBT.Editor
                 var t when t == typeof(int) => CreateIntField(field, node, fieldName),
                 var t when t == typeof(bool) => CreateBoolField(field, node, fieldName),
                 var t when t == typeof(Vector3) => CreateVector3Field(field, node, fieldName),
+                var t when t == typeof(GameObject) => CreateGameObjectField(field, node, fieldName),
                 var t when t.IsEnum => CreateEnumField(field, node, fieldName),
                 _ => null
             };
@@ -263,7 +265,7 @@ namespace MonsterBT.Editor
         {
             var toggle = new Toggle(displayName)
             {
-                value = (bool)field.GetValue(node)
+                value = (bool)field.GetValue(node),
             };
 
             toggle.RegisterValueChangedCallback(evt =>
@@ -293,6 +295,25 @@ namespace MonsterBT.Editor
             });
 
             return vector3Field;
+        }
+
+        private ObjectField CreateGameObjectField(FieldInfo field, BTNode node, string displayName)
+        {
+            var objectField = new ObjectField(displayName)
+            {
+                objectType = typeof(GameObject),
+                value = (GameObject)field.GetValue(node)
+            };
+
+            objectField.RegisterValueChangedCallback(evt =>
+            {
+                Undo.RecordObject(node, $"Change {displayName}");
+                field.SetValue(node, evt.newValue);
+                EditorUtility.SetDirty(node);
+                OnPropertyChanged?.Invoke(node, displayName);
+            });
+
+            return objectField;
         }
 
         private EnumField CreateEnumField(FieldInfo field, BTNode node, string displayName)
