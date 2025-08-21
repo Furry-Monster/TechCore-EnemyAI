@@ -6,7 +6,7 @@ namespace MonsterBT.Runtime.Actions
     [CreateAssetMenu(fileName = "WaitAction", menuName = "MonsterBTNode/Actions/WaitAction")]
     public class WaitAction : ActionNode
     {
-        [SerializeField] private float waitTime = 1f;
+        [SerializeField][Tooltip("µÈ´ýÊ±¼ä")] private float waitTime = 1f;
 
         private float startTime;
 

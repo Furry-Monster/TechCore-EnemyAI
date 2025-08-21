@@ -7,9 +7,9 @@ namespace MonsterBT.Runtime.Conditions
     public class BlackboardFloatCondition : ActionNode
     {
         [SerializeField] private string keyName = "floatKey";
-        [SerializeField] private ComparisonType comparison = ComparisonType.Equal;
+        [SerializeField][Tooltip("比较模式")] private ComparisonType comparison = ComparisonType.Equal;
         [SerializeField] private float compareValue = 0f;
-        [SerializeField] private float tolerance = 0.01f; // 精度
+        [SerializeField][Tooltip("容差,在此精度内忽略浮点舍入")] private float tolerance = 0.01f; 
 
         protected override BTNodeState OnUpdate()
         {

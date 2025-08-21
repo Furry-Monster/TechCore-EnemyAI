@@ -25,7 +25,7 @@ namespace MonsterBT.Runtime.Conditions
         [Header("比较值")]
         [SerializeField] private Vector3 expectedVector = Vector3.zero;
         [SerializeField] private float expectedFloat = 0f;
-        [SerializeField] private float tolerance = 0.1f;
+        [SerializeField][Tooltip("浮点数容差")] private float tolerance = 0.1f;
 
         protected override BTNodeState OnUpdate()
         {
